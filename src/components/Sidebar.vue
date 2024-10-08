@@ -72,7 +72,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 400px;
+    width: 500px;
     height: 100vh;
     background-color: black;
     z-index: 10000;
@@ -104,7 +104,7 @@ export default {
     cursor: pointer;
 }
 
-.open-btn:hover img{
+.open-btn:hover img {
     transform: rotate(45deg) scale(110%);
 }
 
@@ -114,5 +114,25 @@ export default {
     object-fit: contain;
     margin: 0;
     transition: transform 250ms ease;
+}
+
+.background-settings {
+    display: flex;
+    flex-direction: column
+}
+
+.background-settings div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 40px;
+}
+
+.background-settings div h2 {
+    font-size: 1rem;
+    font-weight: 100;
+    text-wrap: nowrap;
 }
 </style>
