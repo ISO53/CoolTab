@@ -123,14 +123,14 @@ export default {
     display: flex;
     flex-direction: column;
     width: 100%;
+    row-gap: 10px;
 }
 
 .background-settings > div {
     display: grid;
     grid-template-columns: 40% 60%;
-    gap: 10px;
-    margin-bottom: 10px;
     align-items: center;
+    height: 50px;
 }
 
 .background-settings > div > h2 {
