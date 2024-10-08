@@ -1,9 +1,5 @@
 <template>
     <div class="file-chooser">
-        <!-- <input type="file" accept="image/*" @change="handleFileChange" /> -->
-        <!-- <p v-if="fileName">Selected file: {{ fileName }}</p> -->
-        <!-- <p v-else="fileName">Choose Your Image</p> -->
-
         <input id="file-input" type="file" accept="image/*" @change="handleFileChange" hidden />
 
         <label for="file-input">
