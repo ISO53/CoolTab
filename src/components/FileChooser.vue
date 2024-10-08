@@ -57,7 +57,7 @@ label {
     font-family: sans-serif;
     border-radius: 10px;
     cursor: pointer;
-    text-align: center;
+    text-align: left;
     border: 2px solid rgb(50, 50, 50);
     transition: color 250ms ease;
     user-select: none;
