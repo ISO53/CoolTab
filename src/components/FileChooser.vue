@@ -43,7 +43,7 @@ label {
     background-color: rgb(20, 20, 20);
     color: rgb(200, 200, 200);
     width: 100%;
-    padding: 8  px 12px 8px 12px;
+    padding: 8px 12px 8px 12px;
     font-family: sans-serif;
     border-radius: 10px;
     cursor: pointer;
