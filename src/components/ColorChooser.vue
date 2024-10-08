@@ -8,7 +8,7 @@
                 class="color-box"
                 :class="{selected: this.color === color}"
                 @click="selectColor(color)"
-            ></div>
+            >A</div>
         </div>
 
         <span>|</span>
@@ -73,6 +73,13 @@ label {
     padding: 0;
     cursor: pointer;
     margin-right: 5px;
+    color: black;
+    font-weight: 900;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    font-size: 0.9rem;
 }
 
 .selected {
