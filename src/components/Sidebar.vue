@@ -40,8 +40,8 @@ export default {
     methods: {
         toggleSidebar() {
             this.isOpen = !this.isOpen;
-        }
-    }
+        },
+    },
 };
 </script>
 
