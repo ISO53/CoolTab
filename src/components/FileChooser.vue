@@ -46,6 +46,7 @@ label {
     text-align: center;
     border: 2px solid rgb(50, 50, 50);
     transition: color 250ms ease;
+    user-select: none;
 }
 
 label:hover {
