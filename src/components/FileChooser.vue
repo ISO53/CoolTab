@@ -8,7 +8,7 @@
 
         <label for="file-input">
             <p v-if="!fileName">Choose Your Image</p>
-            <p v-if="fileName">{{ fileName }}</p>
+            <p class="filename" v-if="fileName">{{ fileName }}</p>
             <img src="@/components/icons/folder.svg" />
         </label>
     </div>
@@ -62,5 +62,12 @@ label img {
 
 label:hover img {
     filter: brightness(150%);
+}
+
+.filename {
+    width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>
