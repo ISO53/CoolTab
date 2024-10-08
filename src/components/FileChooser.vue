@@ -16,15 +16,29 @@ export default {
     data() {
         return {
             fileName: null,
+            image: null,
         };
+    },
+    created() {
+        const storedFileName = localStorage.getItem("background-image-file-name");
+        if (storedFileName) this.fileName = storedFileName;
     },
     methods: {
         handleFileChange(event) {
             const file = event.target.files[0];
             if (file && file.type.startsWith("image/")) {
                 this.fileName = file.name;
-            } else {
-                this.fileName = null;
+
+                // Read the image file as Base64 string
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.image = e.target.result;
+
+                    // Store the file name and image data to localStorage
+                    localStorage.setItem("background-image-file-name", this.fileName);
+                    localStorage.setItem("background-image", this.image);
+                };
+                reader.readAsDataURL(file);
             }
         },
     },

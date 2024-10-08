@@ -8,7 +8,9 @@
                 class="color-box"
                 :class="{selected: this.color === color}"
                 @click="selectColor(color)"
-            >A</div>
+            >
+                A
+            </div>
         </div>
 
         <span>|</span>
@@ -32,6 +34,7 @@ export default {
     methods: {
         selectColor(color) {
             this.color = color;
+            localStorage.setItem("background-color", color);
         },
     },
 };
