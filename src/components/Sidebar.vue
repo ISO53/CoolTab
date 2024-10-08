@@ -14,7 +14,7 @@
         </Transition>
 
         <button v-if="!isOpen" @click="toggleSidebar" class="open-btn">
-            <img src="@/components/icons/settings.svg" alt="" srcset="">
+            <img src="@/components/icons/settings.svg" />
         </button>
     </div>
 </template>
