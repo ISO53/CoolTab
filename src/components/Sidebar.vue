@@ -16,10 +16,13 @@
                         <ColorChooser />
                     </div>
                 </div>
+                <button @click="toggleSidebar" class="sidebar-toggle-button close">
+                    <img src="@/components/icons/back.svg" />
+                </button>
             </div>
         </Transition>
 
-        <button v-if="!isOpen" @click="toggleSidebar" class="open-btn">
+        <button v-if="!isOpen" @click="toggleSidebar" class="sidebar-toggle-button">
             <img src="@/components/icons/settings.svg" />
         </button>
     </div>
@@ -94,7 +97,7 @@ export default {
     transform: translateX(-100%);
 }
 
-.open-btn {
+.sidebar-toggle-button {
     position: absolute;
     bottom: 10px;
     left: 5px;
@@ -107,16 +110,20 @@ export default {
     cursor: pointer;
 }
 
-.open-btn:hover img {
-    transform: rotate(45deg) scale(110%);
+.sidebar-toggle-button:hover img {
+    transform: rotate(45deg);
 }
 
-.open-btn img {
+.sidebar-toggle-button img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     margin: 0;
     transition: transform 250ms ease;
+}
+
+.close:hover img{
+    transform: translateX(-3px);
 }
 
 .background-settings {
