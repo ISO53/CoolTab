@@ -6,6 +6,7 @@
 
         <Transition name="slide">
             <div v-if="isOpen" class="slide">
+                <h1 class="header">CoolTab Settings</h1>
                 <div class="background-settings">
                     <div>
                         <h2>Background Image</h2>
@@ -144,5 +145,11 @@ export default {
     text-wrap: nowrap;
     font-size: 1rem;
     font-weight: 100;
+}
+
+.header {
+    margin-bottom: 20px;
+    font-weight: 900;
+    color: #fafafa;
 }
 </style>
