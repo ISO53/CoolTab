@@ -13,6 +13,10 @@
                         <FileChooser />
                     </div>
                     <div>
+                        <h2>Image Size</h2>
+                        <SelectButton />
+                    </div>
+                    <div>
                         <h2>Background Color</h2>
                         <ColorChooser />
                     </div>
@@ -32,12 +36,14 @@
 <script>
 import ColorChooser from "./ColorChooser.vue";
 import FileChooser from "./FileChooser.vue";
+import SelectButton from "./SelectButton.vue";
 
 export default {
     name: "Sidebar",
     components: {
         FileChooser,
         ColorChooser,
+        SelectButton,
     },
     data() {
         return {

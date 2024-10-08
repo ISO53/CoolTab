@@ -1,5 +1,5 @@
 <template>
-    <div class="background" style="background-image: 'url(${image})'; object-fit: '${objectFit}'"></div>
+    <div class="background" :style="{ backgroundImage: 'url(' + image + ')', backgroundSize: size }"></div>
 </template>
 
 <script>
@@ -8,9 +8,16 @@ export default {
     data() {
         return {
             image: null,
-            objectFit: "contain",
+            size: null,
         };
     },
+    created() {
+        const backgroundImage = localStorage.getItem("background-image");
+        if (backgroundImage) this.image = backgroundImage;
+
+        const backgroundImageFit = localStorage.getItem("background-image-fit");
+        if (backgroundImageFit) this.size = backgroundImageFit;
+    }
 };
 </script>
 
@@ -25,5 +32,7 @@ export default {
     object-position: center;
     z-index: -1000;
     overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 </style>
