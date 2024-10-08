@@ -7,8 +7,13 @@
         <Transition name="slide">
             <div v-if="isOpen" class="slide">
                 <div class="background-settings">
-                    <div></div>
-                    <div></div>
+                    <div>
+                        <h2>Background Image</h2>
+                        <FileChooser />
+                    </div>
+                    <div>
+                        <h2>Image Fit</h2>
+                    </div>
                 </div>
             </div>
         </Transition>
@@ -20,8 +25,13 @@
 </template>
 
 <script>
+import FileChooser from "./FileChooser.vue";
+
 export default {
     name: "Sidebar",
+    components: {
+        FileChooser,
+    },
     data() {
         return {
             isOpen: false,
