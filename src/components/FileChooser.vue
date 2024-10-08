@@ -54,7 +54,6 @@ label {
     color: rgb(200, 200, 200);
     width: 100%;
     padding: 8px 12px 8px 12px;
-    font-family: sans-serif;
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
