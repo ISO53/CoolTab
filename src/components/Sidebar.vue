@@ -12,7 +12,8 @@
                         <FileChooser />
                     </div>
                     <div>
-                        <h2>Image Fit</h2>
+                        <h2>Background Color</h2>
+                        <ColorChooser />
                     </div>
                 </div>
             </div>
@@ -25,12 +26,14 @@
 </template>
 
 <script>
+import ColorChooser from "./ColorChooser.vue";
 import FileChooser from "./FileChooser.vue";
 
 export default {
     name: "Sidebar",
     components: {
         FileChooser,
+        ColorChooser,
     },
     data() {
         return {
