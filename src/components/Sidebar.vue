@@ -121,21 +121,21 @@ export default {
 
 .background-settings {
     display: flex;
-    flex-direction: column
-}
-
-.background-settings div {
+    flex-direction: column;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    gap: 40px;
 }
 
-.background-settings div h2 {
+.background-settings > div {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.background-settings > div > h2 {
+    text-wrap: nowrap;
     font-size: 1rem;
     font-weight: 100;
-    text-wrap: nowrap;
 }
 </style>
