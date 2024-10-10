@@ -10,19 +10,27 @@ export const useSettingsStore = defineStore("settings", {
     actions: {
         setBackgroundImage(image) {
             this.backgroundImage = image;
-            localStorage.setItem("background-image", image);
+            storeInLocalStorage("background-image", image);
         },
         setBackgroundColor(color) {
             this.backgroundColor = color;
-            localStorage.setItem("background-color", color);
+            storeInLocalStorage("background-color", color);
         },
         setBackgroundSize(size) {
             this.backgroundSize = size;
-            localStorage.setItem("background-size", size);
+            storeInLocalStorage("background-size", size);
         },
         setBackgroundImageFileName(fileName) {
             this.backgroundImageFileName = fileName;
-            localStorage.setItem("background-image-file-name", fileName);
+            storeInLocalStorage("background-image-file-name", fileName);
         },
     },
 });
+
+function storeInLocalStorage(key, value) {
+    if (value === null) {
+        localStorage.removeItem(key);
+    } else {
+        localStorage.setItem(key, value);
+    }
+}
