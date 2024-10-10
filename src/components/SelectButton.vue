@@ -21,13 +21,13 @@ export default {
         };
     },
     created() {
-        const objectFit = localStorage.getItem("background-image-fit");
-        if (objectFit) this.selectedValue = objectFit;
+        const backgroundSize = localStorage.getItem("background-size");
+        if (backgroundSize) this.selectedValue = backgroundSize;
     },
     methods: {
         selectOption(option) {
             this.selectedValue = option;
-            localStorage.setItem("background-image-fit", this.selectedValue);
+            localStorage.setItem("background-size", this.selectedValue);
         },
     },
 };

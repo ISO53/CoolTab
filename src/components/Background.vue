@@ -15,8 +15,7 @@ export default {
         const backgroundImage = localStorage.getItem("background-image");
         if (backgroundImage) this.image = backgroundImage;
 
-        const backgroundImageFit = localStorage.getItem("background-image-fit");
-        if (backgroundImageFit) this.size = backgroundImageFit;
+        const backgroundSize = localStorage.getItem("background-size");
     }
 };
 </script>
