@@ -26,6 +26,15 @@
                     </div>
 
                     <span class="divider"></span>
+
+                    <div>
+                        <h2>Search Engine</h2>
+                        <DropdownSelect
+                            v-model="settingsStore.searchEngine"
+                            :values="['Google', 'Bing', 'DuckDuckGo', 'Yahoo', 'Ecosia', 'Yandex', 'Startpage', 'Swisscows']"
+                            :onSelect="setSearchEngine"
+                        />
+                    </div>
                 </div>
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
                     <img src="@/components/icons/back.svg" />
@@ -41,6 +50,7 @@
 
 <script>
 import ColorChooser from "./ColorChooser.vue";
+import DropdownSelect from "./DropdownSelect.vue";
 import FileChooser from "./FileChooser.vue";
 import SelectButton from "./SelectButton.vue";
 import {useSettingsStore} from "@/settings";
@@ -55,6 +65,7 @@ export default {
         FileChooser,
         ColorChooser,
         SelectButton,
+        DropdownSelect,
     },
     data() {
         return {
@@ -71,7 +82,10 @@ export default {
         },
         setBackgroundColor(color) {
             this.settingsStore.setBackgroundColor(color);
-        }
+        },
+        setSearchEngine(engine) {
+            this.settingsStore.setSearchEngine(engine);
+        },
     },
 };
 </script>
