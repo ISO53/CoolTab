@@ -4,14 +4,28 @@
 
         <label for="file-input">
             <p v-if="!settingsStore.backgroundImageFileName">Choose Your Image</p>
-            <p class="filename" v-if="settingsStore.backgroundImageFileName">{{ settingsStore.backgroundImageFileName }}</p>
-            <img src="@/components/icons/folder.svg" />
+            <p class="filename" v-if="settingsStore.backgroundImageFileName">
+                {{ settingsStore.backgroundImageFileName }}
+            </p>
+
+            <img
+                v-if="settingsStore.backgroundImage === null"
+                class="folder-logo"
+                src="@/components/icons/folder.svg"
+            />
+
+            <img
+                v-if="settingsStore.backgroundImage !== null"
+                class="trash-logo"
+                src="@/components/icons/trash.svg"
+                @click.prevent="trash"
+            />
         </label>
     </div>
 </template>
 
 <script>
-import { useSettingsStore } from '@/settings';
+import {useSettingsStore} from "@/settings";
 
 export default {
     name: "FileChooser",
@@ -32,6 +46,11 @@ export default {
                 };
                 reader.readAsDataURL(file);
             }
+        },
+
+        trash() {
+            this.settingsStore.setBackgroundImage(null);
+            this.settingsStore.setBackgroundImageFileName(null);
         },
     },
 };
@@ -58,11 +77,11 @@ label:hover {
     color: white;
 }
 
-label img {
+.folder-logo {
     transition: filter 250ms ease;
 }
 
-label:hover img {
+label:hover .folder-logo {
     filter: brightness(150%);
 }
 
@@ -71,5 +90,14 @@ label:hover img {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.trash-logo {
+    transition: transform 250ms ease;
+}
+
+.trash-logo:hover {
+    filter: invert(22%) sepia(96%) saturate(7231%) hue-rotate(359deg) brightness(109%) contrast(119%);
+    transform: rotate(15deg);
 }
 </style>
