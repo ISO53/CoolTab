@@ -1,16 +1,14 @@
 <template>
     <div class="color-chooser">
-        <div style="display: flex; flex-direction: row">
-            <div
-                v-for="(color, index) in colors"
-                :key="index"
-                :style="{backgroundColor: color}"
-                class="color-box"
-                :class="{selected: this.color === color}"
-                @click="selectColor(color)"
-            >
-                A
-            </div>
+        <div
+            v-for="(color, index) in ['#fc613f', '#98dd98', '#92cef7', '#ebb882', '#f79fda', '#fafafa']"
+            :key="index"
+            :style="{backgroundColor: color}"
+            class="color-box"
+            :class="{selected: modelValue === color}"
+            @click="selectColor(color)"
+        >
+            A
         </div>
 
         <span>|</span>
@@ -25,16 +23,19 @@
 <script>
 export default {
     name: "ColorChooser",
-    data() {
-        return {
-            color: null,
-            colors: ["#fc613f", "#98dd98 ", "#92cef7 ", "#ebb882 ", "#f79fda", "#fafafa"],
-        };
+    props: {
+        modelValue: {
+            type: String,
+            default: "#fc613f",
+        },
+        onSelect: {
+            type: Function,
+        }
     },
     methods: {
         selectColor(color) {
-            this.color = color;
-            localStorage.setItem("background-color", color);
+            this.$emit("update:modelValue", color);
+            this.onSelect(color);
         },
     },
 };

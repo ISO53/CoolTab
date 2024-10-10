@@ -3,40 +3,32 @@
         <input id="file-input" type="file" accept="image/*" @change="handleFileChange" hidden />
 
         <label for="file-input">
-            <p v-if="!fileName">Choose Your Image</p>
-            <p class="filename" v-if="fileName">{{ fileName }}</p>
+            <p v-if="!settingsStore.backgroundImageFileName">Choose Your Image</p>
+            <p class="filename" v-if="settingsStore.backgroundImageFileName">{{ settingsStore.backgroundImageFileName }}</p>
             <img src="@/components/icons/folder.svg" />
         </label>
     </div>
 </template>
 
 <script>
+import { useSettingsStore } from '@/settings';
+
 export default {
     name: "FileChooser",
-    data() {
-        return {
-            fileName: null,
-            image: null,
-        };
-    },
-    created() {
-        const storedFileName = localStorage.getItem("background-image-file-name");
-        if (storedFileName) this.fileName = storedFileName;
+    setup() {
+        const settingsStore = useSettingsStore();
+        return {settingsStore};
     },
     methods: {
         handleFileChange(event) {
             const file = event.target.files[0];
             if (file && file.type.startsWith("image/")) {
-                this.fileName = file.name;
-
                 // Read the image file as Base64 string
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    this.image = e.target.result;
-
-                    // Store the file name and image data to localStorage
-                    localStorage.setItem("background-image-file-name", this.fileName);
-                    localStorage.setItem("background-image", this.image);
+                    // Store the file name and image data to settings store
+                    this.settingsStore.setBackgroundImage(e.target.result);
+                    this.settingsStore.setBackgroundImageFileName(file.name);
                 };
                 reader.readAsDataURL(file);
             }

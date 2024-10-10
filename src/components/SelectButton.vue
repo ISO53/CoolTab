@@ -3,7 +3,7 @@
         <button
             v-for="(option, index) in options"
             :key="index"
-            :class="['select-button-option', {selected: selectedValue === option}]"
+            :class="['select-button-option', {selected: modelValue === option}]"
             @click="selectOption(option)"
         >
             {{ option }}
@@ -14,20 +14,23 @@
 <script>
 export default {
     name: "SelectButton",
-    data() {
-        return {
-            selectedValue: "Cover",
-            options: ["Auto", "Cover", "Contain", "None"],
-        };
-    },
-    created() {
-        const backgroundSize = localStorage.getItem("background-size");
-        if (backgroundSize) this.selectedValue = backgroundSize;
+    props: {
+        modelValue: {
+            type: String,
+            default: "Cover",
+        },
+        options: {
+            type: Array,
+            required: true,
+        },
+        onSelect: {
+            type: Function,
+        },
     },
     methods: {
         selectOption(option) {
-            this.selectedValue = option;
-            localStorage.setItem("background-size", this.selectedValue);
+            this.$emit("update:modelValue", option);
+            this.onSelect(option);
         },
     },
 };

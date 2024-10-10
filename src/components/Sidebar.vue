@@ -14,11 +14,15 @@
                     </div>
                     <div>
                         <h2>Image Size</h2>
-                        <SelectButton />
+                        <SelectButton
+                            v-model="settingsStore.backgroundSize"
+                            :options="['Auto', 'Cover', 'Contain', 'None']"
+                            :onSelect="setBackgroundSize"
+                        />
                     </div>
                     <div>
                         <h2>Background Color</h2>
-                        <ColorChooser />
+                        <ColorChooser v-model="settingsStore.backgroundColor" :onSelect="setBackgroundColor" />
                     </div>
 
                     <span class="divider"></span>
@@ -39,9 +43,14 @@
 import ColorChooser from "./ColorChooser.vue";
 import FileChooser from "./FileChooser.vue";
 import SelectButton from "./SelectButton.vue";
+import {useSettingsStore} from "@/settings";
 
 export default {
     name: "Sidebar",
+    setup() {
+        const settingsStore = useSettingsStore();
+        return {settingsStore};
+    },
     components: {
         FileChooser,
         ColorChooser,
@@ -50,12 +59,19 @@ export default {
     data() {
         return {
             isOpen: false,
+            selectedOption: null,
         };
     },
     methods: {
         toggleSidebar() {
             this.isOpen = !this.isOpen;
         },
+        setBackgroundSize(option) {
+            this.settingsStore.setBackgroundSize(option);
+        },
+        setBackgroundColor(color) {
+            this.settingsStore.setBackgroundColor(color);
+        }
     },
 };
 </script>

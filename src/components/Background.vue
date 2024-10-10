@@ -1,23 +1,23 @@
 <template>
-    <div class="background" :style="{ backgroundImage: 'url(' + image + ')', backgroundSize: size }"></div>
+    <div
+        class="background"
+        :style="{
+            backgroundImage: 'url(' + settingsStore.backgroundImage + ')',
+            backgroundSize: settingsStore.backgroundSize,
+            backgroundColor: settingsStore.backgroundColor,
+        }"
+    ></div>
 </template>
 
 <script>
+import {useSettingsStore} from "@/settings";
+
 export default {
     name: "Background",
-    data() {
-        return {
-            image: null,
-            size: null,
-        };
+    setup() {
+        const settingsStore = useSettingsStore();
+        return {settingsStore};
     },
-    created() {
-        const backgroundImage = localStorage.getItem("background-image");
-        if (backgroundImage) this.image = backgroundImage;
-
-        const backgroundSize = localStorage.getItem("background-size");
-        if (backgroundSize) this.size = backgroundSize;
-    }
 };
 </script>
 
