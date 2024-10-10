@@ -20,6 +20,8 @@
                         <h2>Background Color</h2>
                         <ColorChooser />
                     </div>
+
+                    <span class="divider"></span>
                 </div>
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
                     <img src="@/components/icons/back.svg" />
@@ -156,5 +158,12 @@ export default {
     margin-bottom: 20px;
     font-weight: 900;
     color: #fafafa;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: rgb(50, 50, 50);
+    margin: 10px 0 10px 0;
 }
 </style>
