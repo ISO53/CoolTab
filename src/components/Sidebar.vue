@@ -129,7 +129,7 @@ export default {
     transition: transform 250ms ease;
 }
 
-.close:hover img{
+.close:hover img {
     transform: translateX(-3px);
 }
 
