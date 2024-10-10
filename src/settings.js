@@ -6,6 +6,7 @@ export const useSettingsStore = defineStore("settings", {
         backgroundImageFileName: localStorage.getItem("background-image-file-name") || null,
         backgroundColor: localStorage.getItem("background-color") || "#ffffff",
         backgroundSize: localStorage.getItem("background-size") || "cover",
+        searchEngine: localStorage.getItem("search-engine") || "Google",
     }),
     actions: {
         setBackgroundImage(image) {
@@ -24,6 +25,10 @@ export const useSettingsStore = defineStore("settings", {
             this.backgroundImageFileName = fileName;
             storeInLocalStorage("background-image-file-name", fileName);
         },
+        setSearchEngine(engine) {
+            this.searchEngine = engine;
+            storeInLocalStorage("search-engine", engine);
+        }
     },
 });
 
