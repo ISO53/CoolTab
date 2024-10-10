@@ -7,7 +7,7 @@
         <Transition name="slide">
             <div v-if="isOpen" class="slide">
                 <h1 class="header">CoolTab Settings</h1>
-                <div class="background-settings">
+                <div class="settings">
                     <div>
                         <h2>Background Image</h2>
                         <FileChooser />
@@ -133,20 +133,20 @@ export default {
     transform: translateX(-3px);
 }
 
-.background-settings {
+.settings {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-.background-settings > div {
+.settings > div {
     display: grid;
     grid-template-columns: 40% 60%;
     align-items: center;
     height: 50px;
 }
 
-.background-settings > div > h2 {
+.settings > div > h2 {
     text-wrap: nowrap;
     font-size: 1rem;
     font-weight: 100;
