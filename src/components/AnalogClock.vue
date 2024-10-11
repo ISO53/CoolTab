@@ -31,9 +31,9 @@ export default {
             const minuteDegree = (minutes / 60) * 360 + (seconds / 60) * 6 + 90;
             const hourDegree = (hours / 12) * 360 + (minutes / 60) * 30 + 90;
 
-            this.secondStyle = {transform: `rotate(${secondDegree}deg) translateX(50%)`};
-            this.minuteStyle = {transform: `rotate(${minuteDegree}deg) translateX(50%) translateX(-3px)`};
-            this.hourStyle = {transform: `rotate(${hourDegree}deg) translateX(50%) translateX(-6px)`};
+            this.secondStyle = {transform: `rotate(${secondDegree}deg) translateX(-50%)`};
+            this.minuteStyle = {transform: `rotate(${minuteDegree}deg) translateX(-50%) translateX(3px)`};
+            this.hourStyle = {transform: `rotate(${hourDegree}deg) translateX(-50%) translateX(6px)`};
         },
     },
 };
@@ -61,7 +61,7 @@ export default {
     width: 50%;
     height: 10px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -71,7 +71,7 @@ export default {
     height: 5px;
     border-radius: 50%;
     background-color: rgb(200, 200, 200);
-    transform: translateX(-5px);
+    transform: translateX(5px);
 }
 
 .minute-hand {
