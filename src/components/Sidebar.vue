@@ -16,7 +16,7 @@
                         <h2>Image Size</h2>
                         <SelectButton
                             v-model="settingsStore.backgroundSize"
-                            :options="['Auto', 'Cover', 'Contain', 'None']"
+                            :options="['Auto', 'Cover', 'Contain']"
                             :onSelect="setBackgroundSize"
                         />
                     </div>
