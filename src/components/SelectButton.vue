@@ -51,15 +51,16 @@ export default {
     border: 2px solid rgb(50, 50, 50);
     transition: color 250ms ease;
     user-select: none;
-
+    padding: 5px;
     display: flex;
-    gap: 10px;
+    gap: 5px;
 }
 
 .select-button-option {
     background-color: transparent;
     border: none;
     border-radius: 5px;
+    width: 100%;
     cursor: pointer;
     transition: background-color 250ms ease;
     color: rgb(200, 200, 200);
