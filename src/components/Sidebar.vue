@@ -31,8 +31,26 @@
                         <h2>Search Engine</h2>
                         <DropdownSelect
                             v-model="settingsStore.searchEngine"
-                            :values="['Google', 'Bing', 'DuckDuckGo', 'Yahoo', 'Ecosia', 'Yandex', 'Startpage', 'Swisscows']"
+                            :values="[
+                                'Google',
+                                'Bing',
+                                'DuckDuckGo',
+                                'Yahoo',
+                                'Ecosia',
+                                'Yandex',
+                                'Startpage',
+                                'Swisscows',
+                            ]"
                             :onSelect="setSearchEngine"
+                        />
+                    </div>
+
+                    <div>
+                        <h2>Open Result In</h2>
+                        <SelectButton
+                            v-model="settingsStore.openSearchResultIn"
+                            :options="['Current Tab', 'New Tab']"
+                            :onSelect="setOpenSearchResultIn"
                         />
                     </div>
                 </div>
@@ -85,6 +103,9 @@ export default {
         },
         setSearchEngine(engine) {
             this.settingsStore.setSearchEngine(engine);
+        },
+        setOpenSearchResultIn(choice) {
+            this.settingsStore.setOpenSearchResultIn(choice);
         },
     },
 };
