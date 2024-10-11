@@ -88,6 +88,7 @@ export default {
     resize: both;
     background-color: rgb(20, 20, 20);
     z-index: 2;
+    border-radius: 10px;
 }
 
 .simple h1 {
