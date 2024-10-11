@@ -95,6 +95,4 @@ export default {
     background-color: rgb(100, 100, 100);
     border-radius: 12px;
 }
-
-
 </style>
