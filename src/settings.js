@@ -7,6 +7,7 @@ export const useSettingsStore = defineStore("settings", {
         backgroundColor: localStorage.getItem("background-color") || "#ffffff",
         backgroundSize: localStorage.getItem("background-size") || "cover",
         searchEngine: localStorage.getItem("search-engine") || "Google",
+        openSearchResultIn: localStorage.getItem("open-search-result-in") || "New Tab",
     }),
     actions: {
         setBackgroundImage(image) {
@@ -28,7 +29,11 @@ export const useSettingsStore = defineStore("settings", {
         setSearchEngine(engine) {
             this.searchEngine = engine;
             storeInLocalStorage("search-engine", engine);
-        }
+        },
+        setOpenSearchResultIn(choice) {
+            this.openSearchResultIn = choice;
+            storeInLocalStorage("open-search-result-in", choice);
+        },
     },
 });
 
