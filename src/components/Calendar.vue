@@ -3,7 +3,7 @@
         <div class="simple">
             <h1>{{ date.day }}</h1>
         </div>
-        <div class="compherensive">
+        <div class="comprehensive">
             <h2>{{ date.day_name }}</h2>
             <h2>{{ date.month_name }}</h2>
             <h2>{{ date.day }}</h2>
@@ -99,7 +99,7 @@ export default {
     opacity: 0;
 }
 
-.compherensive {
+.comprehensive {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -114,7 +114,7 @@ export default {
     justify-content: center;
 }
 
-.compherensive h2 {
+.comprehensive h2 {
     font-size: 25cqw;
     line-height: 25cqw;
     margin: 0;
