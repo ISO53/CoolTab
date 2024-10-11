@@ -87,7 +87,7 @@ export default {
 
 .hour-hand {
     position: absolute;
-    width: 45%;
+    width: 35%;
     height: 12px;
     display: flex;
     justify-content: flex-end;
