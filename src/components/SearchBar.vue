@@ -2,7 +2,13 @@
     <div class="search-bar">
         <img class="search-logo" src="@/components/icons/search.svg" />
 
-        <input type="text" v-model="searchQuery" @input="handleSearch" placeholder="Search..." class="search-input" />
+        <input
+            type="text"
+            v-model="searchQuery"
+            @keypress.enter="handleSearch"
+            placeholder="Search..."
+            class="search-input"
+        />
 
         <img v-if="searchQuery" class="clear-button" src="@/components/icons/exit.svg" @click="searchQuery = ''" />
     </div>
@@ -19,11 +25,31 @@ export default {
     },
     data() {
         return {
-            searchQuery: ""
+            searchQuery: "",
         };
     },
     methods: {
-        handleSearch() {},
+        handleSearch() {
+            const searchEngines = new Map([
+                ["Google", "https://www.google.com/search?q="],
+                ["Bing", "https://www.bing.com/search?q="],
+                ["DuckDuckGo", "https://duckduckgo.com/?q="],
+                ["Yahoo", "https://search.yahoo.com/search?p="],
+                ["Ecosia", "https://www.ecosia.org/search?q="],
+                ["Yandex", "https://yandex.com/search/?text="],
+                ["Startpage", "https://www.startpage.com/do/dsearch?query="],
+                ["Swisscows", "https://swisscows.com/web?query="],
+            ]);
+
+            const request = searchEngines.get(this.settingsStore.searchEngine) + encodeURIComponent(this.searchQuery);
+
+            if (this.settingsStore.openSearchResultIn === "New Tab") {
+                window.open(request, "_blank");
+            } else { // Current Tab
+                window.location.href = request;
+            }
+
+        },
     },
 };
 </script>
