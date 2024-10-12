@@ -42,7 +42,7 @@ export default {
         };
     },
     mounted() {
-        this.getcurrentWeatherInfo();
+        this.getCurrentWeatherInfo();
         setInterval(this.calculateRotation, 60_000);
     },
     methods: {
@@ -64,7 +64,7 @@ export default {
             let sunPosition = (currentMinutes - sunriseMinutes) / totalDayMinutes;
             this.rotation = sunPosition * 180;
         },
-        getcurrentWeatherInfo() {
+        getCurrentWeatherInfo() {
             if (this.settingsStore.currentWeatherInfo.lastUpdated) {
                 // compare this.settingsStore.currentWeatherInfo.lastUpdated with current time and check if 1 hour passed
                 const now = new Date();
