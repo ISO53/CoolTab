@@ -71,7 +71,10 @@ export default {
                 const diff = now - this.settingsStore.currentWeatherInfo.lastUpdated;
 
                 // Update the weather info hourly
-                if (diff >= 3_600_000) return;
+                if (diff >= 3_600_000) {
+                    this.calculateRotation();
+                    return;
+                }
             }
 
             fetch("https://cool-tab-api.vercel.app/api/current-weather")
