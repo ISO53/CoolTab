@@ -8,6 +8,7 @@ export const useSettingsStore = defineStore("settings", {
         backgroundSize: localStorage.getItem("background-size") || "cover",
         searchEngine: localStorage.getItem("search-engine") || "Google",
         openSearchResultIn: localStorage.getItem("open-search-result-in") || "New Tab",
+        currentWeatherInfo: getCurrentWeatherInfo(),
     }),
     actions: {
         setBackgroundImage(image) {
@@ -34,6 +35,10 @@ export const useSettingsStore = defineStore("settings", {
             this.openSearchResultIn = choice;
             storeInLocalStorage("open-search-result-in", choice);
         },
+        setCurrentWeatherInfo(weather) {
+            this.currentWeatherInfo = weather;
+            storeInLocalStorage("weather-info", JSON.stringify(weather));
+        },
     },
 });
 
@@ -43,4 +48,29 @@ function storeInLocalStorage(key, value) {
     } else {
         localStorage.setItem(key, value);
     }
+}
+
+function getCurrentWeatherInfo() {
+    const info = localStorage.getItem("weather-info");
+    const def = {
+        sunrise: "",
+        sunset: "",
+        temperature: "",
+        country: "",
+        city: "",
+        lastUpdated: null,
+    };
+
+    let parsed = null;
+    if (info) {
+        try {
+            parsed = JSON.parse(info);
+        } catch (e) {
+            return def;
+        }
+        parsed.lastUpdated = new Date(parsed.lastUpdated);
+        return parsed;
+    }
+
+    return def;
 }
