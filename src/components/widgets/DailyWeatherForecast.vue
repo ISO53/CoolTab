@@ -1,26 +1,28 @@
 <template>
     <div class="weather-forecast">
-        <div class="sun-and-moon">
-            <div class="orbit">
-                <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
-                    <img class="planet" src="@/components/weather/sun.svg" />
-                    <img class="planet" src="@/components/weather/moon.svg" />
+        <div class="inner">
+            <div class="sun-and-moon">
+                <div class="orbit">
+                    <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
+                        <img class="planet" src="@/components/weather/sun.svg" />
+                        <img class="planet" src="@/components/weather/moon.svg" />
+                    </div>
                 </div>
             </div>
-        </div>
-        <div v-if="rotation < 180" class="times">
-            <h2>{{ weather.sunrise }}</h2>
-            <h2>{{ weather.sunset }}</h2>
-        </div>
-        <div v-else class="times">
-            <h2>{{ weather.sunset }}</h2>
-            <h2>{{ weather.sunrise }}</h2>
-        </div>
-        <div class="info">
-            <h1>{{ weather.temperature }}</h1>
-            <div>
-                <h4>{{ weather.country }}</h4>
-                <h3>{{ weather.city }}</h3>
+            <div v-if="rotation < 180" class="times">
+                <h2>{{ weather.sunrise }}</h2>
+                <h2>{{ weather.sunset }}</h2>
+            </div>
+            <div v-else class="times">
+                <h2>{{ weather.sunset }}</h2>
+                <h2>{{ weather.sunrise }}</h2>
+            </div>
+            <div class="info">
+                <h1>{{ weather.temperature }}</h1>
+                <div>
+                    <h4>{{ weather.country }}</h4>
+                    <h3>{{ weather.city }}</h3>
+                </div>
             </div>
         </div>
     </div>
@@ -99,6 +101,13 @@ export default {
 </script>
 
 <style scoped>
+.inner {
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+    padding: 10px;
+}
+
 .weather-forecast {
     position: relative;
     width: 100%;
@@ -113,9 +122,7 @@ export default {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    padding: 10px;
     container-type: size;
-    resize: both;
 }
 
 .sun-and-moon {
@@ -162,12 +169,12 @@ export default {
 
 .info {
     width: 100%;
-    height: 50%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
 }
 
 .info h1 {
@@ -180,10 +187,14 @@ export default {
 .info h3 {
     margin: 0;
     text-align: right;
+    font-size: 10cqw;
+    line-height: 10cqw;
 }
 
 .info h4 {
     margin: 0;
     text-align: right;
+    font-size: 9cqw;
+    line-height: 9cqw;
 }
 </style>
