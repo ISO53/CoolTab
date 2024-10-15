@@ -106,6 +106,7 @@ export default {
     cursor: pointer;
     border: 2px solid rgb(50, 50, 50);
     user-select: none;
+    z-index: 5;
 }
 
 .dropdown-options::-webkit-scrollbar {
