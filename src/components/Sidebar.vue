@@ -53,6 +53,14 @@
                             :onSelect="setOpenSearchResultIn"
                         />
                     </div>
+
+                    <div>
+                        <h2>Stocks</h2>
+                        <DropdownList
+                            v-model="settingsStore.stock.tickers"
+                            :onSelect="setTickers"
+                        />
+                    </div>
                 </div>
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
                     <img src="@/components/icons/back.svg" />
@@ -71,6 +79,7 @@ import ColorChooser from "./ColorChooser.vue";
 import DropdownSelect from "./DropdownSelect.vue";
 import FileChooser from "./FileChooser.vue";
 import SelectButton from "./SelectButton.vue";
+import DropdownList from "./DropdownList.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -84,6 +93,7 @@ export default {
         ColorChooser,
         SelectButton,
         DropdownSelect,
+        DropdownList,
     },
     data() {
         return {
@@ -106,6 +116,11 @@ export default {
         },
         setOpenSearchResultIn(choice) {
             this.settingsStore.setOpenSearchResultIn(choice);
+        },
+        setTickers(tickers) {
+            const stockInfo = this.settingsStore.stock;
+            stockInfo.tickers = tickers;
+            this.settingsStore.setStock(stockInfo);
         },
     },
 };

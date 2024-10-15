@@ -9,6 +9,7 @@ export const useSettingsStore = defineStore("settings", {
         searchEngine: localStorage.getItem("search-engine") || "Google",
         openSearchResultIn: localStorage.getItem("open-search-result-in") || "New Tab",
         currentWeatherInfo: getCurrentWeatherInfo(),
+        stock: getStock(),
     }),
     actions: {
         setBackgroundImage(image) {
@@ -39,6 +40,10 @@ export const useSettingsStore = defineStore("settings", {
             this.currentWeatherInfo = weather;
             storeInLocalStorage("weather-info", JSON.stringify(weather));
         },
+        setStock(stockInfo) {
+            this.stock = stockInfo;
+            storeInLocalStorage("stock", JSON.stringify(stockInfo));
+        },
     },
 });
 
@@ -65,6 +70,29 @@ function getCurrentWeatherInfo() {
     if (info) {
         try {
             parsed = JSON.parse(info);
+        } catch (e) {
+            return def;
+        }
+        parsed.lastUpdated = new Date(parsed.lastUpdated);
+        return parsed;
+    }
+
+    return def;
+}
+
+function getStock() {
+    const stocksData = localStorage.getItem("stock");
+    const def = {
+        cache_time: "",
+        lastUpdated: new Date(null),
+        stocks: [],
+        tickers: ["AAPL", "MSFT", "GOOG"],
+    };
+
+    let parsed = null;
+    if (stocksData) {
+        try {
+            parsed = JSON.parse(stocksData);
         } catch (e) {
             return def;
         }
