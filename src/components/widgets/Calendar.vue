@@ -93,6 +93,9 @@ export default {
 
 .simple h1 {
     font-size: 65cqw;
+    overflow: hidden;
+    text-wrap: wrap;
+    text-overflow: ellipsis;
 }
 
 .simple:hover {
@@ -118,5 +121,8 @@ export default {
     font-size: 25cqw;
     line-height: 25cqw;
     margin: 0;
+    overflow: hidden;
+    text-wrap: wrap;
+    text-overflow: ellipsis;
 }
 </style>
