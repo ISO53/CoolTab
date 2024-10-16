@@ -4,7 +4,7 @@
             class="ticker-input"
             type="text"
             v-model="inputValue"
-            :placeholder="isOpen ? 'Enter stock name here...' : modelValue.length + ' stocks selected.'"
+            :placeholder="isOpen ? 'Enter ' + text + ' here...' : modelValue.length + ' ' + text + 's selected.'"
             @keyup.enter="addValue"
             @click.stop="openDropdown"
         />
@@ -29,6 +29,9 @@ export default {
         onSelect: {
             type: Function,
         },
+        text: {
+            type: String,
+        },
     },
     data() {
         return {
@@ -48,7 +51,7 @@ export default {
         },
         addValue() {
             console.log("asd");
-            
+
             const newValue = this.inputValue.trim();
             if (newValue && !this.modelValue.includes(newValue)) {
                 const updatedValues = [...this.modelValue, newValue];
@@ -174,7 +177,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center
+    align-items: center;
 }
 
 /* .dropdown-option:hover {
