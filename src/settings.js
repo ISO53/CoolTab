@@ -80,12 +80,22 @@ function getCurrentWeatherInfo() {
     return def;
 }
 
+/**
+ * @returns {{cache_time: String, lastUpdated: Date, stocks: Array<{ticker: String, open: String, close: String, diff: Number}>, tickers: Array<String>}}
+ */
 function getStock() {
     const stocksData = localStorage.getItem("stock");
     const def = {
         cache_time: "",
         lastUpdated: new Date(null),
-        stocks: [],
+        stocks: [
+            {
+                ticker: "",
+                open: "",
+                close: "",
+                diff: 0,
+            },
+        ],
         tickers: ["AAPL", "MSFT", "GOOG"],
     };
 
