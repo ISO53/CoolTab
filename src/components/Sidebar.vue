@@ -54,12 +54,11 @@
                         />
                     </div>
 
+                    <span class="divider"></span>
+
                     <div>
                         <h2>Stocks</h2>
-                        <DropdownList
-                            v-model="settingsStore.stock.tickers"
-                            :onSelect="setTickers"
-                        />
+                        <DropdownList v-model="settingsStore.stock.tickers" :text="'stock'" :onSelect="setTickers" />
                     </div>
                 </div>
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
