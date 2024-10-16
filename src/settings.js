@@ -47,6 +47,11 @@ export const useSettingsStore = defineStore("settings", {
     },
 });
 
+/**
+ * Removes the item if the value is null, sets it otherwise
+ * @param {String} key key for local storage
+ * @param {String} value value for local storage
+ */
 function storeInLocalStorage(key, value) {
     if (value === null) {
         localStorage.removeItem(key);
@@ -55,6 +60,9 @@ function storeInLocalStorage(key, value) {
     }
 }
 
+/**
+ * @returns {{sunrise: String, sunset: String, temperature: String, country: String, city: String, lastUpdated: Date}}
+ */
 function getCurrentWeatherInfo() {
     const info = localStorage.getItem("weather-info");
     const def = {
