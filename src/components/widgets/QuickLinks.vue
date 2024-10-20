@@ -1,0 +1,116 @@
+<template>
+    <div class="quick-links" :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'">
+        <base href="/" />
+        <a
+            v-for="(link, index) in settingsStore.quickLinks.links"
+            :key="link"
+            :href="'https://' + link"
+            :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
+            rel="noopener noreferrer"
+        >
+            <img
+                :src="settingsStore.quickLinks.images[index]"
+                :class="
+                    settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical-link' : 'horizontal-link' + ' link'
+                "
+                alt="favicon"
+            />
+        </a>
+    </div>
+</template>
+
+<script>
+import {useSettingsStore} from "@/settings";
+
+export default {
+    name: "QuickLinks",
+    setup() {
+        const settingsStore = useSettingsStore();
+        return {settingsStore};
+    },
+    mounted() {
+        this.setFavicons();
+    },
+    methods: {
+        setFavicons() {
+            if (
+                !this.settingsStore.quickLinks.images ||
+                this.settingsStore.quickLinks.images.length === 0 ||
+                this.settingsStore.quickLinks.links.length !== this.settingsStore.quickLinks.images.length
+            ) {
+                const urls = this.settingsStore.quickLinks.links;
+
+                const fetchFavicon = async (url) => {
+                    const request = `https://cool-tab-api.vercel.app/api/favicon?hostname=${url}`;
+                    const response = await fetch(request);
+                    const buffer = await response.arrayBuffer();
+                    const base64data = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+                    return `data:image/x-icon;base64,${base64data}`;
+                };
+
+                const fetchPromises = urls.map((url) => fetchFavicon(url));
+
+                Promise.all(fetchPromises)
+                    .then((faviconImages) => {
+                        const curr = this.settingsStore.quickLinks;
+                        curr.images = faviconImages;
+                        this.settingsStore.setQuickLinks(curr);
+                        console.log(this.settingsStore.quickLinks);
+                    })
+                    .catch((error) => console.error("Error fetching favicons:", error));
+            }
+        },
+    },
+};
+</script>
+
+<style scoped>
+.quick-links {
+    background-color: rgb(20, 20, 20);
+    color: rgb(200, 200, 200);
+    padding: 8px 12px 8px 12px;
+    border-radius: 10px;
+    border: 2px solid rgb(50, 50, 50);
+    user-select: none;
+    font-size: 1rem;
+    font-family: Satoshi-Regular;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 10px;
+    overflow: hidden;
+}
+
+.vertical {
+    width: 50px;
+    height: 100%;
+}
+
+.horizontal {
+    width: 100%;
+    height: 50px;
+}
+
+.link {
+    aspect-ratio: 1;
+    background-color: black;
+    border-radius: 50%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 250ms ease;
+}
+
+.link:hover {
+    filter: grayscale(0%);
+}
+
+.vertical-link {
+    width: 100%;
+    height: auto;
+}
+
+.horizontal-link {
+    width: auto;
+    height: 100%;
+}
+</style>

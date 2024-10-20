@@ -10,6 +10,7 @@ export const useSettingsStore = defineStore("settings", {
         openSearchResultIn: localStorage.getItem("open-search-result-in") || "New Tab",
         currentWeatherInfo: getCurrentWeatherInfo(),
         stock: getStock(),
+        quickLinks: getQuickLinks(),
     }),
     actions: {
         setBackgroundImage(image) {
@@ -43,6 +44,10 @@ export const useSettingsStore = defineStore("settings", {
         setStock(stockInfo) {
             this.stock = stockInfo;
             storeInLocalStorage("stock", JSON.stringify(stockInfo));
+        },
+        setQuickLinks(links) {
+            this.quickLinks = links;
+            storeInLocalStorage("quick-links", JSON.stringify(links));
         },
     },
 });
@@ -116,6 +121,29 @@ function getStock() {
         }
         parsed.lastUpdated = new Date(parsed.lastUpdated);
         return parsed;
+    }
+
+    return def;
+}
+
+/**
+ * @returns {{orientation: String, links: Array<String>, images: Array<String>, open_link_in: String}}
+ */
+function getQuickLinks() {
+    const quickLinks = localStorage.getItem("quick-links");
+    const def = {
+        orientation: "Horizontal",
+        links: ["www.youtube.com", "google.com/maps"],
+        images: ["", ""],
+        open_link_in: "New Tab",
+    };
+
+    if (quickLinks) {
+        try {
+            return JSON.parse(quickLinks);
+        } catch (e) {
+            return def;
+        }
     }
 
     return def;

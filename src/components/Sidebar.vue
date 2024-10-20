@@ -60,6 +60,35 @@
                         <h2>Stocks</h2>
                         <DropdownList v-model="settingsStore.stock.tickers" :text="'stock'" :onSelect="setTickers" />
                     </div>
+
+                    <span class="divider"></span>
+
+                    <div>
+                        <h2>Quick Links</h2>
+                        <DropdownList
+                            v-model="this.settingsStore.quickLinks.links"
+                            :text="'link'"
+                            :onSelect="setQuickLinks"
+                        />
+                    </div>
+
+                    <div>
+                        <h2>Quick Links Orientation</h2>
+                        <SelectButton
+                            v-model="settingsStore.quickLinks.orientation"
+                            :options="['Vertical', 'Horizontal']"
+                            :onSelect="setOrientation"
+                        />
+                    </div>
+
+                    <div>
+                        <h2>Open Link In</h2>
+                        <SelectButton
+                            v-model="settingsStore.quickLinks.open_link_in"
+                            :options="['Current Tab', 'New Tab']"
+                            :onSelect="setOpenLinkIn"
+                        />
+                    </div>
                 </div>
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
                     <img src="@/components/icons/back.svg" />
@@ -98,6 +127,7 @@ export default {
         return {
             isOpen: false,
             selectedOption: null,
+            links: this.settingsStore.quickLinks.links.map((link) => link.url),
         };
     },
     methods: {
@@ -121,6 +151,21 @@ export default {
             stockInfo.tickers = tickers;
             this.settingsStore.setStock(stockInfo);
         },
+        setOrientation(orientation) {
+            const quickLinksInfo = this.settingsStore.quickLinks;
+            quickLinksInfo.orientation = orientation;
+            this.settingsStore.setQuickLinks(quickLinksInfo);
+        },
+        setQuickLinks(links) {
+            const quickLinksInfo = this.settingsStore.quickLinks;
+            quickLinksInfo.links = links;
+            this.settingsStore.setQuickLinks(quickLinksInfo);
+        },
+        setOpenLinkIn(openLinkIn) {
+            const quickLinksInfo = this.settingsStore.quickLinks;
+            quickLinksInfo.open_link_in = openLinkIn;
+            this.settingsStore.setQuickLinks(quickLinksInfo);
+        }
     },
 };
 </script>
