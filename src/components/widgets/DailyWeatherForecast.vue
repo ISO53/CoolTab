@@ -112,7 +112,7 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: 1 / 1;
     background-color: rgb(20, 20, 20);
     border-radius: 10px;
     border: 2px solid rgb(50, 50, 50);
