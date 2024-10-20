@@ -8,13 +8,7 @@
             :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
             rel="noopener noreferrer"
         >
-            <img
-                :src="settingsStore.quickLinks.images[index]"
-                :class="
-                    settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical-link' : 'horizontal-link' + ' link'
-                "
-                alt="favicon"
-            />
+            <img :src="settingsStore.quickLinks.images[index]" alt="favicon" class="link"/>
         </a>
     </div>
 </template>
@@ -67,32 +61,39 @@ export default {
 <style scoped>
 .quick-links {
     background-color: rgb(20, 20, 20);
-    color: rgb(200, 200, 200);
     padding: 8px 12px 8px 12px;
     border-radius: 10px;
     border: 2px solid rgb(50, 50, 50);
     user-select: none;
-    font-size: 1rem;
-    font-family: Satoshi-Regular;
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    column-gap: 10px;
+    align-items: center;
+}
+
+.quick-links a {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
     overflow: hidden;
 }
 
 .vertical {
     width: 50px;
     height: 100%;
+    flex-direction: column;
+    row-gap: 10px;
 }
 
 .horizontal {
     width: 100%;
     height: 50px;
+    flex-direction: row;
+    column-gap: 10px;
 }
 
 .link {
-    aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
     background-color: black;
     border-radius: 50%;
     object-fit: contain;
@@ -102,15 +103,5 @@ export default {
 
 .link:hover {
     filter: grayscale(0%);
-}
-
-.vertical-link {
-    width: 100%;
-    height: auto;
-}
-
-.horizontal-link {
-    width: auto;
-    height: 100%;
 }
 </style>
