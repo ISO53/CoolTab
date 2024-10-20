@@ -62,7 +62,6 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     background-color: rgb(20, 20, 20);
-    width: 100%;
     padding: 8px;
     border-radius: 10px;
     border: 2px solid rgb(50, 50, 50);
