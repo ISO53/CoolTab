@@ -53,7 +53,6 @@ export default {
     justify-content: center;
     align-items: center;
     container-type: size;
-    resize: both;
 }
 
 .second-hand {
