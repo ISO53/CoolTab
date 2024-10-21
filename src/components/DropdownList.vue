@@ -1,7 +1,7 @@
 <template>
     <div class="dropdown-select" @click="toggleDropdown" v-click-outside="closeDropdown">
         <input
-            class="ticker-input"
+            class="form-input"
             type="text"
             v-model="inputValue"
             :placeholder="isOpen ? 'Enter ' + text + ' here...' : modelValue.length + ' ' + text + 's selected.'"
@@ -99,7 +99,7 @@ export default {
     transform: rotate(180deg);
 }
 
-.ticker-input {
+.form-input {
     width: 90%;
     height: 100%;
     background-color: transparent;
@@ -108,7 +108,7 @@ export default {
     color: rgb(200, 200, 200);
 }
 
-.ticker-input:focus {
+.form-input:focus {
     outline: none;
 }
 
