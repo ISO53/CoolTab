@@ -10,7 +10,7 @@
         />
         <ul v-if="isOpen" class="dropdown-options" @click.stop>
             <li v-for="(value, index) in modelValue" :key="index" class="dropdown-option">
-                {{ value }}
+                <p>{{ value }}</p>
                 <button @click="removeValue(index)" class="delete-button">x</button>
             </li>
         </ul>
@@ -178,5 +178,12 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.dropdown-option p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 80%;
 }
 </style>
