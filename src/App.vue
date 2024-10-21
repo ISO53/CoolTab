@@ -12,6 +12,10 @@
                 <GridItem :p_x="1" :p_y="2" :p_width="3" :p_height="3"><DigitalClock /></GridItem>
                 <GridItem :p_x="1" :p_y="2" :p_width="3" :p_height="3"><Stock /></GridItem>
             </Grid>
+
+            <button @click="toggleEditArea" class="edit-area-toggle-button close">
+                <img src="@/components/icons/edit.svg" />
+            </button>
         </div>
     </div>
 </template>
@@ -49,6 +53,11 @@ export default {
             editing: false,
         };
     },
+    methods: {
+        toggleEditArea() {
+            this.editing = !this.editing;
+        },
+    },
 };
 </script>
 
@@ -62,5 +71,29 @@ export default {
     align-items: center;
     overflow: hidden;
 }
+
+.edit-area-toggle-button {
+    position: absolute;
+    bottom: 60px;
+    left: 5px;
+    margin: 0;
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.edit-area-toggle-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin: 0;
+    transition: transform 250ms ease;
+}
+
+.edit-area-toggle-button:hover img {
+    transform: rotate(-45deg);
 }
 </style>
