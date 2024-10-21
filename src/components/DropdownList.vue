@@ -179,8 +179,4 @@ export default {
     justify-content: space-between;
     align-items: center;
 }
-
-/* .dropdown-option:hover {
-    background-color: rgba(75, 75, 75, 0.5);
-} */
 </style>
