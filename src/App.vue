@@ -4,13 +4,15 @@
         <Sidebar />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="20" :editing="this.editing" :dotColor="'#c8c8c8'">
-                <GridItem :p_x="7" :p_y="4" :p_width="6" :p_height="1"><SearchBar /></GridItem>
-                <GridItem :p_x="3" :p_y="3" :p_width="4" :p_height="1"><QuickLinks /></GridItem>
-                <GridItem :p_x="0" :p_y="1" :p_width="2" :p_height="2"><Calendar /></GridItem>
-                <GridItem :p_x="5" :p_y="3" :p_width="2" :p_height="2"><AnalogClock /></GridItem>
-                <GridItem :p_x="1" :p_y="2" :p_width="3" :p_height="3"><DailyWeatherForecast /></GridItem>
-                <GridItem :p_x="1" :p_y="2" :p_width="3" :p_height="3"><DigitalClock /></GridItem>
-                <GridItem :p_x="1" :p_y="2" :p_width="3" :p_height="3"><Stock /></GridItem>
+                <GridItem :p_x="5" :p_y="2" :p_width="10" :p_height="1" :p_resize="'horizontal'"><SearchBar /></GridItem>
+                <GridItem :p_x="8" :p_y="0" :p_width="4" :p_height="1" :p_resize="'horizontal'"><QuickLinks /></GridItem>
+                <GridItem :p_x="17" :p_y="0" :p_width="2" :p_height="2" :p_resize="'square'"><Calendar /></GridItem>
+                <GridItem :p_x="8" :p_y="4" :p_width="4" :p_height="4" :p_resize="'square'"><AnalogClock /></GridItem>
+                <GridItem :p_x="16" :p_y="5" :p_width="3" :p_height="3" :p_resize="'square'"
+                    ><DailyWeatherForecast
+                /></GridItem>
+                <GridItem :p_x="1" :p_y="0" :p_width="2" :p_height="2" :p_resize="'square'"><DigitalClock /></GridItem>
+                <GridItem :p_x="1" :p_y="5" :p_width="3" :p_height="3" :p_resize="'square'"><Stock /></GridItem>
             </Grid>
 
             <button @click="toggleEditArea" class="edit-area-toggle-button close">
