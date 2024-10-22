@@ -117,6 +117,6 @@ export default {
 }
 
 .blanket:active {
-    background-color: rgba(125, 125, 125, 0.3);
+    background-color: rgba(125, 125, 125, 0.5);
 }
 </style>
