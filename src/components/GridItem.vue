@@ -1,5 +1,10 @@
 <template>
-    <div class="grid-item" :style="itemStyle" @mousedown="mouseDownEvent">
+    <div
+        class="grid-item"
+        :class="this.$parent.editing ? 'resize-' + p_resize : ''"
+        :style="itemStyle"
+        @mousedown="mouseDownEvent"
+    >
         <slot></slot>
         <div v-if="this.$parent.editing" class="blanket"></div>
     </div>
@@ -25,10 +30,15 @@ export default {
             type: Number,
             default: 1,
         },
+        p_resize: {
+            type: String,
+            default: "square",
+        },
     },
     data() {
         return {
-            dragging: true,
+            dragging: false,
+            resizing: false,
             clicked: {x: 0, y: 0},
             initialPosition: {x: this.modelValueX, y: this.modelValueY},
             x: this.p_x,
@@ -40,7 +50,17 @@ export default {
     methods: {
         mouseDownEvent(event) {
             if (!this.$parent.editing) return;
-            
+
+            // If clicked on right bottom corner of the div, it is being resized, don't drag it.
+            const rect = this.$el.getBoundingClientRect();
+            const cornerSize = 10;
+            this.resizing = event.clientX >= rect.right - cornerSize && event.clientY >= rect.bottom - cornerSize;
+            if (this.resizing) {
+                window.addEventListener("mousemove", this.mouseMoveEvent);
+                window.addEventListener("mouseup", this.mouseUpEvent);
+                return;
+            }
+
             this.dragging = true;
             this.clicked = {x: event.pageX, y: event.pageY};
             this.initialPosition = {x: this.x, y: this.y};
@@ -49,6 +69,32 @@ export default {
             window.addEventListener("mouseup", this.mouseUpEvent);
         },
         mouseUpEvent(event) {
+            if (this.resizing) {
+                this.resizing = false;
+                const rect = this.$el.getBoundingClientRect();
+                
+                switch (this.p_resize) {
+                    case "square":
+                        // Square resizing, width and height must match
+                        const w = Math.round(rect.width / this.$parent.step);
+                        const h = Math.round(rect.height / this.$parent.step);
+                        const size = Math.max(Math.min(w, h), 1);
+                        this.width = size;
+                        this.height = size;
+                        console.log(this.width, this.height);
+                        
+                        break;
+                    case "horizontal":
+                        // Horizontal resizing, don't change height
+                        this.width = Math.max(Math.round(rect.width / this.$parent.step), 1); // size can be minimum 1
+                        break;
+                    case "vertical":
+                        // Vertical resizing, don't change width
+                        this.height = Math.max(Math.round(rect.height / this.$parent.step), 1); // size can be minimum 1
+                        break;
+                }
+            }
+
             this.dragging = false;
             window.removeEventListener("mousemove", this.mouseMoveEvent);
             window.removeEventListener("mouseup", this.mouseUpEvent);
@@ -99,6 +145,21 @@ export default {
     justify-content: center;
     align-items: center;
     margin: 1px 0 0 1px;
+}
+
+.resize-vertical {
+    resize: vertical;
+    overflow: hidden;
+}
+
+.resize-horizontal {
+    resize: horizontal;
+    overflow: hidden;
+}
+
+.resize-square {
+    resize: both;
+    overflow: hidden;
 }
 
 .blanket {
