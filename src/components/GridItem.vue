@@ -28,7 +28,7 @@ export default {
     },
     data() {
         return {
-            mouseDown: true,
+            dragging: true,
             clicked: {x: 0, y: 0},
             initialPosition: {x: this.modelValueX, y: this.modelValueY},
             x: this.p_x,
@@ -41,7 +41,7 @@ export default {
         mouseDownEvent(event) {
             if (!this.$parent.editing) return;
             
-            this.mouseDown = true;
+            this.dragging = true;
             this.clicked = {x: event.pageX, y: event.pageY};
             this.initialPosition = {x: this.x, y: this.y};
 
@@ -49,12 +49,12 @@ export default {
             window.addEventListener("mouseup", this.mouseUpEvent);
         },
         mouseUpEvent(event) {
-            this.mouseDown = false;
+            this.dragging = false;
             window.removeEventListener("mousemove", this.mouseMoveEvent);
             window.removeEventListener("mouseup", this.mouseUpEvent);
         },
         mouseMoveEvent(event) {
-            if (!this.mouseDown) return;
+            if (!this.dragging) return;
 
             // Calculate how much the mouse has moved since the click
             const dx = Math.floor((event.pageX - this.clicked.x) / this.$parent.step);
