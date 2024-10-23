@@ -4,26 +4,16 @@
         <Sidebar />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="20" :editing="this.editing" :dotColor="'#c8c8c8'">
-                <GridItem :p_x="5" :p_y="2" :p_width="10" :p_height="1" :p_resize="'horizontal'">
-                    <SearchBar />
-                </GridItem>
-                <GridItem :p_x="8" :p_y="0" :p_width="4" :p_height="1" :p_resize="'horizontal'">
-                    <QuickLinks />
-                </GridItem>
-                <GridItem :p_x="17" :p_y="0" :p_width="2" :p_height="2" :p_resize="'square'">
-                    <Calendar />
-                </GridItem>
-                <GridItem :p_x="8" :p_y="4" :p_width="4" :p_height="4" :p_resize="'square'">
-                    <AnalogClock />
-                </GridItem>
-                <GridItem :p_x="16" :p_y="5" :p_width="3" :p_height="3" :p_resize="'square'">
-                    <DailyWeatherForecast />
-                </GridItem>
-                <GridItem :p_x="1" :p_y="0" :p_width="2" :p_height="2" :p_resize="'square'">
-                    <DigitalClock />
-                </GridItem>
-                <GridItem :p_x="1" :p_y="5" :p_width="3" :p_height="3" :p_resize="'square'">
-                    <Stock />
+                <GridItem
+                    v-for="(widget, index) in this.settingsStore.widgets"
+                    :key="index"
+                    :p_x="widget.x"
+                    :p_y="widget.y"
+                    :p_width="widget.width"
+                    :p_height="widget.height"
+                    :p_resize="widget.resize"
+                >
+                    <component :is="widget.name" />
                 </GridItem>
             </Grid>
 
@@ -46,9 +36,14 @@ import DigitalClock from "@/components/widgets/DigitalClock.vue";
 import DailyWeatherForecast from "./components/widgets/DailyWeatherForecast.vue";
 import Stock from "./components/widgets/Stock.vue";
 import QuickLinks from "./components/widgets/QuickLinks.vue";
+import { useSettingsStore } from "./settings";
 
 export default {
     name: "App",
+    setup() {
+        const settingsStore = useSettingsStore();
+        return {settingsStore};
+    },
     components: {
         Grid,
         GridItem,

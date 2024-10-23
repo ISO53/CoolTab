@@ -11,6 +11,7 @@ export const useSettingsStore = defineStore("settings", {
         currentWeatherInfo: getCurrentWeatherInfo(),
         stock: getStock(),
         quickLinks: getQuickLinks(),
+        widgets: getWidgets(),
     }),
     actions: {
         setBackgroundImage(image) {
@@ -49,6 +50,10 @@ export const useSettingsStore = defineStore("settings", {
             this.quickLinks = links;
             storeInLocalStorage("quick-links", JSON.stringify(links));
         },
+        setWidgets(widgets) {
+            this.widgets = widgets;
+            storeInLocalStorage("widgets", JSON.stringify(widgets));
+        }
     },
 });
 
@@ -141,6 +146,81 @@ function getQuickLinks() {
     if (quickLinks) {
         try {
             return JSON.parse(quickLinks);
+        } catch (e) {
+            return def;
+        }
+    }
+
+    return def;
+}
+
+/**
+ * @returns {{widgets: Array<{name: String, x: Number, y: Number, width: Number, height: Number, resize: String}>}}
+ */
+function getWidgets() {
+    const widgets = localStorage.getItem("widgets");
+    const def = [
+        {
+            name: "SearchBar",
+            x: 5,
+            y: 2,
+            width: 10,
+            height: 1,
+            resize: "horizontal",
+        },
+        {
+            name: "QuickLinks",
+            x: 8,
+            y: 0,
+            width: 4,
+            height: 1,
+            resize: "horizontal",
+        },
+        {
+            name: "Calendar",
+            x: 17,
+            y: 0,
+            width: 2,
+            height: 2,
+            resize: "square",
+        },
+        {
+            name: "AnalogClock",
+            x: 8,
+            y: 4,
+            width: 4,
+            height: 4,
+            resize: "square",
+        },
+        {
+            name: "DailyWeatherForecast",
+            x: 16,
+            y: 5,
+            width: 3,
+            height: 3,
+            resize: "square",
+        },
+        {
+            name: "DigitalClock",
+            x: 1,
+            y: 0,
+            width: 2,
+            height: 2,
+            resize: "square",
+        },
+        {
+            name: "Stock",
+            x: 1,
+            y: 5,
+            width: 3,
+            height: 3,
+            resize: "square",
+        },
+    ];
+
+    if (widgets) {
+        try {
+            return JSON.parse(widgets);
         } catch (e) {
             return def;
         }
