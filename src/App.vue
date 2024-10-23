@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import Grid from "@/components/Grid.vue";
-import GridItem from "@/components/GridItem.vue";
-import Background from "@/components/Background.vue";
-import Sidebar from "@/components/Sidebar.vue";
+import Grid from "@/components/ui/Grid.vue";
+import GridItem from "@/components/ui/GridItem.vue";
+import Background from "@/components/ui/Background.vue";
+import Sidebar from "@/components/ui/Sidebar.vue";
 import SearchBar from "@/components/widgets/SearchBar.vue";
 import Calendar from "@/components/widgets/Calendar.vue";
 import AnalogClock from "@/components/widgets/AnalogClock.vue";
