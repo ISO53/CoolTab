@@ -226,6 +226,7 @@ export default {
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     padding: 20px;
+    overflow: hidden;
 }
 
 .slide-enter-active,
