@@ -109,25 +109,6 @@ export default {
     z-index: 5;
 }
 
-.dropdown-options::-webkit-scrollbar {
-    width: 8px;
-    margin: 2px;
-}
-
-.dropdown-options::-webkit-scrollbar-track {
-    background-color: transparent;
-    overflow: hidden;
-}
-
-.dropdown-options::-webkit-scrollbar-thumb {
-    background-color: rgba(75, 75, 75, 0.5);
-    border-radius: 10px;
-}
-
-.dropdown-options::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(75, 75, 75, 1);
-}
-
 .dropdown-option {
     padding: 5px 8px 5px 8px;
     cursor: pointer;
