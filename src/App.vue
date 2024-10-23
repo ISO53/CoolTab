@@ -97,6 +97,7 @@ export default {
     background-color: transparent;
     border: none;
     cursor: pointer;
+    user-select: none;
 }
 
 .edit-area-toggle-button img {
