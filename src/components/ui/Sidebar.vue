@@ -34,16 +34,7 @@
 
                     <Tab :label="'Widgets'">
                         <div class="settings">
-                            <div>
-                                <h2>Widget Area Columns</h2>
-                                <NumberPicker
-                                    v-model="settingsStore.widgetAreaColumns"
-                                    :min="10"
-                                    :max="80"
-                                    :step="1"
-                                    :onSelect="setWidgetAreaColumns"
-                                />
-                            </div>
+                            
                         </div>
                     </Tab>
 
@@ -113,6 +104,19 @@
                                     v-model="settingsStore.quickLinks.open_link_in"
                                     :options="['Current Tab', 'New Tab']"
                                     :onSelect="setOpenLinkIn"
+                                />
+                            </div>
+
+                            <span class="divider"></span>
+
+                            <div>
+                                <h2>Widget Area Columns</h2>
+                                <NumberPicker
+                                    v-model="settingsStore.widgetAreaColumns"
+                                    :min="10"
+                                    :max="80"
+                                    :step="1"
+                                    :onSelect="setWidgetAreaColumns"
                                 />
                             </div>
                         </div>
