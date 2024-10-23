@@ -7,89 +7,107 @@
         <Transition name="slide">
             <div v-if="isOpen" class="slide">
                 <h1 class="header">CoolTab Settings</h1>
-                <div class="settings">
-                    <div>
-                        <h2>Background Image</h2>
-                        <FileChooser />
-                    </div>
-                    <div>
-                        <h2>Image Size</h2>
-                        <SelectButton
-                            v-model="settingsStore.backgroundSize"
-                            :options="['Auto', 'Cover', 'Contain']"
-                            :onSelect="setBackgroundSize"
-                        />
-                    </div>
-                    <div>
-                        <h2>Background Color</h2>
-                        <ColorChooser v-model="settingsStore.backgroundColor" :onSelect="setBackgroundColor" />
-                    </div>
 
-                    <span class="divider"></span>
+                <Tabs :selected="'Customization'">
+                    <Tab :label="'Customization'">
+                        <div class="settings">
+                            <div>
+                                <h2>Background Image</h2>
+                                <FileChooser />
+                            </div>
 
-                    <div>
-                        <h2>Search Engine</h2>
-                        <DropdownSelect
-                            v-model="settingsStore.searchEngine"
-                            :values="[
-                                'Google',
-                                'Bing',
-                                'DuckDuckGo',
-                                'Yahoo',
-                                'Ecosia',
-                                'Yandex',
-                                'Startpage',
-                                'Swisscows',
-                            ]"
-                            :onSelect="setSearchEngine"
-                        />
-                    </div>
+                            <div>
+                                <h2>Image Size</h2>
+                                <SelectButton
+                                    v-model="settingsStore.backgroundSize"
+                                    :options="['Auto', 'Cover', 'Contain']"
+                                    :onSelect="setBackgroundSize"
+                                />
+                            </div>
 
-                    <div>
-                        <h2>Open Result In</h2>
-                        <SelectButton
-                            v-model="settingsStore.openSearchResultIn"
-                            :options="['Current Tab', 'New Tab']"
-                            :onSelect="setOpenSearchResultIn"
-                        />
-                    </div>
+                            <div>
+                                <h2>Background Color</h2>
+                                <ColorChooser v-model="settingsStore.backgroundColor" :onSelect="setBackgroundColor" />
+                            </div>
+                        </div>
+                    </Tab>
 
-                    <span class="divider"></span>
+                    <Tab :label="'Widgets'">
+                        <div>Content for Tab 2</div>
+                    </Tab>
 
-                    <div>
-                        <h2>Stocks</h2>
-                        <DropdownList v-model="settingsStore.stock.tickers" :text="'stock'" :onSelect="setTickers" />
-                    </div>
+                    <Tab :label="'Settings'">
+                        <div class="settings">
+                            <div>
+                                <h2>Search Engine</h2>
+                                <DropdownSelect
+                                    v-model="settingsStore.searchEngine"
+                                    :values="[
+                                        'Google',
+                                        'Bing',
+                                        'DuckDuckGo',
+                                        'Yahoo',
+                                        'Ecosia',
+                                        'Yandex',
+                                        'Startpage',
+                                        'Swisscows',
+                                    ]"
+                                    :onSelect="setSearchEngine"
+                                />
+                            </div>
 
-                    <span class="divider"></span>
+                            <div>
+                                <h2>Open Result In</h2>
+                                <SelectButton
+                                    v-model="settingsStore.openSearchResultIn"
+                                    :options="['Current Tab', 'New Tab']"
+                                    :onSelect="setOpenSearchResultIn"
+                                />
+                            </div>
 
-                    <div>
-                        <h2>Quick Links</h2>
-                        <DropdownList
-                            v-model="this.settingsStore.quickLinks.links"
-                            :text="'link'"
-                            :onSelect="setQuickLinks"
-                        />
-                    </div>
+                            <span class="divider"></span>
 
-                    <div>
-                        <h2>Quick Links Orientation</h2>
-                        <SelectButton
-                            v-model="settingsStore.quickLinks.orientation"
-                            :options="['Vertical', 'Horizontal']"
-                            :onSelect="setOrientation"
-                        />
-                    </div>
+                            <div>
+                                <h2>Stocks</h2>
+                                <DropdownList
+                                    v-model="settingsStore.stock.tickers"
+                                    :text="'stock'"
+                                    :onSelect="setTickers"
+                                />
+                            </div>
 
-                    <div>
-                        <h2>Open Link In</h2>
-                        <SelectButton
-                            v-model="settingsStore.quickLinks.open_link_in"
-                            :options="['Current Tab', 'New Tab']"
-                            :onSelect="setOpenLinkIn"
-                        />
-                    </div>
-                </div>
+                            <span class="divider"></span>
+
+                            <div>
+                                <h2>Quick Links</h2>
+                                <DropdownList
+                                    v-model="this.settingsStore.quickLinks.links"
+                                    :text="'link'"
+                                    :onSelect="setQuickLinks"
+                                />
+                            </div>
+
+                            <div>
+                                <h2>Quick Links Orientation</h2>
+                                <SelectButton
+                                    v-model="settingsStore.quickLinks.orientation"
+                                    :options="['Vertical', 'Horizontal']"
+                                    :onSelect="setOrientation"
+                                />
+                            </div>
+
+                            <div>
+                                <h2>Open Link In</h2>
+                                <SelectButton
+                                    v-model="settingsStore.quickLinks.open_link_in"
+                                    :options="['Current Tab', 'New Tab']"
+                                    :onSelect="setOpenLinkIn"
+                                />
+                            </div>
+                        </div>
+                    </Tab>
+                </Tabs>
+
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
                     <img src="@/components/icons/back.svg" />
                 </button>
@@ -109,6 +127,8 @@ import FileChooser from "./FileChooser.vue";
 import SelectButton from "./SelectButton.vue";
 import DropdownList from "./DropdownList.vue";
 import {useSettingsStore} from "@/settings";
+import Tabs from "./Tabs.vue";
+import Tab from "./Tab.vue";
 
 export default {
     name: "Sidebar",
@@ -122,6 +142,8 @@ export default {
         SelectButton,
         DropdownSelect,
         DropdownList,
+        Tabs,
+        Tab,
     },
     data() {
         return {
