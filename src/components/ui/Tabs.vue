@@ -62,7 +62,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     font-family: Satoshi-Regular;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     border-bottom: 2px solid rgb(50, 50, 50);
 }
 
