@@ -36,7 +36,7 @@ import DigitalClock from "@/components/widgets/DigitalClock.vue";
 import DailyWeatherForecast from "./components/widgets/DailyWeatherForecast.vue";
 import Stock from "./components/widgets/Stock.vue";
 import QuickLinks from "./components/widgets/QuickLinks.vue";
-import { useSettingsStore } from "./settings";
+import {useSettingsStore} from "./settings";
 
 export default {
     name: "App",
