@@ -66,7 +66,7 @@ export default {
     border: 2px solid rgb(50, 50, 50);
     user-select: none;
     max-height: 43px;
-    font-size: 0.6rem;
+    font-size: 0.45rem;
 }
 
 .btn {
