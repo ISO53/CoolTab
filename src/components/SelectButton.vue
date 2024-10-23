@@ -66,6 +66,7 @@ export default {
     color: rgb(200, 200, 200);
     height: 30px;
     padding: 0 10px 0 10px;
+    font-family: Satoshi-Regular;
 }
 
 .select-button-option:hover {
