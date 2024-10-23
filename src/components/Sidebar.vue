@@ -187,7 +187,7 @@ export default {
             const quickLinksInfo = this.settingsStore.quickLinks;
             quickLinksInfo.open_link_in = openLinkIn;
             this.settingsStore.setQuickLinks(quickLinksInfo);
-        }
+        },
     },
 };
 </script>

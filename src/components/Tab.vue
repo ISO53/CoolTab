@@ -15,7 +15,7 @@ export default {
             required: true,
         },
     },
-    inject: ['registerTab'],
+    inject: ["registerTab"],
     mounted() {
         this.registerTab(this.label);
     },
