@@ -3,7 +3,7 @@
         <Background />
         <Sidebar />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
-            <Grid :cols="20" :editing="this.editing" :dotColor="'#c8c8c8'">
+            <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="'#c8c8c8'">
                 <GridItem
                     v-for="(widget, index) in this.settingsStore.widgets"
                     :key="index"

@@ -33,7 +33,18 @@
                     </Tab>
 
                     <Tab :label="'Widgets'">
-                        <div>Content for Tab 2</div>
+                        <div class="settings">
+                            <div>
+                                <h2>Widget Area Columns</h2>
+                                <NumberPicker
+                                    v-model="settingsStore.widgetAreaColumns"
+                                    :min="10"
+                                    :max="80"
+                                    :step="1"
+                                    :onSelect="setWidgetAreaColumns"
+                                />
+                            </div>
+                        </div>
                     </Tab>
 
                     <Tab :label="'Settings'">
@@ -126,9 +137,10 @@ import DropdownSelect from "./DropdownSelect.vue";
 import FileChooser from "./FileChooser.vue";
 import SelectButton from "./SelectButton.vue";
 import DropdownList from "./DropdownList.vue";
-import {useSettingsStore} from "@/settings";
 import Tabs from "./Tabs.vue";
 import Tab from "./Tab.vue";
+import NumberPicker from "./NumberPicker.vue";
+import {useSettingsStore} from "@/settings";
 
 export default {
     name: "Sidebar",
@@ -144,6 +156,7 @@ export default {
         DropdownList,
         Tabs,
         Tab,
+        NumberPicker,
     },
     data() {
         return {
@@ -187,6 +200,9 @@ export default {
             const quickLinksInfo = this.settingsStore.quickLinks;
             quickLinksInfo.open_link_in = openLinkIn;
             this.settingsStore.setQuickLinks(quickLinksInfo);
+        },
+        setWidgetAreaColumns(columns) {
+            this.settingsStore.setWidgetAreaColumns(columns);
         },
     },
 };

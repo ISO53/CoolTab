@@ -12,6 +12,7 @@ export const useSettingsStore = defineStore("settings", {
         stock: getStock(),
         quickLinks: getQuickLinks(),
         widgets: getWidgets(),
+        widgetAreaColumns: parseInt(localStorage.getItem("widget-area-columns")) || 20,
     }),
     actions: {
         setBackgroundImage(image) {
@@ -53,7 +54,11 @@ export const useSettingsStore = defineStore("settings", {
         setWidgets(widgets) {
             this.widgets = widgets;
             storeInLocalStorage("widgets", JSON.stringify(widgets));
-        }
+        },
+        setWidgetAreaColumns(columns) {
+            this.widgetAreaColumns = columns;
+            storeInLocalStorage("widget-area-columns", columns);
+        },
     },
 });
 
