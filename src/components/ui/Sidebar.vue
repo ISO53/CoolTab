@@ -33,7 +33,7 @@
                     </Tab>
 
                     <Tab :label="'Widgets'">
-                        <div class="settings">
+                        <div class="settings widget-states">
                             <div v-for="(widget, index) in this.settingsStore.widgets" :key="index">
                                 <h2>{{ widget.name }}</h2>
                                 <ToggleSwitch
@@ -331,5 +331,11 @@ export default {
     height: 1px;
     background: rgb(50, 50, 50);
     margin: 10px 0 10px 0;
+}
+
+.widget-states > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
