@@ -174,7 +174,6 @@ export default {
         return {
             isOpen: false,
             selectedOption: null,
-            links: this.settingsStore.quickLinks.links.map((link) => link.url),
         };
     },
     methods: {
