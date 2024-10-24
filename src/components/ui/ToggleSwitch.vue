@@ -38,7 +38,7 @@ export default {
     position: relative;
     display: inline-block;
     width: 60px;
-    height: 34px;
+    height: 35px;
 }
 
 .switch input {
@@ -54,28 +54,30 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: rgb(20, 20, 20);
+    border: 2px solid rgb(50, 50, 50);
     transition: 0.4s;
-    border-radius: 34px;
+    border-radius: 10px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 24px;
+    width: 24px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
+    background-color: rgb(200, 200, 200);
+    transition: 250ms ease;
+    border-radius: 5px;
 }
 
 input:checked + .slider {
-    background-color: #2196f3;
+    background-color: rgb(75, 75, 75);
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(25px);
+    background-color: white;
 }
 </style>
