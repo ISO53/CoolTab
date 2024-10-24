@@ -50,8 +50,6 @@ export default {
             this.isOpen = true;
         },
         addValue() {
-            console.log("asd");
-
             const newValue = this.inputValue.trim();
             if (newValue && !this.modelValue.includes(newValue)) {
                 const updatedValues = [...this.modelValue, newValue];
