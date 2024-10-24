@@ -49,7 +49,6 @@ export default {
                         const curr = this.settingsStore.quickLinks;
                         curr.images = faviconImages;
                         this.settingsStore.setQuickLinks(curr);
-                        console.log(this.settingsStore.quickLinks);
                     })
                     .catch((error) => console.error("Error fetching favicons:", error));
             }
