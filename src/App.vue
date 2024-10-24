@@ -5,7 +5,7 @@
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="'#c8c8c8'">
                 <GridItem
-                    v-for="(widget, index) in this.settingsStore.widgets"
+                    v-for="(widget, index) in settingsStore.widgets"
                     :key="index"
                     :p_x="widget.x"
                     :p_y="widget.y"
