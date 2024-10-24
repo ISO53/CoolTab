@@ -172,6 +172,7 @@ function getWidgets() {
             width: 10,
             height: 1,
             resize: "horizontal",
+            selected: true,
         },
         {
             name: "QuickLinks",
@@ -180,6 +181,7 @@ function getWidgets() {
             width: 4,
             height: 1,
             resize: "horizontal",
+            selected: true,
         },
         {
             name: "Calendar",
@@ -188,6 +190,7 @@ function getWidgets() {
             width: 2,
             height: 2,
             resize: "square",
+            selected: true,
         },
         {
             name: "AnalogClock",
@@ -196,6 +199,7 @@ function getWidgets() {
             width: 4,
             height: 4,
             resize: "square",
+            selected: true,
         },
         {
             name: "DailyWeatherForecast",
@@ -204,6 +208,7 @@ function getWidgets() {
             width: 3,
             height: 3,
             resize: "square",
+            selected: true,
         },
         {
             name: "DigitalClock",
@@ -212,6 +217,7 @@ function getWidgets() {
             width: 2,
             height: 2,
             resize: "square",
+            selected: true,
         },
         {
             name: "Stock",
@@ -220,6 +226,7 @@ function getWidgets() {
             width: 3,
             height: 3,
             resize: "square",
+            selected: true,
         },
     ];
 

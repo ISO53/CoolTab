@@ -34,7 +34,13 @@
 
                     <Tab :label="'Widgets'">
                         <div class="settings">
-                            
+                            <div v-for="(widget, index) in this.settingsStore.widgets" :key="index">
+                                <h2>{{ widget.name }}</h2>
+                                <ToggleSwitch
+                                    v-model="widget.selected"
+                                    @change="setWidgetSelected(widget, widget.selected)"
+                                />
+                            </div>
                         </div>
                     </Tab>
 
@@ -144,6 +150,7 @@ import DropdownList from "./DropdownList.vue";
 import Tabs from "./Tabs.vue";
 import Tab from "./Tab.vue";
 import NumberPicker from "./NumberPicker.vue";
+import ToggleSwitch from "./ToggleSwitch.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -161,6 +168,7 @@ export default {
         Tabs,
         Tab,
         NumberPicker,
+        ToggleSwitch,
     },
     data() {
         return {
@@ -207,6 +215,10 @@ export default {
         },
         setWidgetAreaColumns(columns) {
             this.settingsStore.setWidgetAreaColumns(columns);
+        },
+        setWidgetSelected(widget, isSelected) {
+            widget.selected = isSelected;
+            this.settingsStore.setWidgets(this.settingsStore.widgets);
         },
     },
 };

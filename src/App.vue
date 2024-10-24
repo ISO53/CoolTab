@@ -12,8 +12,9 @@
                     :p_width="widget.width"
                     :p_height="widget.height"
                     :p_resize="widget.resize"
+                    :class="{hidden: !widget.selected}"
                 >
-                    <component :is="widget.name" />
+                    <component v-if="widget.selected" :is="widget.name" />
                 </GridItem>
             </Grid>
 
@@ -105,5 +106,9 @@ export default {
 
 .edit-area-toggle-button:hover img {
     transform: rotate(-45deg);
+}
+
+.hidden {
+    display: none;
 }
 </style>
