@@ -13,6 +13,8 @@
                     :p_height="widget.height"
                     :p_resize="widget.resize"
                     :class="{hidden: !widget.selected}"
+                    @update-position="updateWidgetPosition(index, $event)"
+                    @update-size="updateWidgetSize(index, $event)"
                 >
                     <component v-if="widget.selected" :is="widget.name" />
                 </GridItem>
@@ -66,6 +68,18 @@ export default {
     methods: {
         toggleEditArea() {
             this.editing = !this.editing;
+        },
+        updateWidgetPosition(index, {x, y}) {
+            const widgets = this.settingsStore.widgets;
+            widgets[index].x = x;
+            widgets[index].y = y;
+            this.settingsStore.setWidgets(widgets);
+        },
+        updateWidgetSize(index, {width, height}) {
+            const widgets = this.settingsStore.widgets;
+            widgets[index].width = width;
+            widgets[index].height = height;
+            this.settingsStore.setWidgets(widgets);
         },
     },
 };

@@ -35,6 +35,20 @@ export default {
             default: "square",
         },
     },
+    watch: {
+        p_x(newVal) {
+            this.x = newVal;
+        },
+        p_y(newVal) {
+            this.y = newVal;
+        },
+        p_width(newVal) {
+            this.width = newVal;
+        },
+        p_height(newVal) {
+            this.height = newVal;
+        },
+    },
     data() {
         return {
             dragging: false,
@@ -48,6 +62,10 @@ export default {
         };
     },
     methods: {
+        emitChanges() {
+            this.$emit("update-position", {x: this.x, y: this.y});
+            this.$emit("update-size", {width: this.width, height: this.height});
+        },
         mouseDownEvent(event) {
             if (!this.$parent.editing) return;
 
@@ -72,7 +90,7 @@ export default {
             if (this.resizing) {
                 this.resizing = false;
                 const rect = this.$el.getBoundingClientRect();
-                
+
                 switch (this.p_resize) {
                     case "square":
                         // Square resizing, width and height must match
@@ -81,8 +99,6 @@ export default {
                         const size = Math.max(Math.min(w, h), 1);
                         this.width = size;
                         this.height = size;
-                        console.log(this.width, this.height);
-                        
                         break;
                     case "horizontal":
                         // Horizontal resizing, don't change height
@@ -93,11 +109,17 @@ export default {
                         this.height = Math.max(Math.round(rect.height / this.$parent.step), 1); // size can be minimum 1
                         break;
                 }
+
+                // Emit size changes after resizing
+                this.emitChanges();
             }
 
             this.dragging = false;
             window.removeEventListener("mousemove", this.mouseMoveEvent);
             window.removeEventListener("mouseup", this.mouseUpEvent);
+
+            // Emit position changes after dragging
+            this.emitChanges();
         },
         mouseMoveEvent(event) {
             if (!this.dragging) return;
