@@ -30,7 +30,8 @@ export default {
             if (
                 !this.settingsStore.quickLinks.images ||
                 this.settingsStore.quickLinks.images.length === 0 ||
-                this.settingsStore.quickLinks.links.length !== this.settingsStore.quickLinks.images.length
+                this.settingsStore.quickLinks.links.length !== this.settingsStore.quickLinks.images.length ||
+                this.settingsStore.quickLinks.images[0] === ""
             ) {
                 const urls = this.settingsStore.quickLinks.links;
 
