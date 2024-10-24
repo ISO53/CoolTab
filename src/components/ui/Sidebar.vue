@@ -198,9 +198,22 @@ export default {
             this.settingsStore.setStock(stockInfo);
         },
         setOrientation(orientation) {
+            // Adjust the widgets orientation
             const quickLinksInfo = this.settingsStore.quickLinks;
             quickLinksInfo.orientation = orientation;
             this.settingsStore.setQuickLinks(quickLinksInfo);
+
+            // Adjust the grids orientation for widget
+            const widgets = this.settingsStore.widgets;
+            widgets
+                .filter((w) => (w.name === "QuickLinks"))
+                .forEach((w) => {
+                    w.resize = orientation.toLowerCase();
+                    let temp = w.width;
+                    w.width = w.height;
+                    w.height = temp;
+                });
+            this.settingsStore.setWidgets(widgets);
         },
         setQuickLinks(links) {
             const quickLinksInfo = this.settingsStore.quickLinks;
