@@ -27,6 +27,7 @@
 
 -   [Features](#features)
 -   [Installation](#installation)
+-   [Application UI](#application-ui)
 -   [Contributing](#contributing)
 -   [License](#license)
 
@@ -63,6 +64,15 @@
 5.  Go to `/dist` folder and zip the project files and [upload it to chrome](chrome://extensions/) for testing, development or any other stuff. If you want to use this on firefox you need to add [couple more fields](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings) to `manifest.json` file before copying it to `/dist`.
 
 > If you want to run the project in development mode, just run `npm run dev`.
+
+
+## Application UI
+![shot_1](https://github.com/user-attachments/assets/3de9f3fe-5009-4da9-8eff-f39fb106acfc)
+![shot_2](https://github.com/user-attachments/assets/b8a84db0-f4b0-4290-ae4a-a00576463909)
+![shot_3](https://github.com/user-attachments/assets/e9e86b76-84c4-42ec-a999-5578009f236c)
+![shot_4](https://github.com/user-attachments/assets/2fe57312-4328-42c0-be11-77b5e1945df8)
+![shot_5](https://github.com/user-attachments/assets/faf2b9c8-e816-4209-ba78-c176779ac102)
+![shot_6](https://github.com/user-attachments/assets/4858e064-0109-4235-9ab9-b7fb46ee6d42)
 
 
 ## Contributing
