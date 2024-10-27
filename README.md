@@ -1,8 +1,6 @@
 <p align="center">
-  <img width="460" height="300" src="https://github.com/ISO53/CoolTab/blob/master/cooltab_logo.svg">
+  <img src="https://github.com/user-attachments/assets/914102e2-b625-4a47-92f4-1c8b38e5a0e6">
 </p>
-
-<h1 align="center">Cool Tab</h1>
 
 <p align="center">
     <b>Cool Tab</b> is a customizable New Tab page built with Vue.js.
