@@ -68,6 +68,10 @@ export default {
     user-select: none;
 }
 
+.search-bar:has(> .search-input:focus) {
+    border-color: #fafafa;
+}
+
 .search-logo {
     height: 100%;
 }
