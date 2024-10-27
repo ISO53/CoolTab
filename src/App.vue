@@ -2,6 +2,7 @@
     <div class="app">
         <Background />
         <Sidebar />
+        <Info />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="'#c8c8c8'">
                 <GridItem
@@ -39,6 +40,7 @@ import DigitalClock from "@/components/widgets/DigitalClock.vue";
 import DailyWeatherForecast from "./components/widgets/DailyWeatherForecast.vue";
 import Stock from "./components/widgets/Stock.vue";
 import QuickLinks from "./components/widgets/QuickLinks.vue";
+import Info from "./components/ui/Info.vue";
 import {useSettingsStore} from "./settings";
 
 export default {
@@ -59,6 +61,7 @@ export default {
         DailyWeatherForecast,
         Stock,
         QuickLinks,
+        Info,
     },
     data() {
         return {
