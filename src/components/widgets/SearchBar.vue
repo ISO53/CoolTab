@@ -45,10 +45,9 @@ export default {
 
             if (this.settingsStore.openSearchResultIn === "New Tab") {
                 window.open(request, "_blank");
-            } else { // Current Tab
-                window.location.href = request;
+            } else {
+                window.location.href = request; // Current Tab
             }
-
         },
     },
 };
