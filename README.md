@@ -18,8 +18,15 @@
     <img src="https://img.shields.io/badge/license-GNU-black.svg?style=round-square" alt="License">
   </a>
   <img src="https://img.shields.io/github/languages/code-size/ISO53/CoolTab?style=round-square&color=black" alt="GitHub code size in bytes">
-<!--   <a href="https://chromewebstore.google.com/detail/leetmacro/ijjbjplfbmkfifipofkdbpadlehhndha?pli=1">
-    <img src="https://img.shields.io/badge/Available_On-Chrome_Web_Store-black" alt="Chrome Web Store">
+</p>
+
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/cool-tab/kngdmmkbgfgogddahgjgeeigcellojog">
+    <img src="https://github.com/user-attachments/assets/3098f37b-6118-4c17-9094-511e56712540">
+  </a>
+  <br>
+<!--   <a href="https://chromewebstore.google.com/detail/cool-tab/kngdmmkbgfgogddahgjgeeigcellojog">
+    <img src="[https://github.com/user-attachments/assets/3098f37b-6118-4c17-9094-511e56712540](https://github.com/user-attachments/assets/c2dcc99d-8d4f-44e0-83c0-73575d42494a)">
   </a> -->
 </p>
 
