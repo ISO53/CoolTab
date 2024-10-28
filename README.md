@@ -20,12 +20,11 @@
 
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/cool-tab/kngdmmkbgfgogddahgjgeeigcellojog">
-    <img src="https://github.com/user-attachments/assets/3098f37b-6118-4c17-9094-511e56712540">
+    <img src="https://github.com/user-attachments/assets/3098f37b-6118-4c17-9094-511e56712540" height="75">
   </a>
-  <br>
-<!--   <a href="https://chromewebstore.google.com/detail/cool-tab/kngdmmkbgfgogddahgjgeeigcellojog">
-    <img src="[https://github.com/user-attachments/assets/3098f37b-6118-4c17-9094-511e56712540](https://github.com/user-attachments/assets/c2dcc99d-8d4f-44e0-83c0-73575d42494a)">
-  </a> -->
+  <a href="https://addons.mozilla.org/addon/cooltab/">
+    <img src="https://github.com/user-attachments/assets/c2dcc99d-8d4f-44e0-83c0-73575d42494a" height="75">
+  </a>
 </p>
 
 ## Table of Contents
