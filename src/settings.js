@@ -13,6 +13,7 @@ export const useSettingsStore = defineStore("settings", {
         quickLinks: getQuickLinks(),
         widgets: getWidgets(),
         widgetAreaColumns: parseInt(localStorage.getItem("widget-area-columns")) || 20,
+        weeklyWeatherInfo: getWeeklyWeatherInfo(),
     }),
     actions: {
         setBackgroundImage(image) {
@@ -58,6 +59,10 @@ export const useSettingsStore = defineStore("settings", {
         setWidgetAreaColumns(columns) {
             this.widgetAreaColumns = columns;
             storeInLocalStorage("widget-area-columns", columns);
+        },
+        setWeeklyWeatherInfo(info) {
+            this.weeklyWeatherInfo = info;
+            storeInLocalStorage("weekly-weather-info", JSON.stringify(info));
         },
     },
 });
@@ -167,9 +172,9 @@ function getWidgets() {
     const def = [
         {
             name: "SearchBar",
-            x: 5,
-            y: 2,
-            width: 10,
+            x: 3,
+            y: 4,
+            width: 14,
             height: 1,
             resize: "horizontal",
             selected: true,
@@ -177,7 +182,7 @@ function getWidgets() {
         {
             name: "QuickLinks",
             x: 8,
-            y: 0,
+            y: 5,
             width: 4,
             height: 1,
             resize: "horizontal",
@@ -185,8 +190,8 @@ function getWidgets() {
         },
         {
             name: "Calendar",
-            x: 17,
-            y: 0,
+            x: 9,
+            y: 6,
             width: 2,
             height: 2,
             resize: "square",
@@ -194,17 +199,17 @@ function getWidgets() {
         },
         {
             name: "AnalogClock",
-            x: 8,
-            y: 4,
-            width: 4,
-            height: 4,
+            x: 3,
+            y: 6,
+            width: 2,
+            height: 2,
             resize: "square",
             selected: true,
         },
         {
             name: "DailyWeatherForecast",
-            x: 16,
-            y: 5,
+            x: 14,
+            y: 0,
             width: 3,
             height: 3,
             resize: "square",
@@ -212,20 +217,29 @@ function getWidgets() {
         },
         {
             name: "DigitalClock",
-            x: 1,
+            x: 3,
             y: 0,
+            width: 3,
+            height: 3,
+            resize: "square",
+            selected: true,
+        },
+        {
+            name: "Stock",
+            x: 15,
+            y: 6,
             width: 2,
             height: 2,
             resize: "square",
             selected: true,
         },
         {
-            name: "Stock",
-            x: 1,
-            y: 5,
-            width: 3,
+            name: "WeeklyWeatherForecast",
+            x: 7,
+            y: 0,
+            width: 6,
             height: 3,
-            resize: "square",
+            resize: "2/1",
             selected: true,
         },
     ];
@@ -236,6 +250,51 @@ function getWidgets() {
         } catch (e) {
             return def;
         }
+    }
+
+    return def;
+}
+
+/**
+ * Returns the default weather data structure.
+ *
+ * @returns {{
+ *   curr: {img: String, temperature: Number, high: Number, low: Number, city: String, weather: String},
+ *   week: Array<{date: String, img: String, high: Number, low: Number}>,
+ *   lastUpdated: Date
+ * }} An object containing current weather information and a weekly forecast.
+ **/
+function getWeeklyWeatherInfo() {
+    const info = localStorage.getItem("weekly-weather-info");
+    const def = {
+        curr: {
+            img: "",
+            temperature: 20,
+            high: 25,
+            low: 15,
+            city: "City",
+            weather: "Weather",
+        },
+        week: [
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+        ],
+    };
+
+    let parsed = null;
+    if (info) {
+        try {
+            parsed = JSON.parse(info);
+        } catch (e) {
+            return def;
+        }
+        parsed.lastUpdated = new Date(parsed.lastUpdated);
+        return parsed;
     }
 
     return def;

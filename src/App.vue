@@ -41,6 +41,7 @@ import DailyWeatherForecast from "./components/widgets/DailyWeatherForecast.vue"
 import Stock from "./components/widgets/Stock.vue";
 import QuickLinks from "./components/widgets/QuickLinks.vue";
 import Info from "./components/ui/Info.vue";
+import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
 import {useSettingsStore} from "./settings";
 
 export default {
@@ -62,6 +63,7 @@ export default {
         Stock,
         QuickLinks,
         Info,
+        WeeklyWeatherForecast,
     },
     data() {
         return {
