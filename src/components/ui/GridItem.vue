@@ -1,7 +1,7 @@
 <template>
     <div
         class="grid-item"
-        :class="this.$parent.editing ? 'resize-' + p_resize : ''"
+        :class="this.$parent.editing ? 'resize-' + (p_resize.includes('/') ? 'square' : p_resize) : ''"
         :style="itemStyle"
         @mousedown="mouseDownEvent"
     >
@@ -107,6 +107,22 @@ export default {
                     case "vertical":
                         // Vertical resizing, don't change width
                         this.height = Math.max(Math.round(rect.height / this.$parent.step), 1); // size can be minimum 1
+                        break;
+                    default:
+                        // Case for aspect ratio elements like "2/1"
+                        const [aspectWidth, aspectHeight] = this.p_resize.split("/").map(Number);
+                        if (aspectWidth && aspectHeight) {
+                            // Calculate the target width and height based on the aspect ratio
+                            const aspectRatio = aspectWidth / aspectHeight;
+
+                            // Determine the width and height based on the aspect ratio and available space
+                            const calcWidth = Math.round(rect.width / this.$parent.step);
+                            const calcHeight = Math.round(calcWidth / aspectRatio);
+
+                            // Ensure minimum size of 1 for both dimensions
+                            this.width = Math.max(calcWidth, 1);
+                            this.height = Math.max(calcHeight, 1);
+                        }
                         break;
                 }
 
