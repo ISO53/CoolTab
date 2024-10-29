@@ -10,10 +10,6 @@
     --color-border-line: rgb(50, 50, 50);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {}
-}
-
 *,
 *::before,
 *::after {
