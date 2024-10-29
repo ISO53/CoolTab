@@ -4,8 +4,8 @@
             <div class="sun-and-moon">
                 <div class="orbit">
                     <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
-                        <img class="planet" src="@/components/weather/sun.svg" />
-                        <img class="planet" src="@/components/weather/moon.svg" />
+                        <img class="planet" src="@/components/icons/sun.svg" />
+                        <img class="planet" src="@/components/icons/moon.svg" />
                     </div>
                 </div>
             </div>
