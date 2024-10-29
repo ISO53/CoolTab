@@ -12,10 +12,7 @@
                     <br />
 
                     <h2>Special Thanks To</h2>
-                    <p>
-                        <a href="https://www.weatherapi.com/" title="Weather API">WeatherAPI.com</a> for providing
-                        weather info.
-                    </p>
+                    <p><a href="https://www.weatherapi.com/">WeatherAPI.com</a> for providing weather info.</p>
                     <p><a href="https://open-meteo.com/">Open-Meteo.com</a> for providing weather info.</p>
                     <p><a href="https://polygon.io/">Polygon.io</a> for providing stock market info.</p>
                     <p><a href="https://icons.qweather.com/">QWeather.com</a> for providing weather icons.</p>
