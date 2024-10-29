@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/cool-tab/kngdmmkbgfgogddahgjgeeigcellojog">
-    <img src="https://github.com/user-attachments/assets/3098f37b-6118-4c17-9094-511e56712540" height="75">
+    <img src="https://github.com/user-attachments/assets/d0bfb1ea-67d9-4538-97d7-7b66f61423bd" height="75">
   </a>
   <a href="https://addons.mozilla.org/addon/cooltab/">
     <img src="https://github.com/user-attachments/assets/c2dcc99d-8d4f-44e0-83c0-73575d42494a" height="75">
