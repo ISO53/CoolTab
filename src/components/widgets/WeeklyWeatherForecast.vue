@@ -52,7 +52,7 @@ export default {
                 const diff = now - this.settingsStore.weeklyWeatherInfo.lastUpdated;
 
                 // Update the weather info with 3 hour intervals
-                if (diff >= 10_800_000) return;
+                if (diff <= 10_800_000) return;
             }
 
             // Fetch the data
