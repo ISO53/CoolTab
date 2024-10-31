@@ -1,21 +1,10 @@
 <template>
     <div class="color-chooser">
-        <div
-            v-for="(color, index) in ['#fc613f', '#98dd98', '#92cef7', '#ebb882', '#f79fda', '#fafafa']"
-            :key="index"
-            :style="{backgroundColor: color}"
-            class="color-box"
-            :class="{selected: modelValue === color}"
-            @click="selectColor(color)"
-        >
-            A
-        </div>
-
-        <span>|</span>
+        <div>{{ modelValue }}</div>
 
         <div>
             <input type="color" id="head" @input="selectColor($event.target.value)" />
-            <label for="head"></label>
+            <label for="head" :style="{background: modelValue}"></label>
         </div>
     </div>
 </template>
@@ -26,11 +15,11 @@ export default {
     props: {
         modelValue: {
             type: String,
-            default: "#fc613f",
+            default: "#000",
         },
         onSelect: {
             type: Function,
-        }
+        },
     },
     methods: {
         selectColor(color) {
@@ -47,6 +36,14 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    background-color: var(--color-secondary-background);
+    color: var(--color-secondary-text);
+    width: 100%;
+    height: 43px;
+    padding: 8px 6px 8px 12px;
+    border-radius: 10px;
+    border: 2px solid var(--color-border-line);
+    transition: color 250ms ease;
 }
 
 input {
@@ -63,30 +60,7 @@ label {
     display: block;
     width: 30px;
     height: 30px;
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    background: conic-gradient(red, orange, yellow, green, blue, violet, red);
-}
-
-.color-box {
-    width: 30px;
-    height: 30px;
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    margin-right: 5px;
-    color: black;
-    font-weight: 900;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    font-size: 0.9rem;
-}
-
-.selected {
-    border: 2px solid white;
+    border-radius: 5px;
+    border: 2px solid var(--color-border-line);
 }
 </style>
