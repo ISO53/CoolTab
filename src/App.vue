@@ -22,7 +22,7 @@
             </Grid>
 
             <button @click="toggleEditArea" class="edit-area-toggle-button close">
-                <img src="@/components/icons/edit.svg" />
+                <Svg :name="'edit'"></Svg>
             </button>
         </div>
     </div>
@@ -115,7 +115,7 @@ export default {
     user-select: none;
 }
 
-.edit-area-toggle-button img {
+.edit-area-toggle-button i {
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -123,7 +123,7 @@ export default {
     transition: transform 250ms ease;
 }
 
-.edit-area-toggle-button:hover img {
+.edit-area-toggle-button:hover i {
     transform: rotate(-45deg);
 }
 

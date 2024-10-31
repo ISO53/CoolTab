@@ -21,7 +21,7 @@
         </Transition>
 
         <button @click="toggleInfo" class="info-toggle-button">
-            <img src="@/components/icons/info.svg" />
+            <Svg :name="'info'"></Svg>
         </button>
     </div>
 </template>
@@ -158,19 +158,15 @@ export default {
     user-select: none;
 }
 
-.info-toggle-button:hover img {
+.info-toggle-button:hover i {
     transform: scale(125%);
 }
 
-.info-toggle-button img {
+.info-toggle-button i {
     width: 100%;
     height: 100%;
     object-fit: contain;
     margin: 0;
     transition: transform 250ms ease;
-}
-
-.close:hover img {
-    transform: translateX(-3px);
 }
 </style>

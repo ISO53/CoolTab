@@ -130,13 +130,13 @@
                 </Tabs>
 
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
-                    <img src="@/components/icons/back.svg" />
+                    <Svg :name="'arrow_back'"></Svg>
                 </button>
             </div>
         </Transition>
 
         <button v-if="!isOpen" @click="toggleSidebar" class="sidebar-toggle-button">
-            <img src="@/components/icons/settings.svg" />
+            <Svg :name="'settings'"></Svg>
         </button>
     </div>
 </template>
@@ -297,11 +297,11 @@ export default {
     user-select: none;
 }
 
-.sidebar-toggle-button:hover img {
+.sidebar-toggle-button:hover i {
     transform: rotate(45deg);
 }
 
-.sidebar-toggle-button img {
+.sidebar-toggle-button i {
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -309,7 +309,7 @@ export default {
     transition: transform 250ms ease;
 }
 
-.close:hover img {
+.close:hover i {
     transform: translateX(-3px);
 }
 

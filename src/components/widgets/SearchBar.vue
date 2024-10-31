@@ -1,6 +1,6 @@
 <template>
-    <div class="search-bar">
-        <img class="search-logo" src="@/components/icons/search.svg" />
+        <div class="search-bar">
+            <Svg class="search-logo" :name="'search'"></Svg>
 
         <input
             type="text"
@@ -10,8 +10,8 @@
             class="search-input"
         />
 
-        <img v-if="searchQuery" class="clear-button" src="@/components/icons/exit.svg" @click="searchQuery = ''" />
-    </div>
+            <Svg :name="'close'" v-if="searchQuery" @click="searchQuery = ''" class="clear-button"></Svg>
+        </div>
 </template>
 
 <script>

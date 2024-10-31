@@ -16,7 +16,7 @@
             </li>
         </ul>
 
-        <img :class="{rotate: isOpen}" class="arrow-logo" src="@/components/icons/arrow-down.svg" alt="" />
+        <Svg :name="'keyboard_arrow_down'" :class="{rotate: isOpen}" class="arrow-logo"></Svg>
     </div>
 </template>
 
