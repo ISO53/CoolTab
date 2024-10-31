@@ -20,7 +20,7 @@
 
 body {
     min-height: 100vh;
-    color: var(--color-primary-text);
+    color: var(--color-secondary-text);
     background: var(--color-primary-background);
     transition:
         color 0.5s,
@@ -57,10 +57,10 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: rgba(75, 75, 75, 0.5);
+    background-color: color-mix(in srgb, var(--color-border-line), transparent 50%);
     border-radius: 10px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(75, 75, 75, 1);
+    background-color: var(--color-border-line);
 }

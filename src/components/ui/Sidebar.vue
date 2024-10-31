@@ -25,9 +25,67 @@
                                 />
                             </div>
 
+                            <span class="divider"></span>
+
                             <div>
-                                <h2>Background Color</h2>
-                                <ColorChooser v-model="settingsStore.backgroundColor" :onSelect="setBackgroundColor" />
+                                <h2>Widget Background</h2>
+                                <SelectButton
+                                    v-model="settingsStore.widgetBackground"
+                                    :options="['Color', 'Transparent', 'Blur']"
+                                    :onSelect="setWidgetBackground"
+                                />
+                            </div>
+
+                            <span class="divider"></span>
+
+                            <div>
+                                <h2>Background Color #1</h2>
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_primary_background"
+                                    :onSelect="setColors"
+                                />
+                            </div>
+                            <div>
+                                <h2>Background Color #2</h2>
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_secondary_background"
+                                    :onSelect="setColors"
+                                />
+                            </div>
+                            <div>
+                                <h2>Background Color #3</h2>
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_tertiary_background"
+                                    :onSelect="setColors"
+                                />
+                            </div>
+                            <div>
+                                <h2>Text Color #1</h2>
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_primary_text"
+                                    :onSelect="setColors"
+                                />
+                            </div>
+                            <div>
+                                <h2>Text Color #2</h2>
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_secondary_text"
+                                    :onSelect="setColors"
+                                />
+                            </div>
+                            <div>
+                                <h2>Text Color #3</h2>
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_tertiary_text"
+                                    :onSelect="setColors"
+                                />
+                            </div>
+                            <div>
+                                <h2>Border Color</h2>
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_border_line"
+                                    :onSelect="setColors"
+                                />
                             </div>
                         </div>
                     </Tab>
@@ -183,9 +241,6 @@ export default {
         setBackgroundSize(option) {
             this.settingsStore.setBackgroundSize(option);
         },
-        setBackgroundColor(color) {
-            this.settingsStore.setBackgroundColor(color);
-        },
         setSearchEngine(engine) {
             this.settingsStore.setSearchEngine(engine);
         },
@@ -206,7 +261,7 @@ export default {
             // Adjust the grids orientation for widget
             const widgets = this.settingsStore.widgets;
             widgets
-                .filter((w) => (w.name === "QuickLinks"))
+                .filter((w) => w.name === "QuickLinks")
                 .forEach((w) => {
                     w.resize = orientation.toLowerCase();
                     let temp = w.width;
@@ -232,6 +287,12 @@ export default {
             widget.selected = isSelected;
             this.settingsStore.setWidgets(this.settingsStore.widgets);
         },
+        setWidgetBackground(background) {
+            this.settingsStore.setWidgetBackground(background);
+        },
+        setColors() {
+            this.settingsStore.setColors(this.settingsStore.colors);
+        }
     },
 };
 </script>
@@ -241,8 +302,8 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    backdrop-filter: blur(8px);
-    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    background-color: color-mix(in srgb, var(--color-primary-background), transparent 50%);
     width: 100vw;
     height: 100vh;
     z-index: 9999;
@@ -265,7 +326,7 @@ export default {
     left: 0;
     width: 500px;
     height: 100vh;
-    background-color: black;
+    background-color: var(--color-primary-background);
     z-index: 10000;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -335,7 +396,7 @@ export default {
 .header {
     margin-bottom: 20px;
     font-weight: 900;
-    color: #fafafa;
+    color: var(--color-primary-text);
 }
 
 .divider {

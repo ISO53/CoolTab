@@ -71,13 +71,12 @@ export default {
 <style scoped>
 .dropdown-select {
     position: relative;
-    background-color: rgb(20, 20, 20);
-    color: rgb(200, 200, 200);
+    background-color: var(--color-secondary-background);
     width: 100%;
     padding: 8px 12px 8px 12px;
     border-radius: 10px;
     cursor: pointer;
-    border: 2px solid rgb(50, 50, 50);
+    border: 2px solid var(--color-border-line);
     transition: color 250ms ease;
     user-select: none;
     font-size: 1rem;
@@ -103,7 +102,11 @@ export default {
     background-color: transparent;
     border: none;
     font-family: Satoshi-Medium;
-    color: rgb(200, 200, 200);
+    color: var(--color-secondary-text);
+}
+
+.form-input::placeholder {
+    color: var(--color-tertiary-text);
 }
 
 .form-input:focus {
@@ -116,7 +119,7 @@ export default {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    color: rgb(75, 75, 75);
+    color: var(--color-tertiary-text);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -127,8 +130,8 @@ export default {
 }
 
 .delete-button:hover {
-    background-color: rgba(75, 75, 75, 0.5);
-    color: rgb(200, 200, 200);
+    background-color: var(--color-tertiary-background);
+    color: var(--color-secondary-text);
 }
 
 .dropdown-options {
@@ -141,10 +144,10 @@ export default {
     margin-top: 5px;
     max-height: 160px;
     overflow-y: auto;
-    background-color: rgb(20, 20, 20);
+    background-color: var(--color-secondary-background);
     border-radius: 10px;
     cursor: pointer;
-    border: 2px solid rgb(50, 50, 50);
+    border: 2px solid var(--color-border-line);
     user-select: none;
     z-index: 5;
 }

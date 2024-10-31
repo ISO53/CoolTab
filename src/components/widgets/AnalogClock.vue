@@ -1,14 +1,21 @@
 <template>
-    <div class="clock">
-        <div class="hand hour-hand" :style="hourStyle"></div>
-        <div class="hand minute-hand" :style="minuteStyle"></div>
-        <div class="dot second-hand" :style="secondStyle"></div>
-    </div>
+    <Widget style="border-radius: 50%">
+        <div class="clock">
+            <div class="hand hour-hand" :style="hourStyle"></div>
+            <div class="hand minute-hand" :style="minuteStyle"></div>
+            <div class="dot second-hand" :style="secondStyle"></div>
+        </div>
+    </Widget>
 </template>
 
 <script>
+import Widget from "./Widget.vue";
+
 export default {
     name: "AnalogClock",
+    components: {
+        Widget,
+    },
     data() {
         return {
             hourStyle: {},
@@ -45,10 +52,6 @@ export default {
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    background-color: rgb(20, 20, 20);
-    border-radius: 50%;
-    border: 2px solid rgb(50, 50, 50);
-    user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -69,7 +72,7 @@ export default {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background-color: rgb(200, 200, 200);
+    background-color: var(--color-primary-text);
     transform: translateX(5px);
 }
 
@@ -80,7 +83,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    background-color: rgb(50, 50, 50);
+    background-color: var(--color-tertiary-text);
     border-radius: 5px;
 }
 
@@ -91,7 +94,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    background-color: rgb(100, 100, 100);
+    background-color: var(--color-secondary-text);
     border-radius: 12px;
 }
 </style>

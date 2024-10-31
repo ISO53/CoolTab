@@ -3,7 +3,7 @@
         <Transition name="overlay">
             <div v-if="isOpen" class="overlay" @click="toggleInfo">
                 <div v-if="isOpen" class="info-div" @click.stop>
-                    <img src="@/components/icons/cooltab_logo.svg" />
+                    <img src="@/components/icons/cooltab_logo.svg" draggable="false"/>
                     <h1>CoolTab</h1>
                     <p>Just a new tab for your browser, but cooler...</p>
                     <p>Version: {{ appVersion }}</p>
@@ -50,8 +50,8 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    backdrop-filter: blur(8px);
-    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    background-color: color-mix(in srgb, var(--color-primary-background), transparent 80%);
     width: 100vw;
     height: 100vh;
     z-index: 9999;
@@ -85,8 +85,8 @@ export default {
 .info-div {
     width: fit-content;
     height: fit-content;
-    background-color: rgb(20, 20, 20);
-    border: 2px solid rgb(50, 50, 50);
+    background-color: var(--color-primary-background);
+    border: 2px solid var(--color-border-line);
     z-index: 10000;
     border-radius: 20px;
     padding: 20px;
@@ -119,13 +119,13 @@ export default {
 .info-div > p > a {
     position: relative;
     text-decoration: none;
-    color: rgb(100, 100, 100);
+    color: var(--color-tertiary-text);
     font-weight: bold;
     transition: color 250ms ease;
 }
 
 .info-div > p > a:hover {
-    color: rgb(200, 200, 200);
+    color: var(--color-secondary-text);
 }
 
 .info-div > p > a::after {
@@ -135,7 +135,7 @@ export default {
     bottom: -1px;
     width: 100%;
     height: 1px;
-    background-color: #fafafa;
+    background-color: var(--color-tertiary-text);
     transform: scaleX(0%);
     transition: transform 250ms ease;
 }

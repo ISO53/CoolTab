@@ -1,23 +1,32 @@
 <template>
-    <div class="quick-links" :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'">
-        <base href="/" />
-        <a
-            v-for="(link, index) in settingsStore.quickLinks.links"
-            :key="link"
-            :href="'https://' + link"
-            :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
-            rel="noopener noreferrer"
+    <Widget style="height: unset;">
+        <div
+            class="quick-links"
+            :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'"
         >
-            <img :src="settingsStore.quickLinks.images[index]" alt="favicon" class="link"/>
-        </a>
-    </div>
+            <base href="/" />
+            <a
+                v-for="(link, index) in settingsStore.quickLinks.links"
+                :key="link"
+                :href="'https://' + link"
+                :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
+                rel="noopener noreferrer"
+            >
+                <img :src="settingsStore.quickLinks.images[index]" alt="favicon" class="link" />
+            </a>
+        </div>
+    </Widget>
 </template>
 
 <script>
+import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
     name: "QuickLinks",
+    components: {
+        Widget,
+    },
     setup() {
         const settingsStore = useSettingsStore();
         return {settingsStore};
@@ -60,11 +69,7 @@ export default {
 
 <style scoped>
 .quick-links {
-    background-color: rgb(20, 20, 20);
     padding: 8px 12px 8px 12px;
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -94,8 +99,7 @@ export default {
 .link {
     width: 100%;
     height: 100%;
-    background-color: black;
-    border-radius: 50%;
+    border-radius: 5px;
     object-fit: contain;
     filter: grayscale(100%);
     transition: filter 250ms ease;

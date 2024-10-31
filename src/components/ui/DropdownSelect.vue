@@ -65,17 +65,18 @@ export default {
 <style scoped>
 .dropdown-select {
     position: relative;
-    background-color: rgb(20, 20, 20);
+    background-color: var(--color-secondary-background);
     color: rgb(200, 200, 200);
     width: 100%;
     padding: 8px 12px 8px 12px;
     border-radius: 10px;
     cursor: pointer;
-    border: 2px solid rgb(50, 50, 50);
+    border: 2px solid var(--color-border-line);
     transition: color 250ms ease;
     user-select: none;
     font-size: 1rem;
     font-family: Satoshi-Regular;
+    color: var(--color-secondary-text);
 }
 
 .arrow-logo {
@@ -101,10 +102,10 @@ export default {
     margin-top: 5px;
     max-height: 160px;
     overflow-y: auto;
-    background-color: rgb(20, 20, 20);
+    background-color: var(--color-secondary-background);
     border-radius: 10px;
     cursor: pointer;
-    border: 2px solid rgb(50, 50, 50);
+    border: 2px solid var(--color-border-line);
     user-select: none;
     z-index: 5;
 }
@@ -116,6 +117,6 @@ export default {
 }
 
 .dropdown-option:hover {
-    background-color: rgba(75, 75, 75, 0.5);
+    background-color: color-mix(in srgb, var(--color-tertiary-text), transparent 80%);
 }
 </style>

@@ -1,38 +1,44 @@
 <template>
-    <div class="weather-forecast">
-        <div class="inner">
-            <div class="sun-and-moon">
-                <div class="orbit">
-                    <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
-                        <img class="planet" src="@/components/icons/sun.svg" />
-                        <img class="planet" src="@/components/icons/moon.svg" />
+    <Widget>
+        <div class="weather-forecast">
+            <div class="inner">
+                <div class="sun-and-moon">
+                    <div class="orbit">
+                        <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
+                            <Svg class="planet" :name="'wb_sunny'"></Svg>
+                            <Svg class="planet" :name="'nightlight'"></Svg>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="rotation < 180" class="times">
+                    <h2>{{ weather.sunrise }}</h2>
+                    <h2>{{ weather.sunset }}</h2>
+                </div>
+                <div v-else class="times">
+                    <h2>{{ weather.sunset }}</h2>
+                    <h2>{{ weather.sunrise }}</h2>
+                </div>
+                <div class="info">
+                    <h1>{{ weather.temperature }}</h1>
+                    <div>
+                        <h4>{{ weather.country }}</h4>
+                        <h3>{{ weather.city }}</h3>
                     </div>
                 </div>
             </div>
-            <div v-if="rotation < 180" class="times">
-                <h2>{{ weather.sunrise }}</h2>
-                <h2>{{ weather.sunset }}</h2>
-            </div>
-            <div v-else class="times">
-                <h2>{{ weather.sunset }}</h2>
-                <h2>{{ weather.sunrise }}</h2>
-            </div>
-            <div class="info">
-                <h1>{{ weather.temperature }}</h1>
-                <div>
-                    <h4>{{ weather.country }}</h4>
-                    <h3>{{ weather.city }}</h3>
-                </div>
-            </div>
         </div>
-    </div>
+    </Widget>
 </template>
 
 <script>
+import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
     name: "DailyWeatherForecast",
+    components: {
+        Widget,
+    },
     setup() {
         const settingsStore = useSettingsStore();
         return {settingsStore};
@@ -113,10 +119,6 @@ export default {
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    background-color: rgb(20, 20, 20);
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    user-select: none;
     font-family: Satoshi-Bold;
     display: flex;
     flex-direction: column;
@@ -136,7 +138,7 @@ export default {
 .orbit {
     width: 100%;
     aspect-ratio: 1;
-    border: 1px solid white;
+    border: 1px solid var(--color-primary-text);
     border-radius: 50%;
     position: absolute;
     display: flex;
@@ -155,7 +157,6 @@ export default {
 .planet {
     border-radius: 50%;
     margin: 5px;
-    background-color: rgb(20, 20, 20);
 }
 
 .times {

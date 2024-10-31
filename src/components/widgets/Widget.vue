@@ -15,11 +15,9 @@ export default {
     },
     methods: {
         makeColorTransparent(color, percentage) {
-            const r = parseInt(color.substring(0, 2), 16);
-            const g = parseInt(color.substring(2, 4), 16);
-            const b = parseInt(color.substring(4, 6), 16);
-
-            // Calculate the alpha value
+            const r = parseInt(color.substring(1, 3), 16);
+            const g = parseInt(color.substring(3, 5), 16);
+            const b = parseInt(color.substring(5, 7), 16);
             const alpha = 1 - percentage;
 
             // Convert RGBA to a hex format with alpha
@@ -39,23 +37,20 @@ export default {
                     return {
                         background: this.settingsStore.colors.color_secondary_background,
                         border: "2px solid " + this.settingsStore.colors.color_border_line,
-                        color: this.settingsStore.colors.color_secondary_text,
                     };
                 case "Transparent":
                     return {
                         background: "transparent",
                         border: "2px solid transparent",
-                        color: this.settingsStore.colors.color_secondary_text,
                     };
                 case "Blur":
                     return {
                         background: this.makeColorTransparent(
                             this.settingsStore.colors.color_secondary_background,
-                            0.2
+                            0.8
                         ),
-                        backdropFilter: "blur(10px)",
+                        backdropFilter: "blur(30px)",
                         border: "2px solid transparent",
-                        color: this.settingsStore.colors.color_secondary_text,
                     };
                 default:
                     return {};
@@ -73,5 +68,6 @@ export default {
     user-select: none;
     font-family: Satoshi-Regular;
     overflow: hidden;
+    color: var(--color-secondary-text);
 }
 </style>

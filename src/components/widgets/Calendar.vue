@@ -1,20 +1,27 @@
 <template>
-    <div class="calendar">
-        <div class="simple">
-            <h1>{{ date.day }}</h1>
+    <Widget>
+        <div class="calendar">
+            <div class="simple">
+                <h1>{{ date.day }}</h1>
+            </div>
+            <div class="comprehensive">
+                <h2>{{ date.day_name }}</h2>
+                <h2>{{ date.month_name }}</h2>
+                <h2>{{ date.day }}</h2>
+                <h2>{{ date.year }}</h2>
+            </div>
         </div>
-        <div class="comprehensive">
-            <h2>{{ date.day_name }}</h2>
-            <h2>{{ date.month_name }}</h2>
-            <h2>{{ date.day }}</h2>
-            <h2>{{ date.year }}</h2>
-        </div>
-    </div>
+    </Widget>
 </template>
 
 <script>
+import Widget from './Widget.vue';
+
 export default {
     name: "Calendar",
+    components: {
+        Widget,
+    },
     data() {
         return {
             date: {
@@ -33,7 +40,7 @@ export default {
         getCurrentDate() {
             const date = new Date();
 
-            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const daysOfWeek = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
             const monthsOfYear = [
                 "January",
                 "February",
@@ -66,10 +73,14 @@ export default {
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    background-color: rgb(20, 20, 20);
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    user-select: none;
+}
+
+.calendar:hover .simple {
+    opacity: 0;
+}
+
+.calendar:hover .comprehensive {
+    opacity: 1;
 }
 
 .simple {
@@ -86,7 +97,6 @@ export default {
     transition: opacity 250ms ease;
     container-type: size;
     resize: both;
-    background-color: rgb(20, 20, 20);
     z-index: 2;
     border-radius: 10px;
 }
@@ -96,10 +106,6 @@ export default {
     overflow: hidden;
     text-wrap: wrap;
     text-overflow: ellipsis;
-}
-
-.simple:hover {
-    opacity: 0;
 }
 
 .comprehensive {
@@ -115,6 +121,8 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    opacity: 0;
+    transition: opacity 250ms ease;
 }
 
 .comprehensive h2 {

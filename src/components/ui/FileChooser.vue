@@ -3,7 +3,7 @@
         <input id="file-input" type="file" accept="image/*" @change="handleFileChange" hidden />
 
         <label for="file-input">
-            <p v-if="!settingsStore.backgroundImageFileName">Choose Your Image</p>
+            <p class="file-text" v-if="!settingsStore.backgroundImageFileName">Choose Your Image</p>
             <p class="filename" v-if="settingsStore.backgroundImageFileName">
                 {{ settingsStore.backgroundImageFileName }}
             </p>
@@ -57,20 +57,20 @@ label {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background-color: rgb(20, 20, 20);
-    color: rgb(200, 200, 200);
+    background-color: var(--color-secondary-background);
+    color: var(--color-secondary-text);
     width: 100%;
     padding: 8px 12px 8px 12px;
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
-    border: 2px solid rgb(50, 50, 50);
+    border: 2px solid var(--color-border-line);
     transition: color 250ms ease;
     user-select: none;
 }
 
 label:hover {
-    color: white;
+    color: var(--color-primary-text);
 }
 
 .folder-logo {
@@ -86,6 +86,8 @@ label:hover .folder-logo {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
 }
 
 .trash-logo {
@@ -95,5 +97,10 @@ label:hover .folder-logo {
 .trash-logo:hover {
     color: red;
     transform: rotate(15deg);
+}
+
+.file-text {
+    display: flex;
+    align-items: center;
 }
 </style>

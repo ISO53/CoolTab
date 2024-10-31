@@ -42,13 +42,12 @@ export default {
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    background-color: rgb(20, 20, 20);
-    color: rgb(200, 200, 200);
+    background-color: var(--color-secondary-background);
     width: 100%;
     height: 43px;
     border-radius: 10px;
     cursor: pointer;
-    border: 2px solid rgb(50, 50, 50);
+    border: 2px solid var(--color-border-line);
     transition: color 250ms ease;
     user-select: none;
     padding: 5px;
@@ -63,18 +62,18 @@ export default {
     width: 100%;
     cursor: pointer;
     transition: background-color 250ms ease;
-    color: rgb(200, 200, 200);
+    color: var(--color-secondary-text);
     height: 30px;
     padding: 0 10px 0 10px;
     font-family: Satoshi-Regular;
 }
 
 .select-button-option:hover {
-    background-color: rgba(75, 75, 75, 0.5);
+    background-color: color-mix(in srgb, var(--color-tertiary-text), transparent 80%);
 }
 
 .select-button-option.selected {
-    background-color: rgba(100, 100, 100, 0.5);
-    color: white;
+    background-color: color-mix(in srgb, var(--color-secondary-text), transparent 50%);
+    color: var(--color-primary-text);
 }
 </style>

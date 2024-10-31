@@ -1,35 +1,41 @@
 <template>
-    <div class="weekly-weather-forecast">
-        <div class="curr">
-            <div class="curr-info">
-                <img :style="{content: 'url(' + weather.curr.img + ')'}" />
-                <h1>{{ weather.curr.temperature + "°" }}</h1>
-                <div class="high-low">
-                    <h5>{{ "H " + weather.curr.high + "°" }}</h5>
-                    <h5>{{ "L " + weather.curr.low + "°" }}</h5>
+    <Widget>
+        <div class="weekly-weather-forecast">
+            <div class="curr">
+                <div class="curr-info">
+                    <img :style="{content: 'url(' + weather.curr.img + ')'}" />
+                    <h1>{{ weather.curr.temperature + "°" }}</h1>
+                    <div class="high-low">
+                        <h5>{{ "H " + weather.curr.high + "°" }}</h5>
+                        <h5>{{ "L " + weather.curr.low + "°" }}</h5>
+                    </div>
+                </div>
+                <div class="city-and-weather">
+                    <h2>{{ weather.curr.city }}</h2>
+                    <h2>{{ weather.curr.weather }}</h2>
                 </div>
             </div>
-            <div class="city-and-weather">
-                <h2>{{ weather.curr.city }}</h2>
-                <h2>{{ weather.curr.weather }}</h2>
+            <div class="forecast">
+                <div class="day" v-for="(item, index) in weather.week" :key="index">
+                    <h1>{{ days[new Date(item.date).getDay()] }}</h1>
+                    <img :style="{content: 'url(' + item.img + ')'}" />
+                    <h2>{{ item.high + "°" }}</h2>
+                    <h2>{{ item.low + "°" }}</h2>
+                </div>
             </div>
         </div>
-        <div class="forecast">
-            <div class="day" v-for="(item, index) in weather.week" :key="index">
-                <h1>{{ days[new Date(item.date).getDay()] }}</h1>
-                <img :style="{content: 'url(' + item.img + ')'}" />
-                <h2>{{ item.high + "°" }}</h2>
-                <h2>{{ item.low + "°" }}</h2>
-            </div>
-        </div>
-    </div>
+    </Widget>
 </template>
 
 <script>
 import {useSettingsStore} from "@/settings";
+import Widget from "./Widget.vue";
 
 export default {
     name: "WeekyWeatherForecast",
+    components: {
+        Widget,
+    },
     setup() {
         const settingsStore = useSettingsStore();
         return {settingsStore};
@@ -93,10 +99,6 @@ export default {
     width: 100%;
     height: 100%;
     aspect-ratio: 2 / 1;
-    background-color: rgb(20, 20, 20);
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    user-select: none;
     display: flex;
     flex-direction: column;
     justify-content: center;

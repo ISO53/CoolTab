@@ -59,11 +59,11 @@ export default {
     justify-content: space-between;
     font-size: 0.7rem;
     font-family: Satoshi-Regular;
-    background-color: rgb(20, 20, 20);
-    color: rgb(200, 200, 200);
+    background-color: var(--color-secondary-background);
+    color: var(--color-secondary-text);
     padding: 8px 5px 8px 5px;
     border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
+    border: 2px solid var(--color-border-line);
     user-select: none;
     max-height: 43px;
     font-size: 0.45rem;
@@ -79,15 +79,15 @@ export default {
     background-color: transparent;
     border: none;
     outline: none;
-    color: rgb(100, 100, 100);
+    color: var(--color-tertiary-text);
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 250ms ease, color 250ms ease;
 }
 
 .btn:hover {
-    background-color: rgba(75, 75, 75, 0.5);
-    color: rgb(200, 200, 200);
+    background-color: color-mix(in srgb, var(--color-tertiary-text), transparent 80%);;
+    color: var(--color-secondary-text);
 }
 
 .disabled {

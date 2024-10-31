@@ -201,8 +201,8 @@ export default {
 }
 
 .blanket {
-    background-color: rgba(125, 125, 125, 0.2);
-    border: 1px solid rgba(125, 125, 125, 0.3);
+    background-color: color-mix(in srgb, var(--color-border-line), transparent 80%);
+    border: 1px solid color-mix(in srgb, var(--color-border-line), transparent 60%);
     position: absolute;
     top: 0;
     left: 0;
@@ -216,6 +216,6 @@ export default {
 }
 
 .blanket:active {
-    background-color: rgba(125, 125, 125, 0.5);
+    background-color: color-mix(in srgb, var(--color-border-line), transparent 40%);
 }
 </style>

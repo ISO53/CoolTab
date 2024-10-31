@@ -54,8 +54,8 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgb(20, 20, 20);
-    border: 2px solid rgb(50, 50, 50);
+    background-color: var(--color-secondary-background);
+    border: 2px solid var(--color-border-line);
     transition: 0.4s;
     border-radius: 10px;
 }
@@ -67,17 +67,17 @@ export default {
     width: 24px;
     left: 4px;
     bottom: 4px;
-    background-color: rgb(200, 200, 200);
+    background-color: var(--color-tertiary-text);
     transition: 250ms ease;
     border-radius: 5px;
 }
 
 input:checked + .slider {
-    background-color: rgb(75, 75, 75);
+    background-color: var(--color-tertiary-background);
 }
 
 input:checked + .slider:before {
     transform: translateX(25px);
-    background-color: white;
+    background-color: var(--color-secondary-text);
 }
 </style>

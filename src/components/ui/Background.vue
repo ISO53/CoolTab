@@ -4,7 +4,7 @@
         :style="{
             backgroundImage: 'url(' + settingsStore.backgroundImage + ')',
             backgroundSize: settingsStore.backgroundSize,
-            backgroundColor: settingsStore.backgroundColor,
+            backgroundColor: settingsStore.colors.color_primary_background,
         }"
     ></div>
 </template>

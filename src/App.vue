@@ -4,7 +4,7 @@
         <Sidebar />
         <Info />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
-            <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="'#c8c8c8'">
+            <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="this.settingsStore.colors.color_secondary_text">
                 <GridItem
                     v-for="(widget, index) in settingsStore.widgets"
                     :key="index"
@@ -50,6 +50,9 @@ export default {
         const settingsStore = useSettingsStore();
         return {settingsStore};
     },
+    beforeMount() {
+        this.updateCSSVariables();
+    },
     components: {
         Grid,
         GridItem,
@@ -85,6 +88,17 @@ export default {
             widgets[index].width = width;
             widgets[index].height = height;
             this.settingsStore.setWidgets(widgets);
+        },
+        updateCSSVariables() {
+            // update css variables
+            const r = document.querySelector(":root");
+            const colors = this.settingsStore.colors;
+
+            for (const key in colors) {
+                if (colors.hasOwnProperty(key)) {
+                    r.style.setProperty(`--${key.replaceAll("_", "-")}`, colors[key]);
+                }
+            }
         },
     },
 };

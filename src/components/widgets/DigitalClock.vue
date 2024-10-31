@@ -1,18 +1,25 @@
 <template>
-    <div class="outer">
-        <div class="simple">
-            <h1>{{ hour }}</h1>
-            <h1>{{ minute }}</h1>
+    <Widget>
+        <div class="outer">
+            <div class="simple">
+                <h1>{{ hour }}</h1>
+                <h1>{{ minute }}</h1>
+            </div>
+            <div class="comprehensive">
+                <h1>{{ hour }}:{{ minute }}:{{ second }}</h1>
+            </div>
         </div>
-        <div class="comprehensive">
-            <h1>{{ hour }}:{{ minute }}:{{ second }}</h1>
-        </div>
-    </div>
+    </Widget>
 </template>
 
 <script>
+import Widget from './Widget.vue';
+
 export default {
     name: "DigitalClock",
+    components: {
+        Widget,
+    },
     data() {
         return {
             hour: "",
@@ -41,12 +48,16 @@ export default {
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    background-color: rgb(20, 20, 20);
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    user-select: none;
     font-family: Satoshi-Bold;
     overflow: hidden;
+}
+
+.outer:hover .simple{
+    opacity: 0;
+}
+
+.outer:hover .comprehensive{
+    opacity: 1;
 }
 
 .simple {
@@ -62,7 +73,6 @@ export default {
     transition: opacity 250ms ease;
     container-type: size;
     resize: both;
-    background-color: rgb(20, 20, 20);
     z-index: 2;
     border-radius: 10px;
 }
@@ -72,10 +82,6 @@ export default {
     line-height: 45cqw;
     padding: 0;
     margin: 0;
-}
-
-.simple:hover {
-    opacity: 0;
 }
 
 .comprehensive {
@@ -92,6 +98,8 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    opacity: 0;
+    transition: opacity 250ms ease;
 }
 
 .comprehensive h1 {

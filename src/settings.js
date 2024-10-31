@@ -4,7 +4,6 @@ export const useSettingsStore = defineStore("settings", {
     state: () => ({
         backgroundImage: localStorage.getItem("background-image") || null,
         backgroundImageFileName: localStorage.getItem("background-image-file-name") || null,
-        backgroundColor: localStorage.getItem("background-color") || "#000",
         backgroundSize: localStorage.getItem("background-size") || "Cover",
         searchEngine: localStorage.getItem("search-engine") || "Google",
         openSearchResultIn: localStorage.getItem("open-search-result-in") || "New Tab",
@@ -14,15 +13,13 @@ export const useSettingsStore = defineStore("settings", {
         widgets: getWidgets(),
         widgetAreaColumns: parseInt(localStorage.getItem("widget-area-columns")) || 20,
         weeklyWeatherInfo: getWeeklyWeatherInfo(),
+        widgetBackground: localStorage.getItem("widget-background") || "Color",
+        colors: getColors(),
     }),
     actions: {
         setBackgroundImage(image) {
             this.backgroundImage = image;
             storeInLocalStorage("background-image", image);
-        },
-        setBackgroundColor(color) {
-            this.backgroundColor = color;
-            storeInLocalStorage("background-color", color);
         },
         setBackgroundSize(size) {
             this.backgroundSize = size;
@@ -63,6 +60,23 @@ export const useSettingsStore = defineStore("settings", {
         setWeeklyWeatherInfo(info) {
             this.weeklyWeatherInfo = info;
             storeInLocalStorage("weekly-weather-info", JSON.stringify(info));
+        },
+        setWidgetBackground(background) {
+            this.widgetBackground = background;
+            storeInLocalStorage("widget-background", background);
+        },
+        setColors(colors) {
+            this.colors = colors;
+
+            // update css variables
+            const r = document.querySelector(':root');
+            for (const key in colors) {
+                if (colors.hasOwnProperty(key)) {
+                    r.style.setProperty(`--${key.replaceAll('_', '-')}`, colors[key]);
+                }
+            }
+
+            storeInLocalStorage("colors", JSON.stringify(colors));
         },
     },
 });
@@ -294,6 +308,44 @@ function getWeeklyWeatherInfo() {
             return def;
         }
         parsed.lastUpdated = new Date(parsed.lastUpdated);
+        return parsed;
+    }
+
+    return def;
+}
+
+/**
+ * Returns the current color scheme.
+ *
+ * @returns {{
+ *   color_primary_text: String,
+ *   color_secondary_text: String,
+ *   color_tertiary_text: String,
+ *   color_primary_background: String,
+ *   color_secondary_background: String,
+ *   color_tertiary_background: String,
+ *   color_border_line: String,
+ *}} An object containing current color scheme.
+ **/
+function getColors() {
+    const colors = localStorage.getItem("colors");
+    const def = {
+        color_primary_text: "#fafafa",
+        color_secondary_text: "#c8c8c8",
+        color_tertiary_text: "#646464",
+        color_primary_background: "#000000",
+        color_secondary_background: "#141414",
+        color_tertiary_background: "#4b4b4b",
+        color_border_line: "#323232",
+    };
+
+    let parsed = null;
+    if (colors) {
+        try {
+            parsed = JSON.parse(colors);
+        } catch (e) {
+            return def;
+        }
         return parsed;
     }
 

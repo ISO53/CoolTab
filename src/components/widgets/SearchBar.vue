@@ -1,24 +1,30 @@
 <template>
+    <Widget style="height: unset" class="widget">
         <div class="search-bar">
             <Svg class="search-logo" :name="'search'"></Svg>
 
-        <input
-            type="text"
-            v-model="searchQuery"
-            @keypress.enter="handleSearch"
-            placeholder="Search..."
-            class="search-input"
-        />
+            <input
+                type="text"
+                v-model="searchQuery"
+                @keypress.enter="handleSearch"
+                placeholder="Search..."
+                class="search-input"
+            />
 
             <Svg :name="'close'" v-if="searchQuery" @click="searchQuery = ''" class="clear-button"></Svg>
         </div>
+    </Widget>
 </template>
 
 <script>
+import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
     name: "SearchBar",
+    components: {
+        Widget,
+    },
     setup() {
         const settingsStore = useSettingsStore();
         return {settingsStore};
@@ -60,16 +66,8 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background-color: rgb(20, 20, 20);
     padding: 8px;
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
     transition: color 250ms ease;
-    user-select: none;
-}
-
-.search-bar:has(> .search-input:focus) {
-    border-color: #fafafa;
 }
 
 .search-logo {
@@ -80,9 +78,13 @@ export default {
     width: 100%;
     border: none;
     background-color: transparent;
-    color: rgb(200, 200, 200);
+    color: var(--color-secondary-text);
     padding: 0 8px 0 8px;
     font-size: 1rem;
+}
+
+.search-input::placeholder {
+    color: var(--color-tertiary-text);
 }
 
 .search-input:focus {
@@ -92,10 +94,10 @@ export default {
 .clear-button {
     height: 100%;
     cursor: pointer;
-    transition: filter 250ms ease;
+    transition: color 250ms ease;
 }
 
 .clear-button:hover {
-    filter: brightness(150%);
+    color: var(--color-primary-text);
 }
 </style>

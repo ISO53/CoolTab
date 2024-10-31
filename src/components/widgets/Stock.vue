@@ -1,50 +1,58 @@
 <template>
-    <div class="stock">
-        <svg class="graph" id="gain" width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <defs>
-                <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="rgb(50, 50, 50)" stop-opacity="1" />
-                    <stop offset="100%" stop-color="rgb(50, 50, 50)" stop-opacity="0" />
-                </linearGradient>
-            </defs>
+    <Widget>
+        <div class="stock">
+            <svg class="graph" width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="var(--color-tertiary-text)" stop-opacity="1" />
+                        <stop offset="100%" stop-color="var(--color-tertiary-text)" stop-opacity="0" />
+                    </linearGradient>
+                </defs>
 
-            <path
-                d="M -100 120, L 5 55, L 10 50, L 15 53, L 20 48, L 25 52, L 30 50, L 35 58, L 40 53, L 45 47, L 50 50, L 55 32, L 60 38, L 65 42, L 70 35, L 75 32, L 80 38, L 85 42, L 95 35, L 100 28, L 140 120"
-                fill="url(#gradient)"
-                stroke="none"
-            />
+                <path
+                    d="M -100 120, L 5 55, L 10 50, L 15 53, L 20 48, L 25 52, L 30 50, L 35 58, L 40 53, L 45 47, L 50 50, L 55 32, L 60 38, L 65 42, L 70 35, L 75 32, L 80 38, L 85 42, L 95 35, L 100 28, L 140 120"
+                    fill="url(#gradient)"
+                    stroke="none"
+                />
 
-            <path
-                d="M 0 60 L 5 55, L 10 50, L 15 53, L 20 48, L 25 52, L 30 50, L 35 58, L 40 53, L 45 47, L 50 50, L 55 32, L 60 38, L 65 42, L 70 35, L 75 32, L 80 38, L 85 42, L 95 35, L 100 28,"
-                stroke="rgb(200, 200, 200)"
-                stroke-width="2"
-                fill="none"
-            />
-        </svg>
+                <path
+                    d="M 0 60 L 5 55, L 10 50, L 15 53, L 20 48, L 25 52, L 30 50, L 35 58, L 40 53, L 45 47, L 50 50, L 55 32, L 60 38, L 65 42, L 70 35, L 75 32, L 80 38, L 85 42, L 95 35, L 100 28,"
+                    stroke="var(--color-secondary-text)"
+                    stroke-width="2"
+                    fill="none"
+                />
+            </svg>
 
-        <div class="stock-info">
-            <div>
-                <h1 class="ticker">{{ stock.stocks[selected].ticker }}</h1>
-                <h1 class="diff">
-                    {{
-                        (stock.stocks[selected].diff > 0 ? "+" : "") +
-                        parseFloat(stock.stocks[selected].diff).toFixed(2) +
-                        "%"
-                    }}
-                </h1>
+            <div class="stock-info">
+                <div>
+                    <h1 class="ticker">{{ stock.stocks[selected].ticker }}</h1>
+                    <h1 class="diff">
+                        {{
+                            (stock.stocks[selected].diff > 0 ? "+" : "") +
+                            parseFloat(stock.stocks[selected].diff).toFixed(2) +
+                            "%"
+                        }}
+                    </h1>
+                </div>
+                <h1 class="price">{{ "$" + stock.stocks[selected].close }}</h1>
+
+                <p class="last-updated">
+                    {{ new Date(stock.cache_time).toLocaleDateString("en-GB").replace(/\//g, ".") }}
+                </p>
             </div>
-            <h1 class="price">{{ "$" + stock.stocks[selected].close }}</h1>
-
-            <p class="last-updated">{{ new Date(stock.cache_time).toLocaleDateString('en-GB').replace(/\//g, '.') }}</p>
         </div>
-    </div>
+    </Widget>
 </template>
 
 <script>
+import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
     name: "Stock",
+    components: {
+        Widget,
+    },
     setup() {
         const settingsStore = useSettingsStore();
         return {settingsStore};
@@ -98,16 +106,12 @@ export default {
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    background-color: rgb(20, 20, 20);
-    border-radius: 10px;
-    border: 2px solid rgb(50, 50, 50);
-    user-select: none;
     font-family: Satoshi-Medium;
     overflow: hidden;
     container-type: size;
 }
 
-.stock:hover .last-updated{
+.stock:hover .last-updated {
     opacity: 1;
 }
 
@@ -116,16 +120,6 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 2;
-}
-
-.second {
-    width: 150%;
-    height: 150%;
-    z-index: 1;
-    top: -50%;
-    left: 0;
-    backdrop-filter: blur(25px);
-    opacity: 0.4;
 }
 
 .stock-info {

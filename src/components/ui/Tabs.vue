@@ -63,7 +63,7 @@ export default {
     align-items: center;
     font-family: Satoshi-Regular;
     font-size: 0.7rem;
-    border-bottom: 2px solid rgb(50, 50, 50);
+    border-bottom: 2px solid var(--color-border-line);
 }
 
 .tab {
@@ -78,13 +78,13 @@ export default {
 }
 
 .tab:hover {
-    color: rgb(200, 200, 200);
-    border-color: rgb(200, 200, 200);
+    color: var(--color-secondary-text);
+    border-color: var(--color-secondary-text);
 }
 
 .selected {
-    color: white;
+    color: var(--color-primary-text);
     font-weight: 900;
-    border-color: white;
+    border-color: var(--color-primary-text);
 }
 </style>
