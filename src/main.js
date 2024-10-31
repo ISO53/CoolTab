@@ -4,6 +4,7 @@ import "./assets/satoshi.css";
 import {createApp} from "vue";
 import {createPinia} from "pinia";
 import App from "./App.vue";
+import Svg from "./components/ui/Svg.vue";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -20,6 +21,7 @@ const clickOutside = {
         document.removeEventListener("click", el.clickOutsideEvent);
     },
 };
+app.component('Svg', Svg);
 
 app.directive("click-outside", clickOutside);
 app.use(pinia);
