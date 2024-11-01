@@ -138,7 +138,7 @@ export default {
 .orbit {
     width: 100%;
     aspect-ratio: 1;
-    border: 1px solid var(--color-primary-text);
+    border: 1px solid var(--color-secondary-text);
     border-radius: 50%;
     position: absolute;
     display: flex;
