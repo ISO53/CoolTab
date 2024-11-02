@@ -1,5 +1,5 @@
 <template>
-    <i class="material-icons-outlined svg" draggable="false">{{ name }}</i>
+    <i :class="class_name + ' svg'" draggable="false">{{ name }}</i>
 </template>
 
 <script>
@@ -8,8 +8,12 @@ export default {
     props: {
         name: {
             type: String,
-            required: true,
+            required: false,
         },
+        class_name: {
+            type: String,
+            required: true,
+        }
     },
 };
 </script>
