@@ -73,7 +73,7 @@ export default {
 }
 
 .select-button-option.selected {
-    background-color: color-mix(in srgb, var(--color-secondary-text), transparent 50%);
+    background-color: color-mix(in srgb, var(--color-tertiary-background), transparent 50%);
     color: var(--color-primary-text);
 }
 </style>
