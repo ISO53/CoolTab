@@ -3,7 +3,7 @@
         <div class="weekly-weather-forecast">
             <div class="curr">
                 <div class="curr-info">
-                    <img :style="{content: 'url(' + weather.curr.img + ')'}" />
+                    <Svg :class_name="weather.curr.img"></Svg>
                     <h1>{{ weather.curr.temperature + "°" }}</h1>
                     <div class="high-low">
                         <h5>{{ "H " + weather.curr.high + "°" }}</h5>
@@ -18,7 +18,7 @@
             <div class="forecast">
                 <div class="day" v-for="(item, index) in weather.week" :key="index">
                     <h1>{{ days[new Date(item.date).getDay()] }}</h1>
-                    <img :style="{content: 'url(' + item.img + ')'}" />
+                    <Svg :class_name="item.img"></Svg>
                     <h2>{{ item.high + "°" }}</h2>
                     <h2>{{ item.low + "°" }}</h2>
                 </div>
@@ -66,28 +66,8 @@ export default {
             const data = await response.json();
 
             this.weather = data;
-            this.weather.curr.img = await this.getImageAsBase64(this.weather.curr.img);
-            for (const day of this.weather.week) {
-                day.img = await this.getImageAsBase64(day.img);
-            }
             this.weather.lastUpdated = new Date().toISOString();
             this.settingsStore.setWeeklyWeatherInfo(this.weather);
-        },
-        async getImageAsBase64(url) {
-            try {
-                const response = await fetch(url);
-                const blob = await response.blob();
-
-                return await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(blob);
-                });
-            } catch (error) {
-                console.error("Error fetching image:", error);
-                throw error;
-            }
         },
     },
 };
@@ -128,11 +108,8 @@ export default {
     column-gap: 20cqh;
 }
 
-.curr-info > img {
-    width: 100cqh;
-    height: 100cqh;
-    outline: none;
-    border: none;
+.curr-info > i {
+    font-size: 100cqh;
 }
 
 .curr-info > h1 {
@@ -181,9 +158,8 @@ export default {
     line-height: 5cqh;
 }
 
-.day > img {
-    height: 10cqh;
-    width: 10cqh;
+.day > i {
+    font-size: 10cqh;
 }
 
 .forecast {
