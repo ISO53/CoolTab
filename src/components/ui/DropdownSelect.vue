@@ -16,7 +16,12 @@
             </li>
         </ul>
 
-        <Svg :name="'keyboard_arrow_down'" :class="{rotate: isOpen}" class="arrow-logo"></Svg>
+        <Svg
+            :class_name="'material-icons-outlined'"
+            :name="'keyboard_arrow_down'"
+            :class="{rotate: isOpen}"
+            class="arrow-logo"
+        ></Svg>
     </div>
 </template>
 

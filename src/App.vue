@@ -22,7 +22,7 @@
             </Grid>
 
             <button @click="toggleEditArea" class="edit-area-toggle-button close">
-                <Svg :name="'edit'"></Svg>
+                <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
             </button>
         </div>
     </div>

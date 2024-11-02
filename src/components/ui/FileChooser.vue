@@ -8,12 +8,18 @@
                 {{ settingsStore.backgroundImageFileName }}
             </p>
 
-            <Svg v-if="settingsStore.backgroundImage === null" class="folder-logo" :name="'folder'"></Svg>
+            <Svg
+                v-if="settingsStore.backgroundImage === null"
+                class="folder-logo"
+                :class_name="'material-icons-outlined'"
+                :name="'folder'"
+            ></Svg>
 
             <Svg
                 v-if="settingsStore.backgroundImage !== null"
                 class="trash-logo"
                 @click.prevent="trash"
+                :class_name="'material-icons-outlined'"
                 :name="'delete'"
             ></Svg>
         </label>

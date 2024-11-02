@@ -11,7 +11,13 @@
                 class="search-input"
             />
 
-            <Svg :name="'close'" v-if="searchQuery" @click="searchQuery = ''" class="clear-button"></Svg>
+            <Svg
+                :class_name="'material-icons-outlined'"
+                :name="'close'"
+                v-if="searchQuery"
+                @click="searchQuery = ''"
+                class="clear-button"
+            ></Svg>
         </div>
     </Widget>
 </template>

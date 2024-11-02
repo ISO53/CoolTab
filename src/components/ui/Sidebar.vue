@@ -61,10 +61,7 @@
                             </div>
                             <div>
                                 <h2>Text Color #1</h2>
-                                <ColorChooser
-                                    v-model="settingsStore.colors.color_primary_text"
-                                    :onSelect="setColors"
-                                />
+                                <ColorChooser v-model="settingsStore.colors.color_primary_text" :onSelect="setColors" />
                             </div>
                             <div>
                                 <h2>Text Color #2</h2>
@@ -82,10 +79,7 @@
                             </div>
                             <div>
                                 <h2>Border Color</h2>
-                                <ColorChooser
-                                    v-model="settingsStore.colors.color_border_line"
-                                    :onSelect="setColors"
-                                />
+                                <ColorChooser v-model="settingsStore.colors.color_border_line" :onSelect="setColors" />
                             </div>
                         </div>
                     </Tab>
@@ -188,13 +182,13 @@
                 </Tabs>
 
                 <button @click="toggleSidebar" class="sidebar-toggle-button close">
-                    <Svg :name="'arrow_back'"></Svg>
+                    <Svg :class_name="'material-icons-outlined'" :name="'arrow_back'"></Svg>
                 </button>
             </div>
         </Transition>
 
         <button v-if="!isOpen" @click="toggleSidebar" class="sidebar-toggle-button">
-            <Svg :name="'settings'"></Svg>
+            <Svg :class_name="'material-icons-outlined'" :name="'settings'"></Svg>
         </button>
     </div>
 </template>
@@ -292,7 +286,7 @@ export default {
         },
         setColors() {
             this.settingsStore.setColors(this.settingsStore.colors);
-        }
+        },
     },
 };
 </script>

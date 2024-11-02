@@ -5,8 +5,8 @@
                 <div class="sun-and-moon">
                     <div class="orbit">
                         <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
-                            <Svg class="planet" :name="'wb_sunny'"></Svg>
-                            <Svg class="planet" :name="'nightlight'"></Svg>
+                            <Svg class="planet" :class_name="'material-icons-outlined'" :name="'wb_sunny'"></Svg>
+                            <Svg class="planet" :class_name="'material-icons-outlined'" :name="'nightlight'"></Svg>
                         </div>
                     </div>
                 </div>

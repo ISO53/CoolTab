@@ -3,7 +3,7 @@
         <Transition name="overlay">
             <div v-if="isOpen" class="overlay" @click="toggleInfo">
                 <div v-if="isOpen" class="info-div" @click.stop>
-                    <img src="@/components/icons/cooltab_logo.svg" draggable="false"/>
+                    <img src="@/components/icons/cooltab_logo.svg" draggable="false" />
                     <h1>CoolTab</h1>
                     <p>Just a new tab for your browser, but cooler...</p>
                     <p>Version: {{ appVersion }}</p>
@@ -21,7 +21,7 @@
         </Transition>
 
         <button @click="toggleInfo" class="info-toggle-button">
-            <Svg :name="'info'"></Svg>
+            <Svg :class_name="'material-icons-outlined'" :name="'info'"></Svg>
         </button>
     </div>
 </template>
