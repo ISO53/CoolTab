@@ -157,6 +157,7 @@ export default {
 .planet {
     border-radius: 50%;
     margin: 5px;
+    font-size: 15cqh !important;
 }
 
 .times {
