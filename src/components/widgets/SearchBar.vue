@@ -1,7 +1,7 @@
 <template>
     <Widget style="height: unset" class="widget">
         <div class="search-bar">
-            <Svg class="search-logo" :name="'search'"></Svg>
+            <Svg class="search-logo" :class_name="'material-icons-outlined'" :name="'search'"></Svg>
 
             <input
                 type="text"
