@@ -5,8 +5,8 @@
                 <div v-if="isOpen" class="info-div" @click.stop>
                     <img src="@/components/icons/cooltab_logo.svg" draggable="false" />
                     <h1>CoolTab</h1>
-                    <p>Created by <a href="https://github.com/iso53">iso53</a></p>
                     <p>Just a new tab for your browser, but cooler...</p>
+                    <p>Created by <a href="https://github.com/iso53">iso53</a></p>
                     <p>Version: {{ appVersion }}</p>
                     <p>Source Code: <a href="https://github.com/iso53/cooltab">github.com/iso53/cooltab</a></p>
 
