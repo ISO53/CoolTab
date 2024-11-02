@@ -13,23 +13,6 @@ export default {
         const settingsStore = useSettingsStore();
         return {settingsStore};
     },
-    methods: {
-        makeColorTransparent(color, percentage) {
-            const r = parseInt(color.substring(1, 3), 16);
-            const g = parseInt(color.substring(3, 5), 16);
-            const b = parseInt(color.substring(5, 7), 16);
-            const alpha = 1 - percentage;
-
-            // Convert RGBA to a hex format with alpha
-            const alphaHex = Math.round(alpha * 255)
-                .toString(16)
-                .padStart(2, "0");
-
-            return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b
-                .toString(16)
-                .padStart(2, "0")}${alphaHex}`;
-        },
-    },
     computed: {
         getwidgetStyle() {
             switch (this.settingsStore.widgetBackground) {
@@ -45,10 +28,7 @@ export default {
                     };
                 case "Blur":
                     return {
-                        background: this.makeColorTransparent(
-                            this.settingsStore.colors.color_secondary_background,
-                            0.8
-                        ),
+                        background: `color-mix(in srgb, var(--color-secondary-background), transparent 80%)`,
                         backdropFilter: "blur(30px)",
                         border: "2px solid transparent",
                     };
