@@ -38,6 +38,18 @@
 
                             <span class="divider"></span>
 
+                            <p style="width: auto; text-align: center; margin: 10px">
+                                You can select from predefined themes.
+                            </p>
+
+                            <div style="display: flex; height: auto">
+                                <ColorPalette></ColorPalette>
+                            </div>
+
+                            <p style="width: auto; text-align: center; margin: 10px">
+                                Or you can create your own custom theme.
+                            </p>
+
                             <div>
                                 <h2>Background Color #1</h2>
                                 <ColorChooser
@@ -203,6 +215,7 @@ import Tabs from "./Tabs.vue";
 import Tab from "./Tab.vue";
 import NumberPicker from "./NumberPicker.vue";
 import ToggleSwitch from "./ToggleSwitch.vue";
+import ColorPalette from "./ColorPalette.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -221,6 +234,7 @@ export default {
         Tab,
         NumberPicker,
         ToggleSwitch,
+        ColorPalette,
     },
     data() {
         return {
@@ -385,6 +399,7 @@ export default {
     text-wrap: nowrap;
     font-size: 1rem;
     font-weight: 100;
+    font-weight: bold;
 }
 
 .header {

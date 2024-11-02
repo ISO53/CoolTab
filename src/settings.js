@@ -15,6 +15,7 @@ export const useSettingsStore = defineStore("settings", {
         weeklyWeatherInfo: getWeeklyWeatherInfo(),
         widgetBackground: localStorage.getItem("widget-background") || "Color",
         colors: getColors(),
+        colorPalette: getColorPalette(),
     }),
     actions: {
         setBackgroundImage(image) {
@@ -77,6 +78,10 @@ export const useSettingsStore = defineStore("settings", {
             }
 
             storeInLocalStorage("colors", JSON.stringify(colors));
+        },
+        setColorPalette(palette) {
+            this.colorPalette = palette;
+            storeInLocalStorage("color-palette", JSON.stringify(palette));
         },
     },
 });
@@ -343,6 +348,31 @@ function getColors() {
     if (colors) {
         try {
             parsed = JSON.parse(colors);
+        } catch (e) {
+            return def;
+        }
+        return parsed;
+    }
+
+    return def;
+}
+
+/**
+ * Returns the color palette.
+ *
+ * @returns {{theme: String, color: String}} An object containing color palette.
+ **/
+function getColorPalette() {
+    const palette = localStorage.getItem("color-palette");
+    const def = {
+        theme: "dark",
+        color: "green",
+    };
+
+    let parsed = null;
+    if (palette) {
+        try {
+            parsed = JSON.parse(palette);
         } catch (e) {
             return def;
         }
