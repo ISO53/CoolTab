@@ -69,10 +69,10 @@ export const useSettingsStore = defineStore("settings", {
             this.colors = colors;
 
             // update css variables
-            const r = document.querySelector(':root');
+            const r = document.querySelector(":root");
             for (const key in colors) {
                 if (colors.hasOwnProperty(key)) {
-                    r.style.setProperty(`--${key.replaceAll('_', '-')}`, colors[key]);
+                    r.style.setProperty(`--${key.replaceAll("_", "-")}`, colors[key]);
                 }
             }
 
