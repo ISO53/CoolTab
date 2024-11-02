@@ -402,7 +402,7 @@ export default {
 .divider {
     width: 100%;
     height: 1px;
-    background: rgb(50, 50, 50);
+    background: color-mix(in srgb, var(--color-border-line), transparent 20%);
     margin: 10px 0 10px 0;
 }
 
