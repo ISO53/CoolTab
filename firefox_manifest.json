@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Cool Tab",
+    "version": "1.2.0",
+    "description": "Just a new tab for your browser, but cooler",
+    "chrome_url_overrides": {
+        "newtab": "index.html"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "cooltab@github.io",
+            "strict_min_version": "60.0"
+        }
+    }
+}
