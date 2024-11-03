@@ -46,6 +46,7 @@
 -   **Analog Clock:** A stylish analog clock widget.
 -   **Digital Clock:** A clear and concise digital clock.
 -   **Daily Weather Forecast:** Get a glimpse of the upcoming weather.
+-   **Weekly Weather Forecast:** Shows the full weeks upcoming weather.
 -   **Widget Layout:** Arrange and resize widgets to create your ideal layout. The layout is saved automatically.
 -   **And More:** There will be more widgets and customizations on future releases!
 
@@ -64,19 +65,18 @@
     ```bash
     npm run build
     ```
-4. Copy the `manifest.json` file to `/dist` folder.
-5.  Go to `/dist` folder and zip the project files and [upload it to chrome](chrome://extensions/) for testing, development or any other stuff. If you want to use this on firefox you need to add [couple more fields](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings) to `manifest.json` file before copying it to `/dist`.
-
-> If you want to run the project in development mode, just run `npm run dev`.
+4. Copy the `manifest.json` (for chrome) or `firefox_manifest.json` (for firefox) file to `/dist` folder depending which browser you are building for.
+   > If you copied the `firefox_manifest.json` to `/dist` folder make sure to change the file name back to `manifest.json` after you've copied it.
+5. Go to `/dist` folder and zip the project files and upload it to chrome or firefox for testing, development or any other stuff.
+   > If you want to run the project in development mode, just run `npm run dev`.
 
 
 ## Application UI
-![shot_1](https://github.com/user-attachments/assets/3de9f3fe-5009-4da9-8eff-f39fb106acfc)
-![shot_2](https://github.com/user-attachments/assets/b8a84db0-f4b0-4290-ae4a-a00576463909)
-![shot_3](https://github.com/user-attachments/assets/e9e86b76-84c4-42ec-a999-5578009f236c)
-![shot_4](https://github.com/user-attachments/assets/2fe57312-4328-42c0-be11-77b5e1945df8)
-![shot_5](https://github.com/user-attachments/assets/faf2b9c8-e816-4209-ba78-c176779ac102)
-![shot_6](https://github.com/user-attachments/assets/4858e064-0109-4235-9ab9-b7fb46ee6d42)
+![1 2 0_1](https://github.com/user-attachments/assets/3e5b0da5-9684-484c-a363-1dd42666cda9)
+![1 2 0_2](https://github.com/user-attachments/assets/33185a3a-cfb2-48db-93be-b1bb8edd875c)
+![1 2 0_3](https://github.com/user-attachments/assets/2bf39321-bc65-4d69-b29d-86e652b1f057)
+![1 2 0_4](https://github.com/user-attachments/assets/289729ed-1cb9-402a-8b59-9e390933880e)
+![1 2 0_5](https://github.com/user-attachments/assets/e5b56a83-1153-4c24-b5c3-693c50a125dc)
 
 
 ## Contributing
