@@ -21,14 +21,27 @@ export default {
             width: 0,
             height: 0,
             step: 0,
+            animationFrameId: null,
+            time: 0,
         };
     },
     mounted() {
         window.addEventListener("resize", this.update);
         this.update();
+        if (this.editing) this.startAnimation();
     },
-    unmounted() {
+    watch: {
+        editing(newVal) {
+            if (newVal) {
+                this.startAnimation();
+            } else {
+                cancelAnimationFrame(this.animationFrameId);
+            }
+        },
+    },
+    beforeUnmount() {
         window.removeEventListener("resize", this.update);
+        cancelAnimationFrame(this.animationFrameId);
     },
     methods: {
         drawGridPoints() {
@@ -38,9 +51,14 @@ export default {
             ctx.clearRect(0, 0, this.width, this.height);
             ctx.fillStyle = this.dotColor;
 
+            // Adjust dot size based on animation time
+            const scale = 1.5 + Math.sin(this.time * 0.05) * 0.5;
+
             for (let x = 0; x <= this.width; x += this.step) {
                 for (let y = 0; y <= this.height; y += this.step) {
-                    ctx.fillRect(x - 1, y - 1, 2, 2);
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1.5 * scale, 0, Math.PI * 2);
+                    ctx.fill();
                 }
             }
         },
@@ -50,6 +68,14 @@ export default {
             this.step = this.width / this.cols;
 
             requestAnimationFrame(this.drawGridPoints);
+        },
+        startAnimation() {
+            const animate = () => {
+                this.time += 1;
+                this.drawGridPoints();
+                this.animationFrameId = requestAnimationFrame(animate);
+            };
+            this.animationFrameId = requestAnimationFrame(animate);
         },
     },
 };
