@@ -25,22 +25,23 @@ export default {
     },
     mounted() {
         this.updateClock();
-        setInterval(this.updateClock, 1000);
+        setInterval(this.updateClock, 10);
     },
     methods: {
         updateClock() {
             const now = new Date();
+            const milliseconds = now.getMilliseconds();
             const seconds = now.getSeconds();
             const minutes = now.getMinutes();
             const hours = now.getHours();
 
-            const secondDegree = (seconds / 60) * 360 + 90;
+            const secondDegree = ((seconds * 1000 + milliseconds) / 60000) * 360 + 90;
             const minuteDegree = (minutes / 60) * 360 + (seconds / 60) * 6 + 90;
             const hourDegree = (hours / 12) * 360 + (minutes / 60) * 30 + 90;
 
             this.secondStyle = {transform: `rotate(${secondDegree}deg) translateX(-50%)`};
-            this.minuteStyle = {transform: `rotate(${minuteDegree}deg) translateX(-50%) translateX(3px)`};
-            this.hourStyle = {transform: `rotate(${hourDegree}deg) translateX(-50%) translateX(6px)`};
+            this.minuteStyle = {transform: `rotate(${minuteDegree}deg) translateX(-50%) translateX(1.5cqw)`};
+            this.hourStyle = {transform: `rotate(${hourDegree}deg) translateX(-50%) translateX(3cqw)`};
         },
     },
 };
@@ -69,32 +70,32 @@ export default {
 
 .second-hand::after {
     content: "";
-    width: 5px;
-    height: 5px;
+    width: 2cqw;
+    height: 2cqw;
     border-radius: 50%;
     background-color: var(--color-primary-text);
-    transform: translateX(5px);
+    transform: translateX(1cqw);
 }
 
 .minute-hand {
     position: absolute;
     width: 45%;
-    height: 6px;
+    height: 3cqw;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     background-color: var(--color-tertiary-text);
-    border-radius: 5px;
+    border-radius: 1.5cqw;
 }
 
 .hour-hand {
     position: absolute;
     width: 35%;
-    height: 12px;
+    height: 6cqw;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     background-color: var(--color-secondary-text);
-    border-radius: 12px;
+    border-radius: 3cqw;
 }
 </style>
