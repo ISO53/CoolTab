@@ -3,9 +3,10 @@
         <div class="calendar">
             <div class="simple">
                 <h1>{{ date.day }}</h1>
+                <h2>{{ date.day_name }}</h2>
             </div>
             <div class="comprehensive">
-                <h2>{{ date.day_name }}</h2>
+                <h2>{{ date.day_name + "." }}</h2>
                 <h2>{{ date.month_name }}</h2>
                 <h2>{{ date.day }}</h2>
                 <h2>{{ date.year }}</h2>
@@ -40,7 +41,7 @@ export default {
         getCurrentDate() {
             const date = new Date();
 
-            const daysOfWeek = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
+            const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             const monthsOfYear = [
                 "January",
                 "February",
@@ -106,6 +107,17 @@ export default {
     overflow: hidden;
     text-wrap: wrap;
     text-overflow: ellipsis;
+}
+
+.simple h2 {
+    font-size: 15cqw;
+    overflow: hidden;
+    position: absolute;
+    top: 3cqw;
+    right: 3cqw;
+    height: 15cqw;
+    line-height: 15cqw;
+    font-family: Satoshi-Medium;
 }
 
 .comprehensive {
