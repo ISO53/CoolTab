@@ -265,7 +265,19 @@ function getWidgets() {
 
     if (widgets) {
         try {
-            return JSON.parse(widgets);
+            let widgetsJSON = JSON.parse(widgets);
+
+            // Convert widgetsJSON into a Map for quick lookup by name
+            const widgetMap = new Map(widgetsJSON.map((widget) => [widget.name, widget]));
+
+            // Ensure all default widgets exist in widgetsJSON
+            def.forEach((defaultWidget) => {
+                if (!widgetMap.has(defaultWidget.name)) {
+                    widgetsJSON.push(defaultWidget);
+                }
+            });
+
+            return widgetsJSON;
         } catch (e) {
             return def;
         }
