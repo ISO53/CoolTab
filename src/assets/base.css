@@ -64,3 +64,5 @@ body {
 *::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-border-line);
 }
+
+/* FIXME scroller won't work in firefox */
