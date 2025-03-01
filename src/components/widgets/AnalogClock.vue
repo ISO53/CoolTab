@@ -70,11 +70,11 @@ export default {
 
 .second-hand::after {
     content: "";
-    width: 2cqw;
-    height: 2cqw;
+    width: 3cqw;
+    height: 3cqw;
     border-radius: 50%;
     background-color: var(--color-primary-text);
-    transform: translateX(1cqw);
+    transform: translateX(1.5cqw);
 }
 
 .minute-hand {
