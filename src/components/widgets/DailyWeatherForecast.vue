@@ -189,6 +189,10 @@ export default {
     text-align: right;
     font-size: 10cqw;
     line-height: 10cqw;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 55cqw;
+    overflow: hidden;
 }
 
 .info h4 {
@@ -196,5 +200,9 @@ export default {
     text-align: right;
     font-size: 9cqw;
     line-height: 9cqw;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 55cqw;
+    overflow: hidden;
 }
 </style>
