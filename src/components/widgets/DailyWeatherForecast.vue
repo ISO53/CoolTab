@@ -184,14 +184,19 @@ export default {
     padding: 0;
 }
 
+.info > div {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
 .info h3 {
     margin: 0;
     text-align: right;
     font-size: 10cqw;
-    line-height: 10cqw;
+    line-height: 11cqw;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 55cqw;
     overflow: hidden;
 }
 
@@ -199,10 +204,9 @@ export default {
     margin: 0;
     text-align: right;
     font-size: 9cqw;
-    line-height: 9cqw;
+    line-height: 10cqw;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 55cqw;
     overflow: hidden;
 }
 </style>
