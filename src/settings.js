@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import pkg from "../package.json";
 
 export const useSettingsStore = defineStore("settings", {
     state: () => ({
@@ -16,6 +17,10 @@ export const useSettingsStore = defineStore("settings", {
         widgetBackground: localStorage.getItem("widget-background") || "Color",
         colors: getColors(),
         colorPalette: getColorPalette(),
+        currentVersion: (pkg && pkg.version) ? pkg.version : "0.0.0",
+        savedVersion: getSavedVersion(),
+        releaseNotes: null,
+        showUpdatePopup: false,
     }),
     actions: {
         setBackgroundImage(image) {
@@ -83,6 +88,50 @@ export const useSettingsStore = defineStore("settings", {
             this.colorPalette = palette;
             storeInLocalStorage("color-palette", JSON.stringify(palette));
         },
+        setSavedVersion(version) {
+            this.savedVersion = version;
+            storeInLocalStorage("saved-version", version);
+        },
+        dismissUpdatePopup() {
+            this.setSavedVersion(this.currentVersion);
+            this.showUpdatePopup = false;
+        },
+        hideUpdatePopup() {
+            this.showUpdatePopup = false;
+        },
+        async fetchReleaseForVersion(version) {
+            try {
+                const latest = await fetch(`https://cool-tab-api.vercel.app/api/latest-release`);
+                if (latest.ok) {
+                    const json = await latest.json();
+                    this.releaseNotes = {
+                        tag_name: json.tag_name,
+                        name: json.name,
+                        body: json.body,
+                        html_url: json.html_url,
+                        published_at: json.published_at,
+                    };
+                    return this.releaseNotes;
+                }
+            } catch (e) {
+                console.log(e);
+            }
+            return null;
+        },
+        async checkVersionOnStart() {
+            // Compare savedVersion and currentVersion; if current > saved, fetch notes and show popup
+            try {
+                const cur = this.currentVersion || "0.0.0";
+                const saved = this.savedVersion || "0.0.0";
+                if (compareVersions(cur, saved) === 1) {
+                    // updated
+                    await this.fetchReleaseForVersion(cur);
+                    this.showUpdatePopup = true;
+                }
+            } catch (e) {
+                // ignore errors; don't block startup
+            }
+        },
     },
 });
 
@@ -97,6 +146,31 @@ function storeInLocalStorage(key, value) {
     } else {
         localStorage.setItem(key, value);
     }
+}
+
+/**
+ * Return the saved version stored in localStorage, or default "0.0.0"
+ * @returns {String}
+ */
+function getSavedVersion() {
+    const v = localStorage.getItem("saved-version");
+    return v || "0.0.0";
+}
+
+/**
+ * Compare semantic versions a and b.
+ * Returns 1 if a > b, 0 if equal, -1 if a < b.
+ */
+function compareVersions(a, b) {
+    const pa = (a || "0.0.0").split('.').map(n => parseInt(n, 10) || 0);
+    const pb = (b || "0.0.0").split('.').map(n => parseInt(n, 10) || 0);
+    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const na = pa[i] || 0;
+        const nb = pb[i] || 0;
+        if (na > nb) return 1;
+        if (na < nb) return -1;
+    }
+    return 0;
 }
 
 /**

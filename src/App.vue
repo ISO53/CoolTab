@@ -3,6 +3,7 @@
         <Background />
         <Sidebar />
         <Info />
+        <NewFeaturesPanel />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="this.settingsStore.colors.color_secondary_text">
                 <GridItem
@@ -42,6 +43,7 @@ import Stock from "./components/widgets/Stock.vue";
 import QuickLinks from "./components/widgets/QuickLinks.vue";
 import Info from "./components/ui/Info.vue";
 import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
+import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
 import {useSettingsStore} from "./settings";
 
 export default {
@@ -67,6 +69,7 @@ export default {
         QuickLinks,
         Info,
         WeeklyWeatherForecast,
+        NewFeaturesPanel
     },
     data() {
         return {
