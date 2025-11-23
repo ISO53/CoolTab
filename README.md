@@ -72,6 +72,7 @@
 
 
 ## Application UI
+![1 2 0_0](https://github.com/user-attachments/assets/2a9a99c0-6f41-4490-8a83-ce776d0c14df)
 ![1 2 0_1](https://github.com/user-attachments/assets/3e5b0da5-9684-484c-a363-1dd42666cda9)
 ![1 2 0_2](https://github.com/user-attachments/assets/33185a3a-cfb2-48db-93be-b1bb8edd875c)
 ![1 2 0_3](https://github.com/user-attachments/assets/2bf39321-bc65-4d69-b29d-86e652b1f057)
