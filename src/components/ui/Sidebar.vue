@@ -193,13 +193,13 @@
                     </Tab>
                 </Tabs>
 
-                <button @click="toggleSidebar" class="sidebar-toggle-button close">
+                <button @click="toggleSidebar" class="sidebar-toggle-button close" title="Close settings">
                     <Svg :class_name="'material-icons-outlined'" :name="'arrow_back'"></Svg>
                 </button>
             </div>
         </Transition>
 
-        <button v-if="!isOpen" @click="toggleSidebar" class="sidebar-toggle-button">
+        <button v-if="!isOpen" @click="toggleSidebar" class="sidebar-toggle-button" title="Open settings">
             <Svg :class_name="'material-icons-outlined'" :name="'settings'"></Svg>
         </button>
     </div>
