@@ -17,7 +17,7 @@ export const useSettingsStore = defineStore("settings", {
         widgetBackground: localStorage.getItem("widget-background") || "Color",
         colors: getColors(),
         colorPalette: getColorPalette(),
-        currentVersion: (pkg && pkg.version) ? pkg.version : "0.0.0",
+        currentVersion: pkg && pkg.version ? pkg.version : "0.0.0",
         savedVersion: getSavedVersion(),
         releaseNotes: null,
         showUpdatePopup: false,
