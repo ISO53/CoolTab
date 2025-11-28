@@ -162,8 +162,8 @@ function getSavedVersion() {
  * Returns 1 if a > b, 0 if equal, -1 if a < b.
  */
 function compareVersions(a, b) {
-    const pa = (a || "0.0.0").split('.').map(n => parseInt(n, 10) || 0);
-    const pb = (b || "0.0.0").split('.').map(n => parseInt(n, 10) || 0);
+    const pa = (a || "0.0.0").split(".").map((n) => parseInt(n, 10) || 0);
+    const pb = (b || "0.0.0").split(".").map((n) => parseInt(n, 10) || 0);
     for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
         const na = pa[i] || 0;
         const nb = pb[i] || 0;
