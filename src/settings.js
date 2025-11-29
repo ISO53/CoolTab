@@ -21,6 +21,8 @@ export const useSettingsStore = defineStore("settings", {
         savedVersion: getSavedVersion(),
         releaseNotes: null,
         showUpdatePopup: false,
+        userStyles: getUserStyles(),
+        predefinedStyles: getPredefinedStyles(),
     }),
     actions: {
         setBackgroundImage(image) {
@@ -131,6 +133,69 @@ export const useSettingsStore = defineStore("settings", {
             } catch (e) {
                 // ignore errors; don't block startup
             }
+        },
+        createStyle(name) {
+            const style = {
+                id: Date.now().toString(),
+                name: name,
+                createdAt: new Date().toISOString(),
+                settings: this.getStyleSnapshot(),
+            };
+            // ensure userStyles array exists
+            if (!Array.isArray(this.userStyles)) this.userStyles = [];
+            this.userStyles.push(style);
+            storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
+            return style;
+        },
+        deleteStyle(styleId) {
+            // Only allow deleting user styles
+            const index = this.userStyles ? this.userStyles.findIndex((t) => t.id === styleId) : -1;
+            if (index !== -1) {
+                this.userStyles.splice(index, 1);
+                storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
+            }
+        },
+        applyStyle(styleId, isPredefined = false) {
+            const styleList = isPredefined ? this.predefinedStyles : this.userStyles;
+            const style = styleList ? styleList.find((t) => t.id === styleId) : null;
+            if (style && style.settings) {
+                this.applyStyleSettings(style.settings);
+            }
+        },
+        applyStyleSettings(settings) {
+            if (settings.backgroundImage !== undefined) this.setBackgroundImage(settings.backgroundImage);
+            if (settings.backgroundImageFileName !== undefined)
+                this.setBackgroundImageFileName(settings.backgroundImageFileName);
+            if (settings.backgroundSize !== undefined) this.setBackgroundSize(settings.backgroundSize);
+            if (settings.searchEngine !== undefined) this.setSearchEngine(settings.searchEngine);
+            if (settings.openSearchResultIn !== undefined) this.setOpenSearchResultIn(settings.openSearchResultIn);
+            if (settings.widgetBackground !== undefined) this.setWidgetBackground(settings.widgetBackground);
+            if (settings.colors !== undefined) this.setColors(settings.colors);
+            if (settings.colorPalette !== undefined) this.setColorPalette(settings.colorPalette);
+            if (settings.widgets !== undefined) this.setWidgets(settings.widgets);
+            if (settings.widgetAreaColumns !== undefined) this.setWidgetAreaColumns(settings.widgetAreaColumns);
+            if (settings.quickLinks !== undefined) this.setQuickLinks(settings.quickLinks);
+            if (settings.currentWeatherInfo !== undefined) this.setCurrentWeatherInfo(settings.currentWeatherInfo);
+            if (settings.stock !== undefined) this.setStock(settings.stock);
+            if (settings.weeklyWeatherInfo !== undefined) this.setWeeklyWeatherInfo(settings.weeklyWeatherInfo);
+        },
+        getStyleSnapshot() {
+            return {
+                backgroundImage: this.backgroundImage,
+                backgroundImageFileName: this.backgroundImageFileName,
+                backgroundSize: this.backgroundSize,
+                searchEngine: this.searchEngine,
+                openSearchResultIn: this.openSearchResultIn,
+                widgetBackground: this.widgetBackground,
+                colors: JSON.parse(JSON.stringify(this.colors)),
+                colorPalette: JSON.parse(JSON.stringify(this.colorPalette)),
+                widgets: JSON.parse(JSON.stringify(this.widgets)),
+                widgetAreaColumns: this.widgetAreaColumns,
+                quickLinks: JSON.parse(JSON.stringify(this.quickLinks)),
+                currentWeatherInfo: JSON.parse(JSON.stringify(this.currentWeatherInfo)),
+                stock: JSON.parse(JSON.stringify(this.stock)),
+                weeklyWeatherInfo: JSON.parse(JSON.stringify(this.weeklyWeatherInfo)),
+            };
         },
     },
 });
@@ -466,4 +531,55 @@ function getColorPalette() {
     }
 
     return def;
+}
+
+/**
+ * Return user styles from localStorage
+ * @returns {Array}
+ */
+function getUserStyles() {
+    const styles = localStorage.getItem("user-styles");
+    if (styles) {
+        try {
+            return JSON.parse(styles);
+        } catch (e) {
+            return [];
+        }
+    }
+    return [];
+}
+
+/**
+ * Return predefined styles hardcoded in the app
+ * @returns {Array}
+ */
+function getPredefinedStyles() {
+    return [
+        {
+            id: "default-dark",
+            name: "Default Dark",
+            settings: {
+                backgroundImage: null,
+                backgroundImageFileName: null,
+                backgroundSize: "Cover",
+                searchEngine: "Google",
+                openSearchResultIn: "New Tab",
+                widgetBackground: "Color",
+                widgetAreaColumns: 20,
+                colors: {
+                    color_primary_text: "#fafafa",
+                    color_secondary_text: "#c8c8c8",
+                    color_tertiary_text: "#646464",
+                    color_primary_background: "#000000",
+                    color_secondary_background: "#141414",
+                    color_tertiary_background: "#4b4b4b",
+                    color_border_line: "#323232",
+                },
+                colorPalette: {
+                    theme: "dark",
+                    color: "default",
+                },
+            },
+        },
+    ];
 }

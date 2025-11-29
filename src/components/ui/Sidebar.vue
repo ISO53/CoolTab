@@ -96,6 +96,10 @@
                         </div>
                     </Tab>
 
+                    <Tab :label="'Styles'">
+                        <Styles />
+                    </Tab>
+
                     <Tab :label="'Widgets'">
                         <div class="settings widget-states">
                             <div v-for="(widget, index) in this.settingsStore.widgets" :key="index">
@@ -216,6 +220,7 @@ import Tab from "./Tab.vue";
 import NumberPicker from "./NumberPicker.vue";
 import ToggleSwitch from "./ToggleSwitch.vue";
 import ColorPalette from "./ColorPalette.vue";
+import Styles from "./Styles.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -235,6 +240,7 @@ export default {
         NumberPicker,
         ToggleSwitch,
         ColorPalette,
+        Styles,
     },
     data() {
         return {
