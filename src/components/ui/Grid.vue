@@ -38,6 +38,9 @@ export default {
                 cancelAnimationFrame(this.animationFrameId);
             }
         },
+        cols() {
+            this.update();
+        },
     },
     beforeUnmount() {
         window.removeEventListener("resize", this.update);
