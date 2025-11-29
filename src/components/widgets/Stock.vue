@@ -83,6 +83,9 @@ export default {
             fetch("https://cool-tab-api.vercel.app/api/stock?names=" + this.settingsStore.stock.tickers.join(","))
                 .then((response) => response.json())
                 .then((data) => {
+                    // Why the fuck this is handling here instead of in the catch statement?
+                    if (data.error) throw new Error(data.error);
+
                     this.stock.cache_time = data.cache_time;
                     this.stock.lastUpdated = new Date();
                     this.stock.stocks = data.stock_data;
