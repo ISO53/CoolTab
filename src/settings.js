@@ -281,6 +281,18 @@ function getStock() {
                 close: "",
                 diff: 0,
             },
+            {
+                ticker: "",
+                open: "",
+                close: "",
+                diff: 0,
+            },
+            {
+                ticker: "",
+                open: "",
+                close: "",
+                diff: 0,
+            },
         ],
         tickers: ["AAPL", "MSFT", "GOOG"],
     };
