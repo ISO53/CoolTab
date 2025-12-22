@@ -20,10 +20,6 @@
                 </div>
             </div>
         </Transition>
-
-        <button @click="toggleInfo" class="info-toggle-button">
-            <Svg :class_name="'material-icons-outlined'" :name="'info'"></Svg>
-        </button>
     </div>
 </template>
 
@@ -143,31 +139,5 @@ export default {
 
 .info-div > p > a:hover::after {
     transform: scaleX(100%);
-}
-
-.info-toggle-button {
-    position: absolute;
-    bottom: 10px;
-    right: 5px;
-    margin: 0;
-    border-radius: 50px;
-    width: 40px;
-    height: 40px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    user-select: none;
-}
-
-.info-toggle-button:hover i {
-    transform: scale(125%);
-}
-
-.info-toggle-button i {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    margin: 0;
-    transition: transform 250ms ease;
 }
 </style>

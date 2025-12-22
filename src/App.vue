@@ -4,6 +4,7 @@
         <Sidebar />
         <Info />
         <NewFeaturesPanel />
+        <Buttons />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="this.settingsStore.colors.color_secondary_text">
                 <GridItem
@@ -21,10 +22,6 @@
                     <component v-if="widget.selected" :is="widget.name" />
                 </GridItem>
             </Grid>
-
-            <button @click="toggleEditArea" class="edit-area-toggle-button close" title="Edit layout">
-                <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
-            </button>
         </div>
     </div>
 </template>
@@ -44,6 +41,7 @@ import QuickLinks from "./components/widgets/QuickLinks.vue";
 import Info from "./components/ui/Info.vue";
 import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
 import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
+import Buttons from "./components/ui/Buttons.vue";
 import {useSettingsStore} from "./settings";
 
 export default {
@@ -69,7 +67,8 @@ export default {
         QuickLinks,
         Info,
         WeeklyWeatherForecast,
-        NewFeaturesPanel
+        NewFeaturesPanel,
+        Buttons,
     },
     data() {
         return {
@@ -116,32 +115,6 @@ export default {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-}
-
-.edit-area-toggle-button {
-    position: absolute;
-    bottom: 60px;
-    left: 5px;
-    margin: 0;
-    border-radius: 50px;
-    width: 40px;
-    height: 40px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    user-select: none;
-}
-
-.edit-area-toggle-button i {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    margin: 0;
-    transition: transform 250ms ease;
-}
-
-.edit-area-toggle-button:hover i {
-    transform: rotate(-45deg);
 }
 
 .hidden {

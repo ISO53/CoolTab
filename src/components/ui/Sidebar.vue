@@ -202,10 +202,6 @@
                 </button>
             </div>
         </Transition>
-
-        <button v-if="!isOpen" @click="toggleSidebar" class="sidebar-toggle-button" title="Open settings">
-            <Svg :class_name="'material-icons-outlined'" :name="'settings'"></Svg>
-        </button>
     </div>
 </template>
 
@@ -370,10 +366,6 @@ export default {
     border: none;
     cursor: pointer;
     user-select: none;
-}
-
-.sidebar-toggle-button:hover i {
-    transform: rotate(45deg);
 }
 
 .sidebar-toggle-button i {
