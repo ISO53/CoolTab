@@ -1,11 +1,11 @@
 <template>
     <div>
         <Transition name="overlay">
-            <div v-if="isOpen" class="overlay" @click="toggleSidebar"></div>
+            <div v-show="isOpen" class="overlay" @click="toggleSidebar"></div>
         </Transition>
 
         <Transition name="slide">
-            <div v-if="isOpen" class="slide">
+            <div v-show="isOpen" class="slide">
                 <h1 class="header">CoolTab Settings</h1>
 
                 <Tabs :selected="'Customization'">
