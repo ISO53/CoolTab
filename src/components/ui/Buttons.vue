@@ -6,7 +6,7 @@
             <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
         </button>
 
-        <button @click="toggleInfo" class="button">
+        <button @click="toggleInfo" class="button" title="Info">
             <Svg :class_name="'material-icons-outlined'" :name="'info'"></Svg>
         </button>
 
