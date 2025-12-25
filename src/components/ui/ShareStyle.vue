@@ -23,7 +23,7 @@
 
                         <p v-if="isMessageShown" class="subtitle success-message">
                             Success! Your style will be shared on
-                            <a href="https://iso53.github.io/CoolTab/styles" target="_blank" rel="noopener noreferrer"
+                            <a href="https://iso53.github.io/CoolTab/#/style" target="_blank" rel="noopener noreferrer"
                                 >CoolTab Community Styles</a
                             >
                             in a couple of days after review.
