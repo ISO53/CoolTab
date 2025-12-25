@@ -1,14 +1,14 @@
 <template>
     <nav class="navbar glass-panel">
         <div class="container nav-content">
-            <router-link to="/" class="logo">
+            <a href="#/" class="logo">
                 <img class="logo" src="/src/public/cooltab_logo.svg" alt="logo" /> CoolTab
-            </router-link>
+            </a>
 
             <div class="nav-links">
-                <router-link to="/">Home</router-link>
-                <a href="/#features">Features</a>
-                <router-link to="/style">Styles</router-link>
+                <a href="#/" :class="{ 'active-link': currentPath === '#/' || currentPath === '' || currentPath === '#' }">Home</a>
+                <a href="#features" @click="handleScroll">Features</a>
+                <a href="#/style" :class="{ 'active-link': currentPath === '#/style' }">Styles</a>
             </div>
 
             <a href="#install" class="btn-primary btn-sm"> Add to Browser </a>
@@ -16,7 +16,25 @@
     </nav>
 </template>
 
-<script setup></script>
+<script setup>
+import { useNavigation } from '../navigation'
+
+const { currentPath } = useNavigation()
+
+const handleScroll = (e) => {
+    // If we are not on home page, we should go home first then scroll
+    // But since this is a SPA without router, we can just let it scroll if the element exists
+    // or manually navigate if we are on #/style
+    if (window.location.hash.startsWith('#/style')) {
+        window.location.hash = '#/'
+        // Wait for component to mount then scroll
+        setTimeout(() => {
+            const el = document.querySelector('#features')
+            if (el) el.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+    }
+}
+</script>
 
 <style scoped>
 .logo {
@@ -64,7 +82,7 @@
 }
 
 .nav-links a:hover,
-.nav-links a.router-link-active {
+.nav-links a.active-link {
     color: var(--text-main);
 }
 
