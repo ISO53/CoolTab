@@ -1,7 +1,12 @@
 <template>
     <Sidebar ref="sidebarRef" />
     <Info ref="infoRef" />
+    <ShareStyle ref="shareStyleRef" />
     <div class="buttons" :class="{revealed: isRevealed}">
+        <button @click="toggleSharePopup" class="button" title="Share this style!">
+            <Svg :class_name="'material-icons-outlined'" :name="'share'"></Svg>
+        </button>
+
         <button @click="toggleEditArea" class="button" title="Edit layout">
             <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
         </button>
@@ -19,6 +24,7 @@
 <script>
 import Sidebar from "@/components/ui/Sidebar.vue";
 import Info from "@/components/ui/Info.vue";
+import ShareStyle from "./ShareStyle.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -30,6 +36,7 @@ export default {
     components: {
         Sidebar,
         Info,
+        ShareStyle,
     },
     data() {
         return {
@@ -53,7 +60,7 @@ export default {
     methods: {
         checkProximity(event) {
             const thresholdX = 150; // Width of detection area
-            const thresholdY = 150; // Height of detection area (from bottom)
+            const thresholdY = 250; // Height of detection area (from bottom)
             const windowHeight = window.innerHeight;
 
             const inZone = event.clientX < thresholdX && event.clientY > windowHeight - thresholdY;
@@ -68,6 +75,9 @@ export default {
         },
         toggleInfo() {
             this.$refs.infoRef.toggleInfo();
+        },
+        toggleSharePopup() {
+            this.$refs.shareStyleRef.toggleShareStyle();
         },
     },
 };
@@ -101,19 +111,12 @@ export default {
     transition-delay: 0ms;
 }
 .buttons .button:nth-child(2) {
-    transition-delay: 50ms;
+    transition-delay: 25ms;
 }
 .buttons .button:nth-child(3) {
-    transition-delay: 100ms;
+    transition-delay: 75ms;
 }
-
-.buttons.revealed .button:nth-child(1) {
-    transition-delay: 0ms;
-}
-.buttons.revealed .button:nth-child(2) {
-    transition-delay: 50ms;
-}
-.buttons.revealed .button:nth-child(3) {
+.buttons .button:nth-child(4) {
     transition-delay: 100ms;
 }
 

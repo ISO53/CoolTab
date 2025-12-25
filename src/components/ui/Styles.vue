@@ -1,18 +1,28 @@
 <template>
     <div class="styles-container">
         <div class="styles-header">
-            <p>Save your current style for easy access.</p>
-            <button class="save-style-btn" @click="saveCurrentStyle" title="Save current style">
-                Save Current Style
-            </button>
+            <p>Save your current style for quick access, or import a style from Community Styles.</p>
+            <div class="styles-buttons">
+                <button class="style-btn" @click="saveCurrentStyle" title="Save current style">
+                    <Svg :class_name="'material-icons-outlined'" :name="'save'"></Svg>
+                    Save Current Style
+                </button>
+                <p>or</p>
+                <button class="style-btn" @click="importStyle" title="Import style from ID">
+                    <Svg :class_name="'material-icons-outlined'" :name="'download'"></Svg>
+                    Import Style
+                </button>
+            </div>
         </div>
 
         <!-- User Styles Section -->
         <div class="styles-section">
-            <h2>Your Styles</h2>
+            <div class="section-header">
+                <h2>Your Styles</h2>
+            </div>
             <div class="styles-grid">
                 <StyleCard
-                    v-for="style in settingsStore.userStyles"
+                    v-for="style in this.settingsStore.userStyles"
                     :key="style.id"
                     :style="style"
                     :isPredefined="false"
@@ -20,19 +30,8 @@
                     @delete="deleteStyle"
                 />
             </div>
-        </div>
-
-        <!-- Predefined Styles Section -->
-        <div class="styles-section">
-            <h2>Predefined Styles</h2>
-            <div class="styles-grid">
-                <StyleCard
-                    v-for="style in settingsStore.predefinedStyles"
-                    :key="style.id"
-                    :style="style"
-                    :isPredefined="true"
-                    @apply="applyStyle"
-                />
+            <div v-if="!this.settingsStore.userStyles.length" class="no-styles">
+                <p>No styles saved yet. Create your own or import one!</p>
             </div>
         </div>
     </div>
@@ -53,13 +52,24 @@ export default {
         };
     },
     methods: {
+        async importStyle() {
+            const styleId = prompt("Paste Style ID:");
+            if (!styleId) return;
+
+            const result = await this.settingsStore.importStyleById(styleId);
+            if (result.success) {
+                alert("Style imported successfully!");
+            } else {
+                alert("Failed to import style: " + result.error);
+            }
+        },
         saveCurrentStyle() {
             const name = prompt("Name for your style:");
             if (!name) return;
             this.settingsStore.createStyle(name);
         },
-        applyStyle(styleId, isPredefined) {
-            this.settingsStore.applyStyle(styleId, isPredefined);
+        applyStyle(styleId) {
+            this.settingsStore.applyStyle(styleId);
         },
         deleteStyle(styleId) {
             if (confirm("Are you sure you want to delete this style?")) {
@@ -99,14 +109,59 @@ export default {
     gap: 8px;
 }
 
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.no-styles {
+    text-align: center;
+    padding: 20px;
+    color: var(--color-tertiary-text);
+    background-color: var(--color-secondary-background);
+    border: 2px dashed var(--color-border-line);
+    border-radius: 10px;
+}
+
+.no-styles p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
 .styles-header {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 6px;
 }
 
-.save-style-btn {
+.styles-buttons {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.styles-buttons button {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+}
+
+.style-btn i {
+    font-size: 1.6rem;
+}
+
+.style-btn {
     background-color: var(--color-secondary-background);
     color: var(--color-secondary-text);
     padding: 8px 12px 8px 12px;
@@ -117,9 +172,11 @@ export default {
     border: 2px solid var(--color-border-line);
     transition: color 250ms ease, border-color 250ms ease;
     user-select: none;
+    font-family: Satoshi-Bold;
+    font-size: 0.85rem;
 }
 
-.save-style-btn:hover {
+.style-btn:hover {
     color: var(--color-primary-text);
     border-color: var(--color-secondary-text);
 }

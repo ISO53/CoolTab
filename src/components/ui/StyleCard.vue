@@ -36,13 +36,13 @@
         </div>
         <div class="style-info">
             <h3>{{ style.name }}</h3>
-            <p class="style-date" v-if="!isPredefined && style.createdAt">{{ formatDate(style.createdAt) }}</p>
+            <p class="style-date" v-if="style.createdAt">{{ formatDate(style.createdAt) }}</p>
         </div>
         <div class="style-actions">
             <button class="action-btn" @click="handleApply" title="Apply style">
                 <Svg :class_name="'material-icons-outlined'" class="apply" :name="'check_circle'"></Svg>
             </button>
-            <button v-if="!isPredefined" class="action-btn" @click="handleDelete" title="Delete style">
+            <button class="action-btn" @click="handleDelete" title="Delete style">
                 <Svg :class_name="'material-icons-outlined'" class="delete" :name="'delete'"></Svg>
             </button>
         </div>
@@ -62,14 +62,10 @@ export default {
             type: Object,
             required: true,
         },
-        isPredefined: {
-            type: Boolean,
-            default: false,
-        },
     },
     methods: {
         handleApply() {
-            this.$emit("apply", this.style.id, this.isPredefined);
+            this.$emit("apply", this.style.id);
         },
         handleDelete() {
             this.$emit("delete", this.style.id);
