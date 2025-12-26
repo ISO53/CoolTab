@@ -112,32 +112,4 @@ export default {
     width: 100px;
     height: 100px;
 }
-
-.info-div > p > a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-tertiary-text);
-    font-weight: bold;
-    transition: color 250ms ease;
-}
-
-.info-div > p > a:hover {
-    color: var(--color-secondary-text);
-}
-
-.info-div > p > a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 100%;
-    height: 1px;
-    background-color: var(--color-tertiary-text);
-    transform: scaleX(0%);
-    transition: transform 250ms ease;
-}
-
-.info-div > p > a:hover::after {
-    transform: scaleX(100%);
-}
 </style>

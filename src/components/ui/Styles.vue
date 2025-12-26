@@ -1,7 +1,13 @@
 <template>
     <div class="styles-container">
         <div class="styles-header">
-            <p>Save your current style for quick access, or import a style from Community Styles.</p>
+            <p>
+                Save your current style for quick access, or import a style from
+                <a href="https://iso53.github.io/CoolTab/#/style" target="_blank" rel="noopener noreferrer"
+                    >Community Styles</a
+                >
+                .
+            </p>
             <div class="styles-buttons">
                 <button class="style-btn" @click="saveCurrentStyle" title="Save current style">
                     <Svg :class_name="'material-icons-outlined'" :name="'save'"></Svg>

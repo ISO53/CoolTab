@@ -157,34 +157,6 @@ export default {
     font-size: 1rem;
 }
 
-.share-style-div a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-tertiary-text);
-    font-weight: bold;
-    transition: color 250ms ease;
-}
-
-.share-style-div a:hover {
-    color: var(--color-secondary-text);
-}
-
-.share-style-div a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 100%;
-    height: 1px;
-    background-color: var(--color-tertiary-text);
-    transform: scaleX(0%);
-    transition: transform 250ms ease;
-}
-
-.share-style-div a:hover::after {
-    transform: scaleX(100%);
-}
-
 .subtitle {
     color: var(--color-secondary-text);
     margin-top: -10px;
