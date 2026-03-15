@@ -101,13 +101,28 @@
                     </Tab>
 
                     <Tab :label="'Widgets'">
-                        <div class="settings widget-states">
-                            <div v-for="(widget, index) in this.settingsStore.widgets" :key="index">
-                                <h2>{{ widget.name }}</h2>
-                                <ToggleSwitch
-                                    v-model="widget.selected"
-                                    @change="setWidgetSelected(widget, widget.selected)"
-                                />
+                        <div class="widget-grid">
+                            <div
+                                v-for="(widget, index) in settingsStore.widgets"
+                                :key="index"
+                                class="widget-card"
+                                :class="{
+                                    active: widget.selected,
+                                    inactive: !widget.selected
+                                }"
+                                @click="setWidgetSelected(widget, !widget.selected)"
+                            >
+                                <div v-if="widget.selected" class="card-indicator">
+                                    <Svg :class_name="'material-icons-outlined'" :name="'check_circle'" />
+                                </div>
+                                <div class="preview-container">
+                                    <div class="preview-wrapper">
+                                        <component :is="widget.name" class="widget-preview" />
+                                    </div>
+                                </div>
+                                <div class="widget-info">
+                                    <span class="widget-name">{{ formatWidgetName(widget.name) }}</span>
+                                </div>
                             </div>
                         </div>
                     </Tab>
@@ -217,6 +232,14 @@ import NumberPicker from "./NumberPicker.vue";
 import ToggleSwitch from "./ToggleSwitch.vue";
 import ColorPalette from "./ColorPalette.vue";
 import Styles from "./Styles.vue";
+import SearchBar from "../widgets/SearchBar.vue";
+import Calendar from "../widgets/Calendar.vue";
+import AnalogClock from "../widgets/AnalogClock.vue";
+import DigitalClock from "../widgets/DigitalClock.vue";
+import DailyWeatherForecast from "../widgets/DailyWeatherForecast.vue";
+import Stock from "../widgets/Stock.vue";
+import QuickLinks from "../widgets/QuickLinks.vue";
+import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -237,6 +260,14 @@ export default {
         ToggleSwitch,
         ColorPalette,
         Styles,
+        SearchBar,
+        Calendar,
+        AnalogClock,
+        DigitalClock,
+        DailyWeatherForecast,
+        Stock,
+        QuickLinks,
+        WeeklyWeatherForecast,
     },
     data() {
         return {
@@ -302,6 +333,10 @@ export default {
         },
         setColors() {
             this.settingsStore.setColors(this.settingsStore.colors);
+        },
+        formatWidgetName(name) {
+            // Add spaces between camelCase words
+            return name.replace(/([A-Z])/g, " $1").trim();
         },
     },
 };
@@ -417,5 +452,122 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.widget-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 10px;
+}
+
+.widget-card {
+    background-color: var(--color-secondary-background);
+    border: 1.5px solid var(--color-border-line);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.widget-card.wide {
+    grid-column: span 2;
+}
+
+.widget-card:hover {
+    border-color: var(--color-tertiary-text);
+}
+
+.widget-card.active {
+    border-color: var(--color-primary-text);
+    background-color: color-mix(in srgb, var(--color-secondary-background), var(--color-primary-text) 3%);
+}
+
+.widget-card.inactive {
+    opacity: 0.7;
+}
+
+.widget-card.inactive:hover {
+    opacity: 1;
+}
+
+.card-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    color: var(--color-primary-text);
+    background-color: var(--color-primary-background);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.card-indicator i {
+    font-size: 1.1rem !important;
+}
+
+.preview-container {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--color-primary-background);
+    background-image: 
+        radial-gradient(circle at 2px 2px, var(--color-border-line) 1px, transparent 0);
+    background-size: 16px 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1.5px solid var(--color-border-line);
+    position: relative;
+}
+
+/* Force blur background for previews */
+.preview-container :deep(.widget) {
+    background: color-mix(in srgb, var(--color-secondary-background), transparent 80%) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--color-border-line) !important;
+}
+
+.preview-wrapper {
+    width: 600px;
+    height: 400px;
+    transform: scale(0.3);
+    transform-origin: center;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.widget-card:hover .preview-wrapper {
+    transform: scale(0.33);
+}
+
+.widget-info {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.widget-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    color: var(--color-secondary-text);
+    transition: color 0.3s ease;
+}
+
+.widget-card:hover .widget-name,
+.widget-card.active .widget-name {
+    color: var(--color-primary-text);
 }
 </style>
