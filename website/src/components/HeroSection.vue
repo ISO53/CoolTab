@@ -1,10 +1,10 @@
 <template>
     <section class="hero">
         <div class="container hero-content">
+            <div class="version-badge">Version 1.8.0 Now Available</div>
             <h1 class="hero-title">Just a new tab,<br />but <span class="gradient-text">cooler</span>.</h1>
             <p class="hero-subtitle">
-                Customize your browser's new tab with widgets, themes, and more. Experience the next level of
-                productivity and aesthetics.
+                Customize your browser's new tab with brand new widgets, interactive themes, and seamless productivity tools.
             </p>
 
             <div class="hero-actions">
@@ -32,6 +32,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.version-badge {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--text-muted);
+    backdrop-filter: blur(5px);
 }
 
 .hero-title {
