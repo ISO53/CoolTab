@@ -24,6 +24,7 @@ export const useSettingsStore = defineStore("settings", {
         userStyles: getUserStyles(),
         todoItems: getTodoItems(),
         todoMaxTasks: parseInt(localStorage.getItem("todo-max-tasks")) || 25,
+        analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
     }),
     actions: {
         setBackgroundImage(image) {
@@ -181,6 +182,7 @@ export const useSettingsStore = defineStore("settings", {
             if (settings.weeklyWeatherInfo !== undefined) this.setWeeklyWeatherInfo(settings.weeklyWeatherInfo);
             if (settings.todoItems !== undefined) this.setTodoItems(settings.todoItems);
             if (settings.todoMaxTasks !== undefined) this.setTodoMaxTasks(settings.todoMaxTasks);
+            if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
         },
         getStyleSnapshot() {
             return {
@@ -200,6 +202,7 @@ export const useSettingsStore = defineStore("settings", {
                 weeklyWeatherInfo: JSON.parse(JSON.stringify(this.weeklyWeatherInfo)),
                 todoItems: JSON.parse(JSON.stringify(this.todoItems)),
                 todoMaxTasks: this.todoMaxTasks,
+                analogClockStyle: this.analogClockStyle,
             };
         },
         async importStyleById(styleId) {
@@ -265,6 +268,10 @@ export const useSettingsStore = defineStore("settings", {
         setTodoMaxTasks(max) {
             this.todoMaxTasks = max;
             storeInLocalStorage("todo-max-tasks", max);
+        },
+        setAnalogClockStyle(style) {
+            this.analogClockStyle = style;
+            storeInLocalStorage("analog-clock-style", style);
         },
     },
 });
