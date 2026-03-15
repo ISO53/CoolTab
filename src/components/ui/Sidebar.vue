@@ -208,6 +208,19 @@
                                     :onSelect="setWidgetAreaColumns"
                                 />
                             </div>
+
+                            <span class="divider"></span>
+
+                            <div>
+                                <h2>Max Todo Tasks</h2>
+                                <NumberPicker
+                                    v-model="settingsStore.todoMaxTasks"
+                                    :min="5"
+                                    :max="100"
+                                    :step="1"
+                                    :onSelect="setTodoMaxTasks"
+                                />
+                            </div>
                         </div>
                     </Tab>
                 </Tabs>
@@ -240,6 +253,7 @@ import DailyWeatherForecast from "../widgets/DailyWeatherForecast.vue";
 import Stock from "../widgets/Stock.vue";
 import QuickLinks from "../widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
+import TodoList from "../widgets/TodoList.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -268,6 +282,7 @@ export default {
         Stock,
         QuickLinks,
         WeeklyWeatherForecast,
+        TodoList,
     },
     data() {
         return {
@@ -323,6 +338,9 @@ export default {
         },
         setWidgetAreaColumns(columns) {
             this.settingsStore.setWidgetAreaColumns(columns);
+        },
+        setTodoMaxTasks(max) {
+            this.settingsStore.setTodoMaxTasks(max);
         },
         setWidgetSelected(widget, isSelected) {
             widget.selected = isSelected;

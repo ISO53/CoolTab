@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import pkg from "../package.json";
 
 export const useSettingsStore = defineStore("settings", {
@@ -22,6 +22,8 @@ export const useSettingsStore = defineStore("settings", {
         releaseNotes: null,
         showUpdatePopup: false,
         userStyles: getUserStyles(),
+        todoItems: getTodoItems(),
+        todoMaxTasks: parseInt(localStorage.getItem("todo-max-tasks")) || 25,
     }),
     actions: {
         setBackgroundImage(image) {
@@ -177,6 +179,8 @@ export const useSettingsStore = defineStore("settings", {
             if (settings.currentWeatherInfo !== undefined) this.setCurrentWeatherInfo(settings.currentWeatherInfo);
             if (settings.stock !== undefined) this.setStock(settings.stock);
             if (settings.weeklyWeatherInfo !== undefined) this.setWeeklyWeatherInfo(settings.weeklyWeatherInfo);
+            if (settings.todoItems !== undefined) this.setTodoItems(settings.todoItems);
+            if (settings.todoMaxTasks !== undefined) this.setTodoMaxTasks(settings.todoMaxTasks);
         },
         getStyleSnapshot() {
             return {
@@ -194,6 +198,8 @@ export const useSettingsStore = defineStore("settings", {
                 currentWeatherInfo: JSON.parse(JSON.stringify(this.currentWeatherInfo)),
                 stock: JSON.parse(JSON.stringify(this.stock)),
                 weeklyWeatherInfo: JSON.parse(JSON.stringify(this.weeklyWeatherInfo)),
+                todoItems: JSON.parse(JSON.stringify(this.todoItems)),
+                todoMaxTasks: this.todoMaxTasks,
             };
         },
         async importStyleById(styleId) {
@@ -211,13 +217,13 @@ export const useSettingsStore = defineStore("settings", {
                         if (!Array.isArray(this.userStyles)) this.userStyles = [];
                         this.userStyles.push(importedStyle);
                         storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
-                        return {success: true, style: importedStyle};
+                        return { success: true, style: importedStyle };
                     }
                 }
-                return {success: false, error: "Style not found or invalid format"};
+                return { success: false, error: "Style not found or invalid format" };
             } catch (e) {
                 console.error("Error importing style:", e);
-                return {success: false, error: e.message};
+                return { success: false, error: e.message };
             }
         },
         async shareUserStyle(styleName) {
@@ -238,19 +244,27 @@ export const useSettingsStore = defineStore("settings", {
                 });
 
                 if (response.ok) {
-                    return {success: true};
+                    return { success: true };
                 }
 
                 // Check for rate limit error
                 if (response.status === 429) {
-                    return {success: false, error: "Rate limit exceeded", isRateLimit: true};
+                    return { success: false, error: "Rate limit exceeded", isRateLimit: true };
                 }
 
-                return {success: false, error: "Failed to share style"};
+                return { success: false, error: "Failed to share style" };
             } catch (e) {
                 console.error("Error sharing style:", e);
-                return {success: false, error: e.message};
+                return { success: false, error: e.message };
             }
+        },
+        setTodoItems(items) {
+            this.todoItems = items;
+            storeInLocalStorage("todo-items", JSON.stringify(items));
+        },
+        setTodoMaxTasks(max) {
+            this.todoMaxTasks = max;
+            storeInLocalStorage("todo-max-tasks", max);
         },
     },
 });
@@ -467,6 +481,15 @@ function getWidgets() {
             resize: "2/1",
             selected: true,
         },
+        {
+            name: "TodoList",
+            x: 17,
+            y: 0,
+            width: 2,
+            height: 4,
+            resize: "1/2",
+            selected: false,
+        },
     ];
 
     if (widgets) {
@@ -513,13 +536,13 @@ function getWeeklyWeatherInfo() {
             weather: "Weather",
         },
         week: [
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
+            { date: "", img: "", high: 25, low: 15 },
+            { date: "", img: "", high: 25, low: 15 },
+            { date: "", img: "", high: 25, low: 15 },
+            { date: "", img: "", high: 25, low: 15 },
+            { date: "", img: "", high: 25, low: 15 },
+            { date: "", img: "", high: 25, low: 15 },
+            { date: "", img: "", high: 25, low: 15 },
         ],
     };
 
@@ -609,6 +632,22 @@ function getUserStyles() {
     if (styles) {
         try {
             return JSON.parse(styles);
+        } catch (e) {
+            return [];
+        }
+    }
+    return [];
+}
+
+/**
+ * Return todo items from localStorage
+ * @returns {Array}
+ */
+function getTodoItems() {
+    const items = localStorage.getItem("todo-items");
+    if (items) {
+        try {
+            return JSON.parse(items);
         } catch (e) {
             return [];
         }
