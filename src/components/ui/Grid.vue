@@ -1,10 +1,12 @@
 <template>
     <div class="grid" ref="grid">
         <!-- Canvas for rendering grid points -->
-        <canvas :class="{hide: !editing}" ref="gridCanvas" class="grid-canvas" :width="width" :height="height"></canvas>
+        <canvas :class="{hide: !editing}" ref="gridCanvas" class="grid-canvas" :width="width" :height="height" :style="{ left: offsetX + 'px', top: offsetY + 'px' }"></canvas>
 
         <!-- Slot to add Grid Items dynamically -->
-        <slot></slot>
+        <div class="grid-items" :style="{ width: width + 'px', height: height + 'px', left: offsetX + 'px', top: offsetY + 'px' }">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -21,6 +23,8 @@ export default {
             width: 0,
             height: 0,
             step: 0,
+            offsetX: 0,
+            offsetY: 0,
             animationFrameId: null,
             time: 0,
         };
@@ -66,9 +70,17 @@ export default {
             }
         },
         update() {
-            this.width = this.$refs.grid.offsetWidth;
-            this.height = this.$refs.grid.offsetHeight;
-            this.step = this.width / this.cols;
+            const containerWidth = this.$refs.grid.offsetWidth;
+            const containerHeight = this.$refs.grid.offsetHeight;
+
+            this.step = Math.max(1, Math.floor(containerWidth / this.cols));
+            const rows = Math.floor(containerHeight / this.step);
+
+            this.width = this.cols * this.step;
+            this.height = rows * this.step;
+
+            this.offsetX = (containerWidth - this.width) / 2;
+            this.offsetY = (containerHeight - this.height) / 2;
 
             requestAnimationFrame(this.drawGridPoints);
         },
@@ -92,9 +104,12 @@ export default {
 }
 
 .grid-canvas {
-    width: 100%;
-    height: 100%;
+    position: absolute;
     pointer-events: none;
+}
+
+.grid-items {
+    position: absolute;
 }
 
 .hide {
