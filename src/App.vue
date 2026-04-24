@@ -55,6 +55,7 @@ export default {
     },
     beforeMount() {
         this.updateCSSVariables();
+        this.settingsStore.loadBackgroundImage();
     },
     components: {
         Grid,

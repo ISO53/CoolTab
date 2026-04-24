@@ -12,7 +12,7 @@
                 :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
                 rel="noopener noreferrer"
             >
-                <img :src="settingsStore.quickLinks.images[index]" alt="favicon" class="link" />
+                <img :src="faviconUrls[link]" alt="favicon" class="link" />
             </a>
         </div>
     </Widget>
@@ -21,6 +21,7 @@
 <script>
 import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
+import { getItem, setItem } from "@/utils/db";
 
 export default {
     name: "QuickLinks",
@@ -31,36 +32,50 @@ export default {
         const settingsStore = useSettingsStore();
         return {settingsStore};
     },
+    data() {
+        return {
+            faviconUrls: {},
+        };
+    },
     mounted() {
-        this.setFavicons();
+        this.loadFavicons();
+    },
+    beforeUnmount() {
+        // Revoke all favicon object URLs to free memory
+        Object.values(this.faviconUrls).forEach((url) => {
+            if (url && url.startsWith("blob:")) {
+                URL.revokeObjectURL(url);
+            }
+        });
     },
     methods: {
-        setFavicons() {
-            if (
-                !this.settingsStore.quickLinks.images ||
-                this.settingsStore.quickLinks.images.length === 0 ||
-                this.settingsStore.quickLinks.links.length !== this.settingsStore.quickLinks.images.length ||
-                this.settingsStore.quickLinks.images[0] === ""
-            ) {
-                const urls = this.settingsStore.quickLinks.links;
+        async loadFavicons() {
+            const urls = this.settingsStore.quickLinks.links;
+            const newFaviconUrls = { ...this.faviconUrls };
+            let updated = false;
 
-                const fetchFavicon = async (url) => {
-                    const request = `https://cool-tab-api.vercel.app/api/favicon?hostname=${url}`;
-                    const response = await fetch(request);
-                    const buffer = await response.arrayBuffer();
-                    const base64data = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-                    return `data:image/x-icon;base64,${base64data}`;
-                };
+            for (const url of urls) {
+                try {
+                    let blob = await getItem(`favicon-${url}`);
+                    if (!blob) {
+                        // Fetch if not in cache
+                        const request = `https://cool-tab-api.vercel.app/api/favicon?hostname=${url}`;
+                        const response = await fetch(request);
+                        blob = await response.blob();
+                        await setItem(`favicon-${url}`, blob);
+                    }
+                    
+                    if (blob instanceof Blob) {
+                        newFaviconUrls[url] = URL.createObjectURL(blob);
+                        updated = true;
+                    }
+                } catch (error) {
+                    console.error(`Error loading favicon for ${url}:`, error);
+                }
+            }
 
-                const fetchPromises = urls.map((url) => fetchFavicon(url));
-
-                Promise.all(fetchPromises)
-                    .then((faviconImages) => {
-                        const curr = this.settingsStore.quickLinks;
-                        curr.images = faviconImages;
-                        this.settingsStore.setQuickLinks(curr);
-                    })
-                    .catch((error) => console.error("Error fetching favicons:", error));
+            if (updated) {
+                this.faviconUrls = newFaviconUrls;
             }
         },
     },

@@ -1,9 +1,11 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import pkg from "../package.json";
+import {getItem, setItem, removeItem} from "./utils/db";
+import {upload} from "@vercel/blob/client";
 
 export const useSettingsStore = defineStore("settings", {
     state: () => ({
-        backgroundImage: localStorage.getItem("background-image") || null,
+        backgroundImage: null,
         backgroundImageFileName: localStorage.getItem("background-image-file-name") || null,
         backgroundSize: localStorage.getItem("background-size") || "Cover",
         searchEngine: localStorage.getItem("search-engine") || "Google",
@@ -27,9 +29,72 @@ export const useSettingsStore = defineStore("settings", {
         analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
     }),
     actions: {
-        setBackgroundImage(image) {
-            this.backgroundImage = image;
-            storeInLocalStorage("background-image", image);
+        async setBackgroundImage(image, saveToDb = true) {
+            if (this.backgroundImage?.startsWith("blob:")) {
+                URL.revokeObjectURL(this.backgroundImage);
+            }
+
+            if (image instanceof Blob) {
+                const processed = await this.processImage(image);
+                this.backgroundImage = URL.createObjectURL(processed);
+                if (saveToDb) {
+                    await setItem("background-image", processed);
+                }
+            } else {
+                this.backgroundImage = null;
+                if (saveToDb) {
+                    await removeItem("background-image");
+                }
+            }
+        },
+        async loadBackgroundImage() {
+            try {
+                const blob = await getItem("background-image");
+                if (blob instanceof Blob) {
+                    this.backgroundImage = URL.createObjectURL(blob);
+                }
+            } catch (e) {
+                console.error("Failed to load background image:", e);
+            }
+        },
+        processImage(file) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const screenWidth = window.screen.width * window.devicePixelRatio;
+                    const screenHeight = window.screen.height * window.devicePixelRatio;
+
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Only scale down if image is larger than screen resolution
+                    if (width > screenWidth || height > screenHeight) {
+                        const ratio = Math.min(screenWidth / width, screenHeight / height);
+                        width = Math.floor(width * ratio);
+                        height = Math.floor(height * ratio);
+
+                        const canvas = document.createElement("canvas");
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Use high quality since we are in IndexedDB now
+                        canvas.toBlob(
+                            (blob) => {
+                                resolve(blob || file);
+                            },
+                            "image/jpeg",
+                            0.95,
+                        );
+                    } else {
+                        // Image is smaller than screen, keep original
+                        resolve(file);
+                    }
+                };
+                img.onerror = () => resolve(file);
+                img.src = URL.createObjectURL(file);
+            });
         },
         setBackgroundSize(size) {
             this.backgroundSize = size;
@@ -143,6 +208,17 @@ export const useSettingsStore = defineStore("settings", {
                 createdAt: new Date().toISOString(),
                 settings: this.getStyleSnapshot(),
             };
+
+            // If there's a custom background image, save a copy for this style
+            const currentImage = this.backgroundImage;
+            if (currentImage && currentImage.startsWith("blob:")) {
+                fetch(currentImage)
+                    .then((r) => r.blob())
+                    .then((blob) => {
+                        setItem(`style-image-${style.id}`, blob);
+                    });
+            }
+
             // ensure userStyles array exists
             if (!Array.isArray(this.userStyles)) this.userStyles = [];
             this.userStyles.push(style);
@@ -153,19 +229,29 @@ export const useSettingsStore = defineStore("settings", {
             // Only allow deleting user styles
             const index = this.userStyles ? this.userStyles.findIndex((t) => t.id === styleId) : -1;
             if (index !== -1) {
+                const styleIdToDelete = this.userStyles[index].id;
                 this.userStyles.splice(index, 1);
                 storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
+                removeItem(`style-image-${styleIdToDelete}`);
             }
         },
-        applyStyle(styleId) {
+        async applyStyle(styleId) {
             const styleList = this.userStyles;
             const style = styleList ? styleList.find((t) => t.id === styleId) : null;
             if (style && style.settings) {
-                this.applyStyleSettings(style.settings);
+                await this.applyStyleSettings(style.settings);
+
+                // Load style-specific background if it exists
+                const styleBlob = await getItem(`style-image-${styleId}`);
+                if (styleBlob) {
+                    await this.setBackgroundImage(styleBlob);
+                }
             }
         },
-        applyStyleSettings(settings) {
-            if (settings.backgroundImage !== undefined) this.setBackgroundImage(settings.backgroundImage);
+        async applyStyleSettings(settings) {
+            if (settings.backgroundImage !== undefined) {
+                await this.setBackgroundImage(settings.backgroundImage);
+            }
             if (settings.backgroundImageFileName !== undefined)
                 this.setBackgroundImageFileName(settings.backgroundImageFileName);
             if (settings.backgroundSize !== undefined) this.setBackgroundSize(settings.backgroundSize);
@@ -186,7 +272,8 @@ export const useSettingsStore = defineStore("settings", {
         },
         getStyleSnapshot() {
             return {
-                backgroundImage: this.backgroundImage,
+                backgroundImage:
+                    this.backgroundImage && this.backgroundImage.startsWith("blob:") ? null : this.backgroundImage,
                 backgroundImageFileName: this.backgroundImageFileName,
                 backgroundSize: this.backgroundSize,
                 searchEngine: this.searchEngine,
@@ -220,23 +307,44 @@ export const useSettingsStore = defineStore("settings", {
                         if (!Array.isArray(this.userStyles)) this.userStyles = [];
                         this.userStyles.push(importedStyle);
                         storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
-                        return { success: true, style: importedStyle };
+                        return {success: true, style: importedStyle};
                     }
                 }
-                return { success: false, error: "Style not found or invalid format" };
+                return {success: false, error: "Style not found or invalid format"};
             } catch (e) {
                 console.error("Error importing style:", e);
-                return { success: false, error: e.message };
+                return {success: false, error: e.message};
             }
         },
         async shareUserStyle(styleName) {
             try {
+                const snapshot = this.getStyleSnapshot();
+
+                // Handle background image upload if it's a custom blob
+                if (this.backgroundImage && this.backgroundImage.startsWith("blob:")) {
+                    try {
+                        const response = await fetch(this.backgroundImage);
+                        const blob = await response.blob();
+
+                        // Upload to Vercel Blob
+                        const newBlob = await upload(this.backgroundImageFileName || "background.jpg", blob, {
+                            access: "public",
+                            handleUploadUrl: "https://cool-tab-api.vercel.app/api/upload-image", // Path to your backend upload handler
+                        });
+
+                        snapshot.backgroundImage = newBlob.url;
+                    } catch (uploadError) {
+                        console.error("Failed to upload background image to Vercel Blob:", uploadError);
+                        // Continue without background or handle error?
+                        // For now, we'll continue with null background if upload fails
+                        snapshot.backgroundImage = null;
+                    }
+                }
+
                 const styleData = {
                     name: styleName,
-                    settings: this.getStyleSnapshot(),
+                    settings: snapshot,
                 };
-
-                console.log(styleData);
 
                 const response = await fetch("https://cool-tab-api.vercel.app/api/set-style", {
                     method: "POST",
@@ -247,18 +355,18 @@ export const useSettingsStore = defineStore("settings", {
                 });
 
                 if (response.ok) {
-                    return { success: true };
+                    return {success: true};
                 }
 
                 // Check for rate limit error
                 if (response.status === 429) {
-                    return { success: false, error: "Rate limit exceeded", isRateLimit: true };
+                    return {success: false, error: "Rate limit exceeded", isRateLimit: true};
                 }
 
-                return { success: false, error: "Failed to share style" };
+                return {success: false, error: "Failed to share style"};
             } catch (e) {
                 console.error("Error sharing style:", e);
-                return { success: false, error: e.message };
+                return {success: false, error: e.message};
             }
         },
         setTodoItems(items) {
@@ -395,13 +503,14 @@ function getQuickLinks() {
     const def = {
         orientation: "Horizontal",
         links: ["www.youtube.com", "google.com/maps"],
-        images: ["", ""],
         open_link_in: "New Tab",
     };
 
     if (quickLinks) {
         try {
-            return JSON.parse(quickLinks);
+            const parsed = JSON.parse(quickLinks);
+            delete parsed.images; // Cleanup legacy data
+            return parsed;
         } catch (e) {
             return def;
         }
@@ -543,13 +652,13 @@ function getWeeklyWeatherInfo() {
             weather: "Weather",
         },
         week: [
-            { date: "", img: "", high: 25, low: 15 },
-            { date: "", img: "", high: 25, low: 15 },
-            { date: "", img: "", high: 25, low: 15 },
-            { date: "", img: "", high: 25, low: 15 },
-            { date: "", img: "", high: 25, low: 15 },
-            { date: "", img: "", high: 25, low: 15 },
-            { date: "", img: "", high: 25, low: 15 },
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high: 25, low: 15},
         ],
     };
 

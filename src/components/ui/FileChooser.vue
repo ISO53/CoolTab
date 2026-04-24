@@ -40,51 +40,12 @@ export default {
             const file = event.target.files[0];
             if (file && file.type.startsWith("image/")) {
                 try {
-                    const resizedImage = await this.resizeImage(file);
-                    this.settingsStore.setBackgroundImage(resizedImage);
+                    await this.settingsStore.setBackgroundImage(file);
                     this.settingsStore.setBackgroundImageFileName(file.name);
                 } catch (error) {
                     console.error("Failed to process image:", error);
                 }
             }
-        },
-
-        resizeImage(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement("canvas");
-                        let width = img.width;
-                        let height = img.height;
-
-                        const screenWidth = window.screen.width;
-                        const screenHeight = window.screen.height;
-
-                        // Scale down to screen resolution if image is larger
-                        if (width > screenWidth || height > screenHeight) {
-                            const ratio = Math.min(screenWidth / width, screenHeight / height);
-                            width = Math.floor(width * ratio);
-                            height = Math.floor(height * ratio);
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext("2d");
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Use JPEG with quality adjustment to save space
-                        // 0.8 is usually a good balance between quality and size
-                        const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
-                        resolve(dataUrl);
-                    };
-                    img.onerror = reject;
-                    img.src = e.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
         },
 
         trash() {
