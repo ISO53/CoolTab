@@ -40,6 +40,15 @@ export const useSettingsStore = defineStore("settings", {
                 if (saveToDb) {
                     await setItem("background-image", processed);
                 }
+            } else if (typeof image === "string" && image.trim() !== "") {
+                try {
+                    const response = await fetch(image);
+                    const blob = await response.blob();
+                    await this.setBackgroundImage(blob, saveToDb);
+                } catch (e) {
+                    console.error("Failed to fetch remote background image:", e);
+                    this.backgroundImage = null;
+                }
             } else {
                 this.backgroundImage = null;
                 if (saveToDb) {
@@ -113,10 +122,16 @@ export const useSettingsStore = defineStore("settings", {
             storeInLocalStorage("open-search-result-in", choice);
         },
         setCurrentWeatherInfo(weather) {
+            if (weather && weather.lastUpdated && typeof weather.lastUpdated === "string") {
+                weather.lastUpdated = new Date(weather.lastUpdated);
+            }
             this.currentWeatherInfo = weather;
             storeInLocalStorage("weather-info", JSON.stringify(weather));
         },
         setStock(stockInfo) {
+            if (stockInfo && stockInfo.lastUpdated && typeof stockInfo.lastUpdated === "string") {
+                stockInfo.lastUpdated = new Date(stockInfo.lastUpdated);
+            }
             this.stock = stockInfo;
             storeInLocalStorage("stock", JSON.stringify(stockInfo));
         },
@@ -132,9 +147,12 @@ export const useSettingsStore = defineStore("settings", {
             this.widgetAreaColumns = columns;
             storeInLocalStorage("widget-area-columns", columns);
         },
-        setWeeklyWeatherInfo(info) {
-            this.weeklyWeatherInfo = info;
-            storeInLocalStorage("weekly-weather-info", JSON.stringify(info));
+        setWeeklyWeatherInfo(weather) {
+            if (weather && weather.lastUpdated && typeof weather.lastUpdated === "string") {
+                weather.lastUpdated = new Date(weather.lastUpdated);
+            }
+            this.weeklyWeatherInfo = weather;
+            storeInLocalStorage("weekly-weather-info", JSON.stringify(weather));
         },
         setWidgetBackground(background) {
             this.widgetBackground = background;

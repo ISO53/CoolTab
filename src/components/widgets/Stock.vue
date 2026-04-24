@@ -25,19 +25,19 @@
 
             <div class="stock-info">
                 <div>
-                    <h1 class="ticker">{{ stock.stocks[selected].ticker }}</h1>
+                    <h1 class="ticker">{{ settingsStore.stock.stocks[selected].ticker }}</h1>
                     <h1 class="diff">
                         {{
-                            (stock.stocks[selected].diff > 0 ? "+" : "") +
-                            parseFloat(stock.stocks[selected].diff).toFixed(2) +
+                            (settingsStore.stock.stocks[selected].diff > 0 ? "+" : "") +
+                            parseFloat(settingsStore.stock.stocks[selected].diff).toFixed(2) +
                             "%"
                         }}
                     </h1>
                 </div>
-                <h1 class="price">{{ "$" + stock.stocks[selected].close }}</h1>
+                <h1 class="price">{{ "$" + settingsStore.stock.stocks[selected].close }}</h1>
 
                 <p class="last-updated">
-                    {{ new Date(stock.cache_time).toLocaleDateString("en-GB").replace(/\//g, ".") }}
+                    {{ new Date(settingsStore.stock.cache_time).toLocaleDateString("en-GB").replace(/\//g, ".") }}
                 </p>
             </div>
         </div>
@@ -59,7 +59,6 @@ export default {
     },
     data() {
         return {
-            stock: this.settingsStore.stock,
             selected: 0,
         };
     },
@@ -70,7 +69,7 @@ export default {
     methods: {
         getCurrentStockInfo() {
             const now = new Date();
-            const last = this.settingsStore.stock.lastUpdated;
+            const last = new Date(this.settingsStore.stock.lastUpdated);
 
             // Check if one day passed (or passed midnight) since last update
             const diff = (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24);
@@ -86,18 +85,22 @@ export default {
                     // Why the fuck this is handling here instead of in the catch statement?
                     if (data.error) throw new Error(data.error);
 
-                    this.stock.cache_time = data.cache_time;
-                    this.stock.lastUpdated = new Date();
-                    this.stock.stocks = data.stock_data;
-                    this.stock.tickers = this.settingsStore.stock.tickers;
-                    this.settingsStore.setStock(this.stock);
+                    const newStockInfo = {
+                        cache_time: data.cache_time,
+                        lastUpdated: new Date(),
+                        stocks: data.stock_data,
+                        tickers: this.settingsStore.stock.tickers,
+                    };
+                    this.settingsStore.setStock(newStockInfo);
                 })
                 .catch((error) => {
                     console.error("Error fetching stock data:", error);
                 });
         },
         setSelected() {
-            if (this.stock.stocks) this.selected = (this.selected + 1) % this.stock.stocks.length;
+            if (this.settingsStore.stock.stocks) {
+                this.selected = (this.selected + 1) % this.settingsStore.stock.stocks.length;
+            }
         },
     },
 };
