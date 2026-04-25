@@ -2,7 +2,6 @@
     <div class="app">
         <Background />
         <Sidebar />
-        <Info />
         <NewFeaturesPanel />
         <Buttons />
         <ShareStyle />
@@ -39,7 +38,6 @@ import DigitalClock from "@/components/widgets/DigitalClock.vue";
 import DailyWeatherForecast from "./components/widgets/DailyWeatherForecast.vue";
 import Stock from "./components/widgets/Stock.vue";
 import QuickLinks from "./components/widgets/QuickLinks.vue";
-import Info from "./components/ui/Info.vue";
 import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
 import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
 import Buttons from "./components/ui/Buttons.vue";
@@ -69,7 +67,6 @@ export default {
         DailyWeatherForecast,
         Stock,
         QuickLinks,
-        Info,
         WeeklyWeatherForecast,
         NewFeaturesPanel,
         Buttons,

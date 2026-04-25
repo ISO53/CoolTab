@@ -1,25 +1,42 @@
 <template>
-    <div>
-        <Transition name="overlay">
-            <div v-if="isOpen" class="overlay" @click="toggleInfo">
-                <div v-if="isOpen" class="info-div" @click.stop>
-                    <img src="@/components/icons/cooltab_logo.svg" draggable="false" />
-                    <h1>CoolTab</h1>
-                    <p>Just a new tab for your browser, but cooler...</p>
-                    <p>Created by <a href="https://github.com/iso53">iso53</a></p>
-                    <p>Version: {{ appVersion }}</p>
-                    <p>Source Code: <a href="https://github.com/iso53/cooltab">github.com/iso53/cooltab</a></p>
+    <div class="info-container">
+        <div class="info-header">
+            <img src="@/components/icons/cooltab_logo.svg" draggable="false" class="logo" />
+            <h2 class="page-title">CoolTab</h2>
+            <p class="tagline">Just a new tab for your browser, but cooler...</p>
+        </div>
 
-                    <br />
-
-                    <h2>Special Thanks To</h2>
-                    <p><a href="https://www.weatherapi.com/">WeatherAPI.com</a> for providing weather info.</p>
-                    <p><a href="https://open-meteo.com/">Open-Meteo.com</a> for providing weather info.</p>
-                    <p><a href="https://polygon.io/">Polygon.io</a> for providing stock market info.</p>
-                    <p><a href="https://icons.qweather.com/">QWeather.com</a> for providing weather icons.</p>
-                </div>
+        <div class="info-section">
+            <div class="info-item">
+                <span class="label">Version</span>
+                <span class="value">{{ appVersion }}</span>
             </div>
-        </Transition>
+            <div class="info-item">
+                <span class="label">Created by</span>
+                <span class="value"><a href="https://github.com/iso53" target="_blank">iso53</a></span>
+            </div>
+            <div class="info-item">
+                <span class="label">Source Code</span>
+                <span class="value"><a href="https://github.com/iso53/cooltab" target="_blank">GitHub</a></span>
+            </div>
+        </div>
+
+        <div class="thanks-section">
+            <h3 class="section-title">Special Thanks To</h3>
+            <ul class="thanks-list">
+                <li>
+                    <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a> for providing weather info.
+                </li>
+                <li>
+                    <a href="https://open-meteo.com/" target="_blank">Open-Meteo.com</a> for providing weather info.
+                </li>
+                <li><a href="https://polygon.io/" target="_blank">Polygon.io</a> for providing stock market info.</li>
+                <li>
+                    <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> for providing stock market
+                    info.
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -30,86 +47,111 @@ export default {
     name: "Info",
     data() {
         return {
-            isOpen: false,
             appVersion: version,
         };
-    },
-    methods: {
-        toggleInfo() {
-            this.isOpen = !this.isOpen;
-        },
     },
 };
 </script>
 
 <style scoped>
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    backdrop-filter: blur(10px);
-    background-color: color-mix(in srgb, var(--color-primary-background), transparent 80%);
-    width: 100vw;
-    height: 100vh;
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.overlay-enter-active,
-.overlay-leave-active {
-    transition: backdrop-filter 250ms ease, background-color 250ms ease;
-}
-
-.overlay-enter-from,
-.overlay-leave-to {
-    backdrop-filter: none;
-    background-color: transparent;
-}
-
-.overlay-enter-active > .info-div,
-.overlay-leave-active > .info-div {
-    transition: transform 250ms ease, opacity 250ms ease;
-}
-
-.overlay-enter-from > .info-div,
-.overlay-leave-to > .info-div {
-    transform: scale(50%);
-    opacity: 0;
-}
-
-.info-div {
-    width: fit-content;
-    height: fit-content;
-    background-color: var(--color-primary-background);
-    border: 2px solid var(--color-border-line);
-    z-index: 10000;
-    border-radius: 20px;
-    padding: 20px;
+.info-container {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    gap: 24px;
+}
+
+.info-header {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 10px 0;
 }
 
-.info-div > h1 {
+.logo {
+    width: 128px;
+    height: 128px;
+    margin-bottom: 8px;
+}
+
+.tagline {
+    font-size: 0.9rem;
+    color: var(--color-secondary-text);
+    margin: 0;
+}
+
+.page-title {
     font-family: Satoshi-Bold;
-    font-size: 3rem;
+    font-size: 1.8rem;
+    color: var(--color-primary-text);
+    margin: 0;
 }
 
-.info-div > p {
-    font-family: Satoshi-Light;
-    font-size: 1rem;
+.info-section {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-secondary-background);
+    border-radius: 12px;
+    border: 1.5px solid var(--color-border-line);
+    overflow: hidden;
 }
 
-.info-div > h2 {
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border-line);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.label {
+    font-size: 0.85rem;
+    color: var(--color-tertiary-text);
+}
+
+.value {
+    font-size: 0.85rem;
     font-family: Satoshi-Bold;
-    font-size: 2rem;
+    color: var(--color-primary-text);
 }
 
-.info-div > img {
-    width: 100px;
-    height: 100px;
+.value a {
+    color: var(--color-primary-text);
+    text-decoration: underline;
+}
+
+.section-title {
+    font-family: Satoshi-Bold;
+    font-size: 1.2rem;
+    color: var(--color-primary-text);
+    margin: 0 0 12px 0;
+}
+
+.thanks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.thanks-list li {
+    font-size: 0.85rem;
+    color: var(--color-secondary-text);
+}
+
+.thanks-list a {
+    color: var(--color-primary-text);
+    font-family: Satoshi-Bold;
+    text-decoration: none;
+}
+
+.thanks-list a:hover {
+    text-decoration: underline;
 }
 </style>

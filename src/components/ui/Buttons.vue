@@ -1,6 +1,5 @@
 <template>
     <Sidebar ref="sidebarRef" />
-    <Info ref="infoRef" />
     <ShareStyle ref="shareStyleRef" />
     <div class="buttons" :class="{revealed: isRevealed}">
         <button @click="toggleSharePopup" class="button" title="Share this style!">
@@ -11,10 +10,6 @@
             <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
         </button>
 
-        <button @click="toggleInfo" class="button" title="Info">
-            <Svg :class_name="'material-icons-outlined'" :name="'info'"></Svg>
-        </button>
-
         <button @click="toggleSidebar" class="button" title="Open settings">
             <Svg :class_name="'material-icons-outlined'" :name="'settings'"></Svg>
         </button>
@@ -23,7 +18,6 @@
 
 <script>
 import Sidebar from "@/components/ui/Sidebar.vue";
-import Info from "@/components/ui/Info.vue";
 import ShareStyle from "./ShareStyle.vue";
 import {useSettingsStore} from "@/settings";
 
@@ -35,7 +29,6 @@ export default {
     },
     components: {
         Sidebar,
-        Info,
         ShareStyle,
     },
     data() {
@@ -72,9 +65,6 @@ export default {
         },
         toggleSidebar() {
             this.$refs.sidebarRef.toggleSidebar();
-        },
-        toggleInfo() {
-            this.$refs.infoRef.toggleInfo();
         },
         toggleSharePopup() {
             this.$refs.shareStyleRef.toggleShareStyle();
@@ -115,9 +105,6 @@ export default {
 }
 .buttons .button:nth-child(3) {
     transition-delay: 75ms;
-}
-.buttons .button:nth-child(4) {
-    transition-delay: 100ms;
 }
 
 .button {

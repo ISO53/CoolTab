@@ -7,7 +7,6 @@
         <Transition name="slide">
             <div v-show="isOpen" class="slide">
                 <Tabs :selected="'Customization'">
-
                     <!-- Customization -->
                     <Tab :label="'Customization'" :icon="'palette'">
                         <div class="settings">
@@ -20,16 +19,22 @@
 
                             <div>
                                 <h2>Image Size</h2>
-                                <SelectButton v-model="settingsStore.backgroundSize"
-                                    :options="['Auto', 'Cover', 'Contain']" :onSelect="setBackgroundSize" />
+                                <SelectButton
+                                    v-model="settingsStore.backgroundSize"
+                                    :options="['Auto', 'Cover', 'Contain']"
+                                    :onSelect="setBackgroundSize"
+                                />
                             </div>
 
                             <span class="divider"></span>
 
                             <div>
                                 <h2>Widget Background</h2>
-                                <SelectButton v-model="settingsStore.widgetBackground"
-                                    :options="['Color', 'Transparent', 'Blur']" :onSelect="setWidgetBackground" />
+                                <SelectButton
+                                    v-model="settingsStore.widgetBackground"
+                                    :options="['Color', 'Transparent', 'Blur']"
+                                    :onSelect="setWidgetBackground"
+                                />
                             </div>
 
                             <span class="divider"></span>
@@ -48,18 +53,24 @@
 
                             <div>
                                 <h2>Background Color #1</h2>
-                                <ColorChooser v-model="settingsStore.colors.color_primary_background"
-                                    :onSelect="setColors" />
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_primary_background"
+                                    :onSelect="setColors"
+                                />
                             </div>
                             <div>
                                 <h2>Background Color #2</h2>
-                                <ColorChooser v-model="settingsStore.colors.color_secondary_background"
-                                    :onSelect="setColors" />
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_secondary_background"
+                                    :onSelect="setColors"
+                                />
                             </div>
                             <div>
                                 <h2>Background Color #3</h2>
-                                <ColorChooser v-model="settingsStore.colors.color_tertiary_background"
-                                    :onSelect="setColors" />
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_tertiary_background"
+                                    :onSelect="setColors"
+                                />
                             </div>
                             <div>
                                 <h2>Text Color #1</h2>
@@ -67,13 +78,17 @@
                             </div>
                             <div>
                                 <h2>Text Color #2</h2>
-                                <ColorChooser v-model="settingsStore.colors.color_secondary_text"
-                                    :onSelect="setColors" />
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_secondary_text"
+                                    :onSelect="setColors"
+                                />
                             </div>
                             <div>
                                 <h2>Text Color #3</h2>
-                                <ColorChooser v-model="settingsStore.colors.color_tertiary_text"
-                                    :onSelect="setColors" />
+                                <ColorChooser
+                                    v-model="settingsStore.colors.color_tertiary_text"
+                                    :onSelect="setColors"
+                                />
                             </div>
                             <div>
                                 <h2>Border Color</h2>
@@ -96,11 +111,16 @@
                     <Tab :label="'Widgets'" :icon="'widgets'">
                         <h2 class="page-title">Widgets</h2>
                         <div class="widget-grid">
-                            <div v-for="(widget, index) in settingsStore.widgets" :key="index" class="widget-card"
+                            <div
+                                v-for="(widget, index) in settingsStore.widgets"
+                                :key="index"
+                                class="widget-card"
                                 :class="{
                                     active: widget.selected,
-                                    inactive: !widget.selected
-                                }" @click="setWidgetSelected(widget, !widget.selected)">
+                                    inactive: !widget.selected,
+                                }"
+                                @click="setWidgetSelected(widget, !widget.selected)"
+                            >
                                 <div v-if="widget.selected" class="card-indicator">
                                     <Svg :class_name="'material-icons-outlined'" :name="'check_circle'"></Svg>
                                 </div>
@@ -123,76 +143,111 @@
 
                             <div>
                                 <h2>Search Engine</h2>
-                                <DropdownSelect v-model="settingsStore.searchEngine" :values="[
-                                    'Google',
-                                    'Bing',
-                                    'DuckDuckGo',
-                                    'Yahoo',
-                                    'Ecosia',
-                                    'Yandex',
-                                    'Startpage',
-                                    'Swisscows',
-                                ]" :onSelect="setSearchEngine" />
+                                <DropdownSelect
+                                    v-model="settingsStore.searchEngine"
+                                    :values="[
+                                        'Google',
+                                        'Bing',
+                                        'DuckDuckGo',
+                                        'Yahoo',
+                                        'Ecosia',
+                                        'Yandex',
+                                        'Startpage',
+                                        'Swisscows',
+                                    ]"
+                                    :onSelect="setSearchEngine"
+                                />
                             </div>
 
                             <div>
                                 <h2>Open Result In</h2>
-                                <SelectButton v-model="settingsStore.openSearchResultIn"
-                                    :options="['Current Tab', 'New Tab']" :onSelect="setOpenSearchResultIn" />
+                                <SelectButton
+                                    v-model="settingsStore.openSearchResultIn"
+                                    :options="['Current Tab', 'New Tab']"
+                                    :onSelect="setOpenSearchResultIn"
+                                />
                             </div>
 
                             <span class="divider"></span>
 
                             <div>
                                 <h2>Analog Clock Style</h2>
-                                <SelectButton v-model="settingsStore.analogClockStyle" :options="['Minimal', 'Classic']"
-                                    :onSelect="setAnalogClockStyle" />
+                                <SelectButton
+                                    v-model="settingsStore.analogClockStyle"
+                                    :options="['Minimal', 'Classic']"
+                                    :onSelect="setAnalogClockStyle"
+                                />
                             </div>
 
                             <span class="divider"></span>
 
                             <div>
                                 <h2>Stocks</h2>
-                                <DropdownList v-model="settingsStore.stock.tickers" :text="'stock'"
-                                    :onSelect="setTickers" />
+                                <DropdownList
+                                    v-model="settingsStore.stock.tickers"
+                                    :text="'stock'"
+                                    :onSelect="setTickers"
+                                />
                             </div>
 
                             <span class="divider"></span>
 
                             <div>
                                 <h2>Quick Links</h2>
-                                <DropdownList v-model="this.settingsStore.quickLinks.links" :text="'link'"
-                                    :onSelect="setQuickLinks" />
+                                <DropdownList
+                                    v-model="this.settingsStore.quickLinks.links"
+                                    :text="'link'"
+                                    :onSelect="setQuickLinks"
+                                />
                             </div>
 
                             <div>
                                 <h2>Quick Links Orientation</h2>
-                                <SelectButton v-model="settingsStore.quickLinks.orientation"
-                                    :options="['Vertical', 'Horizontal']" :onSelect="setOrientation" />
+                                <SelectButton
+                                    v-model="settingsStore.quickLinks.orientation"
+                                    :options="['Vertical', 'Horizontal']"
+                                    :onSelect="setOrientation"
+                                />
                             </div>
 
                             <div>
                                 <h2>Open Link In</h2>
-                                <SelectButton v-model="settingsStore.quickLinks.open_link_in"
-                                    :options="['Current Tab', 'New Tab']" :onSelect="setOpenLinkIn" />
+                                <SelectButton
+                                    v-model="settingsStore.quickLinks.open_link_in"
+                                    :options="['Current Tab', 'New Tab']"
+                                    :onSelect="setOpenLinkIn"
+                                />
                             </div>
 
                             <span class="divider"></span>
 
                             <div>
                                 <h2>Widget Area Columns</h2>
-                                <NumberPicker v-model="settingsStore.widgetAreaColumns" :min="10" :max="80" :step="1"
-                                    :onSelect="setWidgetAreaColumns" />
+                                <NumberPicker
+                                    v-model="settingsStore.widgetAreaColumns"
+                                    :min="10"
+                                    :max="80"
+                                    :step="1"
+                                    :onSelect="setWidgetAreaColumns"
+                                />
                             </div>
 
                             <span class="divider"></span>
 
                             <div>
                                 <h2>Max Todo Tasks</h2>
-                                <NumberPicker v-model="settingsStore.todoMaxTasks" :min="5" :max="100" :step="1"
-                                    :onSelect="setTodoMaxTasks" />
+                                <NumberPicker
+                                    v-model="settingsStore.todoMaxTasks"
+                                    :min="5"
+                                    :max="100"
+                                    :step="1"
+                                    :onSelect="setTodoMaxTasks"
+                                />
                             </div>
                         </div>
+                    </Tab>
+                    <Tab :label="'About'" :icon="'info'">
+                        <Info />
                     </Tab>
                 </Tabs>
 
@@ -219,6 +274,7 @@ import ToggleSwitch from "./ToggleSwitch.vue";
 import ColorPalette from "./ColorPalette.vue";
 import Styles from "./Styles.vue";
 import CommunityStyles from "./CommunityStyles.vue";
+import Info from "./Info.vue";
 import SearchBar from "../widgets/SearchBar.vue";
 import Calendar from "../widgets/Calendar.vue";
 import AnalogClock from "../widgets/AnalogClock.vue";
@@ -228,13 +284,13 @@ import Stock from "../widgets/Stock.vue";
 import QuickLinks from "../widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import TodoList from "../widgets/TodoList.vue";
-import { useSettingsStore } from "@/settings";
+import {useSettingsStore} from "@/settings";
 
 export default {
     name: "Sidebar",
     setup() {
         const settingsStore = useSettingsStore();
-        return { settingsStore };
+        return {settingsStore};
     },
     components: {
         FileChooser,
@@ -249,6 +305,7 @@ export default {
         ColorPalette,
         Styles,
         CommunityStyles,
+        Info,
         SearchBar,
         Calendar,
         AnalogClock,
@@ -349,7 +406,9 @@ export default {
 
 .overlay-enter-active,
 .overlay-leave-active {
-    transition: backdrop-filter 250ms ease, background-color 250ms ease;
+    transition:
+        backdrop-filter 250ms ease,
+        background-color 250ms ease;
 }
 
 .overlay-enter-from,
@@ -398,7 +457,9 @@ export default {
     align-items: center;
     justify-content: center;
     color: var(--color-tertiary-text);
-    transition: background-color 180ms ease, color 180ms ease;
+    transition:
+        background-color 180ms ease,
+        color 180ms ease;
     z-index: 1;
 }
 
@@ -412,10 +473,6 @@ export default {
 .sidebar-close-btn:hover {
     background-color: var(--color-secondary-background);
     color: var(--color-primary-text);
-}
-
-.sidebar-close-btn:hover i {
-    transform: translateX(-3px);
 }
 
 /* Tooltip on close button */
