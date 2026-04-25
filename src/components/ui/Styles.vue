@@ -1,31 +1,15 @@
 <template>
     <div class="styles-container">
-        <div class="styles-header">
-            <p>
-                Save your current style for quick access, or import a style from
-                <a href="https://iso53.github.io/CoolTab/#/style" target="_blank" rel="noopener noreferrer"
-                    >Community Styles</a
-                >
-                .
-            </p>
-            <div class="styles-buttons">
-                <button class="style-btn" @click="saveCurrentStyle" title="Save current style">
-                    <Svg :class_name="'material-icons-outlined'" :name="'save'"></Svg>
-                    Save Current Style
-                </button>
-                <p>or</p>
-                <button class="style-btn" @click="importStyle" title="Import style from ID">
-                    <Svg :class_name="'material-icons-outlined'" :name="'download'"></Svg>
-                    Import Style
-                </button>
-            </div>
+        <div class="styles-top-bar">
+            <h2 class="page-title">My Styles</h2>
+            <button class="save-btn" @click="saveCurrentStyle" title="Save current style">
+                <i class="material-icons-outlined">save</i>
+                Save Current Style
+            </button>
         </div>
 
         <!-- User Styles Section -->
         <div class="styles-section">
-            <div class="section-header">
-                <h2>Your Styles</h2>
-            </div>
             <div class="styles-grid">
                 <StyleCard
                     v-for="style in this.settingsStore.userStyles"
@@ -37,14 +21,16 @@
                 />
             </div>
             <div v-if="!this.settingsStore.userStyles.length" class="no-styles">
-                <p>No styles saved yet. Create your own or import one!</p>
+                <i class="material-icons-outlined">style</i>
+                <p>No styles saved yet.</p>
+                <p class="hint">Save your current look or browse Community Styles.</p>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import {useSettingsStore} from "@/settings";
+import { useSettingsStore } from "@/settings";
 import StyleCard from "./StyleCard.vue";
 
 export default {
@@ -58,17 +44,6 @@ export default {
         };
     },
     methods: {
-        async importStyle() {
-            const styleId = prompt("Paste Style ID:");
-            if (!styleId) return;
-
-            const result = await this.settingsStore.importStyleById(styleId);
-            if (result.success) {
-                alert("Style imported successfully!");
-            } else {
-                alert("Failed to import style: " + result.error);
-            }
-        },
         saveCurrentStyle() {
             const name = prompt("Name for your style:");
             if (!name) return;
@@ -91,22 +66,57 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow-y: auto;
-    padding: 10px;
-    gap: 15px;
+    gap: 16px;
+}
+
+.styles-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.page-title {
+    font-family: Satoshi-Bold;
+    font-size: 1.2rem;
+    color: var(--color-primary-text);
+    margin: 0;
+}
+
+.save-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background-color: var(--color-secondary-background);
+    color: var(--color-secondary-text);
+    border: 1.5px solid var(--color-border-line);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Satoshi-Bold;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    transition: color 200ms ease, border-color 200ms ease;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.save-btn i {
+    font-size: 1.1rem;
+}
+
+.save-btn:hover {
+    color: var(--color-primary-text);
+    border-color: var(--color-secondary-text);
 }
 
 .styles-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.styles-section > h2 {
-    font-family: Satoshi-Bold;
-    font-size: 1.1rem;
-    color: var(--color-primary-text);
-    margin: 0;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .styles-grid {
@@ -115,75 +125,31 @@ export default {
     gap: 8px;
 }
 
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .no-styles {
-    text-align: center;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 32px 20px;
     color: var(--color-tertiary-text);
     background-color: var(--color-secondary-background);
     border: 2px dashed var(--color-border-line);
-    border-radius: 10px;
+    border-radius: 12px;
+}
+
+.no-styles i {
+    font-size: 2rem;
+    opacity: 0.5;
 }
 
 .no-styles p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
 }
 
-.styles-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 6px;
-}
-
-.styles-buttons {
-    width: 100%;
-    margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
-
-.styles-buttons button {
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    padding: 10px;
-    gap: 10px;
-}
-
-.style-btn i {
-    font-size: 1.6rem;
-}
-
-.style-btn {
-    background-color: var(--color-secondary-background);
-    color: var(--color-secondary-text);
-    padding: 8px 12px 8px 12px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: left;
-    border: 2px solid var(--color-border-line);
-    transition: color 250ms ease, border-color 250ms ease;
-    user-select: none;
-    font-family: Satoshi-Bold;
-    font-size: 0.85rem;
-}
-
-.style-btn:hover {
-    color: var(--color-primary-text);
-    border-color: var(--color-secondary-text);
+.no-styles .hint {
+    font-size: 0.78rem;
+    opacity: 0.7;
 }
 </style>

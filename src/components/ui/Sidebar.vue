@@ -6,11 +6,13 @@
 
         <Transition name="slide">
             <div v-show="isOpen" class="slide">
-                <h1 class="header">CoolTab Settings</h1>
-
                 <Tabs :selected="'Customization'">
-                    <Tab :label="'Customization'">
+
+                    <!-- Customization -->
+                    <Tab :label="'Customization'" :icon="'palette'">
                         <div class="settings">
+                            <h2 class="page-title">Customization</h2>
+
                             <div>
                                 <h2>Background Image</h2>
                                 <FileChooser />
@@ -80,11 +82,19 @@
                         </div>
                     </Tab>
 
-                    <Tab :label="'Styles'">
+                    <!-- My Styles -->
+                    <Tab :label="'Styles'" :icon="'style'">
                         <Styles />
                     </Tab>
 
-                    <Tab :label="'Widgets'">
+                    <!-- Community Styles -->
+                    <Tab :label="'Community'" :icon="'explore'">
+                        <CommunityStyles />
+                    </Tab>
+
+                    <!-- Widgets -->
+                    <Tab :label="'Widgets'" :icon="'widgets'">
+                        <h2 class="page-title">Widgets</h2>
                         <div class="widget-grid">
                             <div v-for="(widget, index) in settingsStore.widgets" :key="index" class="widget-card"
                                 :class="{
@@ -106,8 +116,11 @@
                         </div>
                     </Tab>
 
-                    <Tab :label="'Settings'">
+                    <!-- Settings -->
+                    <Tab :label="'Settings'" :icon="'tune'">
                         <div class="settings">
+                            <h2 class="page-title">Settings</h2>
+
                             <div>
                                 <h2>Search Engine</h2>
                                 <DropdownSelect v-model="settingsStore.searchEngine" :values="[
@@ -183,8 +196,10 @@
                     </Tab>
                 </Tabs>
 
-                <button @click="toggleSidebar" class="sidebar-toggle-button close" title="Close settings">
-                    <Svg :class_name="'material-icons-outlined'" :name="'arrow_back'"></Svg>
+                <!-- Close button — positioned at the bottom of the icon rail -->
+                <button class="sidebar-close-btn" @click="toggleSidebar" title="Close settings">
+                    <i class="material-icons-outlined">arrow_back</i>
+                    <span class="close-tooltip">Close</span>
                 </button>
             </div>
         </Transition>
@@ -203,6 +218,7 @@ import NumberPicker from "./NumberPicker.vue";
 import ToggleSwitch from "./ToggleSwitch.vue";
 import ColorPalette from "./ColorPalette.vue";
 import Styles from "./Styles.vue";
+import CommunityStyles from "./CommunityStyles.vue";
 import SearchBar from "../widgets/SearchBar.vue";
 import Calendar from "../widgets/Calendar.vue";
 import AnalogClock from "../widgets/AnalogClock.vue";
@@ -232,6 +248,7 @@ export default {
         ToggleSwitch,
         ColorPalette,
         Styles,
+        CommunityStyles,
         SearchBar,
         Calendar,
         AnalogClock,
@@ -267,12 +284,10 @@ export default {
             this.settingsStore.setStock(stockInfo);
         },
         setOrientation(orientation) {
-            // Adjust the widgets orientation
             const quickLinksInfo = this.settingsStore.quickLinks;
             quickLinksInfo.orientation = orientation;
             this.settingsStore.setQuickLinks(quickLinksInfo);
 
-            // Adjust the grids orientation for widget
             const widgets = this.settingsStore.widgets;
             widgets
                 .filter((w) => w.name === "QuickLinks")
@@ -314,7 +329,6 @@ export default {
             this.settingsStore.setColors(this.settingsStore.colors);
         },
         formatWidgetName(name) {
-            // Add spaces between camelCase words
             return name.replace(/([A-Z])/g, " $1").trim();
         },
     },
@@ -348,14 +362,15 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 500px;
+    width: 560px;
     height: 100vh;
     background-color: var(--color-primary-background);
     z-index: 10000;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-    padding: 20px;
+    padding: 16px 16px 16px 0;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .slide-enter-active,
@@ -368,76 +383,108 @@ export default {
     transform: translateX(-100%);
 }
 
-.sidebar-toggle-button {
+/* ── Close button (sits below the icon rail) ── */
+.sidebar-close-btn {
     position: absolute;
-    bottom: 10px;
-    left: 5px;
-    margin: 0;
-    border-radius: 50px;
-    width: 40px;
-    height: 40px;
-    background-color: transparent;
+    bottom: 14px;
+    left: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: transparent;
     border: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-tertiary-text);
+    transition: background-color 180ms ease, color 180ms ease;
+    z-index: 1;
+}
+
+.sidebar-close-btn i {
+    font-size: 1.5rem;
+    color: inherit;
+    transition: transform 200ms ease;
     user-select: none;
 }
 
-.sidebar-toggle-button i {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    margin: 0;
-    transition: transform 250ms ease;
+.sidebar-close-btn:hover {
+    background-color: var(--color-secondary-background);
+    color: var(--color-primary-text);
 }
 
-.close:hover i {
+.sidebar-close-btn:hover i {
     transform: translateX(-3px);
 }
 
+/* Tooltip on close button */
+.close-tooltip {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--color-secondary-background);
+    color: var(--color-primary-text);
+    border: 1px solid var(--color-border-line);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-family: Satoshi-Bold;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: 10001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-close-btn:hover .close-tooltip {
+    opacity: 1;
+}
+
+/* ── Page title used across tabs ── */
+.page-title {
+    font-family: Satoshi-Bold;
+    font-size: 1.2rem;
+    color: var(--color-primary-text);
+    margin: 0 0 16px 0;
+    flex-shrink: 0;
+}
+
+/* ── Settings layout ── */
 .settings {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-.settings>div {
+.settings > div {
     display: grid;
     grid-template-columns: 40% 60%;
     align-items: center;
     height: 50px;
 }
 
-.settings>div>h2 {
+.settings > div > h2 {
     text-wrap: nowrap;
     font-size: 1rem;
-    font-weight: 100;
     font-weight: bold;
-}
-
-.header {
-    margin-bottom: 20px;
-    font-weight: 900;
-    color: var(--color-primary-text);
 }
 
 .divider {
     width: 100%;
     height: 1px;
     background: color-mix(in srgb, var(--color-border-line), transparent 20%);
-    margin: 10px 0 10px 0;
+    margin: 10px 0;
 }
 
-.widget-states>div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
+/* ── Widget grid ── */
 .widget-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    padding: 10px;
+    padding: 4px 0;
 }
 
 .widget-card {
@@ -450,10 +497,6 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
-}
-
-.widget-card.wide {
-    grid-column: span 2;
 }
 
 .widget-card:hover {
@@ -495,8 +538,7 @@ export default {
     width: 100%;
     aspect-ratio: 1 / 1;
     background-color: var(--color-primary-background);
-    background-image:
-        radial-gradient(circle at 2px 2px, var(--color-border-line) 1px, transparent 0);
+    background-image: radial-gradient(circle at 2px 2px, var(--color-border-line) 1px, transparent 0);
     background-size: 16px 16px;
     overflow: hidden;
     display: flex;
@@ -506,8 +548,7 @@ export default {
     position: relative;
 }
 
-/* Force blur background for previews */
-.preview-container :deep(.widget) {
+:deep(.preview-container .widget) {
     background: color-mix(in srgb, var(--color-secondary-background), transparent 80%) !important;
     backdrop-filter: blur(20px) !important;
     border: 1px solid var(--color-border-line) !important;

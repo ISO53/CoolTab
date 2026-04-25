@@ -14,32 +14,36 @@ export default {
             type: String,
             required: true,
         },
+        icon: {
+            type: String,
+            required: false,
+            default: "settings",
+        },
     },
     inject: ["registerTab"],
     mounted() {
-        this.registerTab(this.label);
+        this.registerTab({ label: this.label, icon: this.icon });
     },
 };
 </script>
 
 <style scoped>
 .tab {
-    width: 100%;
-    height: 90%;
-    overflow: auto;
     position: absolute;
-    top: 60px;
-    left: 0;
+    inset: 0;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px 18px;
 }
 
 .tab-switch-enter-active,
 .tab-switch-leave-active {
-    transition: opacity 250ms ease, transform 250ms ease;
+    transition: opacity 200ms ease, transform 200ms ease;
 }
 
 .tab-switch-enter-from,
 .tab-switch-leave-to {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(8px);
 }
 </style>
