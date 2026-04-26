@@ -1,7 +1,7 @@
 <template>
     <section class="hero">
         <div class="container hero-content">
-            <div class="version-badge">Version 1.8.0 Now Available</div>
+            <div class="version-badge">Version 1.9.0 Now Available</div>
             <h1 class="hero-title">Just a new tab,<br />but <span class="gradient-text">cooler</span>.</h1>
             <p class="hero-subtitle">
                 Customize your browser's new tab with brand new widgets, interactive themes, and seamless productivity tools.
