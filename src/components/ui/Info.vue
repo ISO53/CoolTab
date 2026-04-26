@@ -32,8 +32,7 @@
                 </li>
                 <li><a href="https://polygon.io/" target="_blank">Polygon.io</a> for providing stock market info.</li>
                 <li>
-                    <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> for providing stock market
-                    info.
+                    <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> for providing weather icons.
                 </li>
             </ul>
         </div>
