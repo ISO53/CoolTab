@@ -1,43 +1,48 @@
 <template>
     <Widget>
         <div class="stock">
-            <svg class="graph" width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+            <svg class="graph" width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <defs>
-                    <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="live-gradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stop-color="var(--color-tertiary-text)" stop-opacity="1" />
                         <stop offset="100%" stop-color="var(--color-tertiary-text)" stop-opacity="0" />
                     </linearGradient>
                 </defs>
 
                 <path
-                    d="M -100 120, L 5 55, L 10 50, L 15 53, L 20 48, L 25 52, L 30 50, L 35 58, L 40 53, L 45 47, L 50 50, L 55 32, L 60 38, L 65 42, L 70 35, L 75 32, L 80 38, L 85 42, L 95 35, L 100 28, L 140 120"
-                    fill="url(#gradient)"
+                    v-if="pathData"
+                    :d="pathData + ' L 100 100 L 0 100 Z'"
+                    fill="url(#live-gradient)"
                     stroke="none"
+                    class="live-fill"
                 />
 
                 <path
-                    d="M 0 60 L 5 55, L 10 50, L 15 53, L 20 48, L 25 52, L 30 50, L 35 58, L 40 53, L 45 47, L 50 50, L 55 32, L 60 38, L 65 42, L 70 35, L 75 32, L 80 38, L 85 42, L 95 35, L 100 28,"
+                    v-if="pathData"
+                    :d="pathData"
                     stroke="var(--color-secondary-text)"
                     stroke-width="2"
                     fill="none"
+                    class="live-line"
                 />
             </svg>
 
             <div class="stock-info">
-                <div>
-                    <h1 class="ticker">{{ settingsStore.stock.stocks[selected].ticker }}</h1>
+                <div v-if="currentData">
+                    <h1 class="ticker">{{ currentTickerDisplay }}</h1>
                     <h1 class="diff">
-                        {{
-                            (settingsStore.stock.stocks[selected].diff > 0 ? "+" : "") +
-                            parseFloat(settingsStore.stock.stocks[selected].diff).toFixed(2) +
-                            "%"
-                        }}
+                        {{ diffPercentDisplay }}
                     </h1>
                 </div>
-                <h1 class="price">{{ "$" + settingsStore.stock.stocks[selected].close }}</h1>
+                <h1 v-if="currentData" class="price">{{ formattedPrice }}</h1>
+                
+                <div v-else class="loading-container">
+                    <h1 class="ticker">{{ currentTickerDisplay }}</h1>
+                    <p class="loading-text">Loading data...</p>
+                </div>
 
                 <p class="last-updated">
-                    {{ new Date(settingsStore.stock.cache_time).toLocaleDateString("en-GB").replace(/\//g, ".") }}
+                    {{ lastUpdatedDisplay }}
                 </p>
             </div>
         </div>
@@ -47,6 +52,7 @@
 <script>
 import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
+import { YAHOO_QUERY1_BASE } from "@/utils/api";
 
 export default {
     name: "Stock",
@@ -60,46 +66,133 @@ export default {
     data() {
         return {
             selected: 0,
+            stockDataCache: {},
+            lastUpdated: null,
+            intervalId: null,
+            fetchIntervalId: null,
         };
     },
+    computed: {
+        currentTicker() {
+            const tickers = this.settingsStore.stock.tickers;
+            if (!tickers || !tickers.length) return null;
+            return tickers[this.selected % tickers.length];
+        },
+        currentData() {
+            if (!this.currentTicker) return null;
+            return this.stockDataCache[this.currentTicker];
+        },
+        currentTickerDisplay() {
+            return this.currentData?.meta?.symbol || this.currentTicker || "---";
+        },
+        diffPercentDisplay() {
+            if (!this.currentData) return "0.00%";
+            const diff = this.currentData.diffPercent;
+            return (diff > 0 ? "+" : "") + diff.toFixed(2) + "%";
+        },
+        formattedPrice() {
+            if (!this.currentData) return "$0.00";
+            return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: this.currentData.meta.currency || "USD",
+            }).format(this.currentData.meta.regularMarketPrice);
+        },
+        pathData() {
+            const targetPoints = 40;
+            if (!this.currentData || !this.currentData.prices.length) {
+                let d = "";
+                for (let i = 0; i < targetPoints; i++) {
+                    const x = (i / (targetPoints - 1)) * 100;
+                    d += (i === 0 ? "M " : " L ") + `${x} 45`;
+                }
+                return d;
+            }
+            
+            const prices = this.currentData.prices;
+            const max = Math.max(...prices);
+            const min = Math.min(...prices);
+            const range = max - min || 1;
+            
+            let d = "";
+            for (let i = 0; i < prices.length; i++) {
+                const x = (i / (prices.length - 1)) * 100;
+                // Map prices to y range [20, 70] to leave space for text at the top and price at the bottom
+                const y = 70 - ((prices[i] - min) / range) * 50;
+                d += (i === 0 ? "M " : " L ") + `${x} ${y}`;
+            }
+            return d;
+        },
+        lastUpdatedDisplay() {
+            if (!this.lastUpdated) return "";
+            return this.lastUpdated.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+    },
     mounted() {
-        this.getCurrentStockInfo();
-        setInterval(this.setSelected, 5000);
+        this.fetchAllStockInfo();
+        this.fetchIntervalId = setInterval(this.fetchAllStockInfo, 60000); // Fetch every minute
+        this.intervalId = setInterval(this.setSelected, 8000); // Cycle every 8 seconds
+    },
+    unmounted() {
+        if (this.intervalId) clearInterval(this.intervalId);
+        if (this.fetchIntervalId) clearInterval(this.fetchIntervalId);
     },
     methods: {
-        getCurrentStockInfo() {
-            const now = new Date();
-            const last = new Date(this.settingsStore.stock.lastUpdated);
+        async fetchAllStockInfo() {
+            const tickers = this.settingsStore.stock.tickers;
+            if (!tickers || !tickers.length) return;
 
-            // Check if one day passed (or passed midnight) since last update
-            const diff = (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24);
-            if (diff < 0) return;
+            for (const ticker of tickers) {
+                try {
+                    const res = await fetch(`${YAHOO_QUERY1_BASE}/v8/finance/chart/${encodeURIComponent(ticker)}?range=1d&interval=1m`);
+                    const data = await res.json();
+                    
+                    if (data.chart && data.chart.result && data.chart.result.length > 0) {
+                        const result = data.chart.result[0];
+                        const meta = result.meta;
+                        let rawPrices = result.indicators?.quote[0]?.close || [];
+                        
+                        // Filter out leading/trailing nulls if any, but better to just fill
+                        let lastValid = rawPrices.find(p => p !== null) ?? meta.regularMarketPrice;
+                        rawPrices = rawPrices.map(p => {
+                            if (p === null || p === undefined) return lastValid;
+                            lastValid = p;
+                            return p;
+                        });
 
-            // If there is no selected tickers, return
-            if (!this.settingsStore.stock.tickers?.length) return;
+                        // Downsample to exactly 40 points for smooth transitions
+                        const targetPoints = 40;
+                        const prices = [];
+                        if (rawPrices.length > 0) {
+                            for (let i = 0; i < targetPoints; i++) {
+                                const index = Math.floor(i * (rawPrices.length - 1) / (targetPoints - 1));
+                                prices.push(rawPrices[index]);
+                            }
+                        }
 
-            // Update the stock info
-            fetch("https://cool-tab-api.vercel.app/api/stock?names=" + this.settingsStore.stock.tickers.join(","))
-                .then((response) => response.json())
-                .then((data) => {
-                    // Why the fuck this is handling here instead of in the catch statement?
-                    if (data.error) throw new Error(data.error);
+                        const currentPrice = meta.regularMarketPrice;
+                        const prevClose = meta.chartPreviousClose || meta.previousClose || currentPrice;
+                        const diffPercent = prevClose ? ((currentPrice - prevClose) / prevClose) * 100 : 0;
 
-                    const newStockInfo = {
-                        cache_time: data.cache_time,
-                        lastUpdated: new Date(),
-                        stocks: data.stock_data,
-                        tickers: this.settingsStore.stock.tickers,
-                    };
-                    this.settingsStore.setStock(newStockInfo);
-                })
-                .catch((error) => {
-                    console.error("Error fetching stock data:", error);
-                });
+                        // Use spread to ensure reactivity in Vue 3
+                        this.stockDataCache = {
+                            ...this.stockDataCache,
+                            [ticker]: {
+                                meta,
+                                prices,
+                                diffPercent
+                            }
+                        };
+                    }
+                } catch (e) {
+                    console.error("Error fetching live stock for", ticker, e);
+                }
+            }
+            this.lastUpdated = new Date();
         },
         setSelected() {
-            if (this.settingsStore.stock.stocks) {
-                this.selected = (this.selected + 1) % this.settingsStore.stock.stocks.length;
+            const tickers = this.settingsStore.stock.tickers;
+            if (tickers && tickers.length > 0) {
+                this.selected = (this.selected + 1) % tickers.length;
             }
         },
     },
@@ -126,6 +219,16 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 2;
+    bottom: 0;
+    left: 0;
+}
+
+.live-line {
+    transition: d 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.live-fill {
+    transition: d 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stock-info {
@@ -137,6 +240,7 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     z-index: 3;
+    pointer-events: none;
 }
 
 .ticker {
@@ -170,5 +274,18 @@ export default {
     font-family: Satoshi-Light;
     opacity: 0;
     transition: opacity 250ms ease;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.loading-text {
+    font-size: 8cqw;
+    color: var(--color-tertiary-text);
+    margin: 5px 0 0 0;
 }
 </style>

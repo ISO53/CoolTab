@@ -6,6 +6,11 @@
     "chrome_url_overrides": {
         "newtab": "index.html"
     },
+    "host_permissions": [
+        "https://query1.finance.yahoo.com/*",
+        "https://query2.finance.yahoo.com/*",
+        "https://cool-tab-api.vercel.app/*"
+    ],
     "browser_specific_settings": {
         "gecko": {
             "id": "cooltab@github.io",

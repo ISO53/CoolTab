@@ -183,11 +183,48 @@
 
                             <div>
                                 <h2>Stocks</h2>
-                                <DropdownList
-                                    v-model="settingsStore.stock.tickers"
-                                    :text="'stock'"
-                                    :onSelect="setTickers"
-                                />
+                                <StockSearch v-model="settingsStore.stock.tickers" :onSelect="setTickers" />
+                            </div>
+
+                            <div class="search-tips">
+                                <p class="tips-title">Search Guide</p>
+                                <div class="tips-content">
+                                    <div class="tip-section">
+                                        <span class="tip-label">Stocks:</span>
+                                        <p class="tip-desc">
+                                            Use standard tickers like <b>AAPL</b>. For international markets, add a
+                                            suffix like <b>VOW3.DE</b> (Germany) or <b>OR.PA</b> (France).
+                                        </p>
+                                    </div>
+                                    <div class="tip-section">
+                                        <span class="tip-label">Crypto:</span>
+                                        <p class="tip-desc">
+                                            Track coins by using pair symbols such as <b>BTC-USD</b>, <b>ETH-EUR</b>, or
+                                            <b>SOL-GBP</b>.
+                                        </p>
+                                    </div>
+                                    <div class="tip-section">
+                                        <span class="tip-label">Currencies:</span>
+                                        <p class="tip-desc">
+                                            Monitor Forex pairs by adding the <b>=X</b> suffix, for example
+                                            <b>EURUSD=X</b> or <b>JPY=X</b>.
+                                        </p>
+                                    </div>
+                                    <div class="tip-section">
+                                        <span class="tip-label">Commodities:</span>
+                                        <p class="tip-desc">
+                                            Use futures symbols like <b>GC=F</b> for Gold, <b>SI=F</b> for Silver, or
+                                            <b>CL=F</b> for Oil.
+                                        </p>
+                                    </div>
+                                    <div class="tip-section">
+                                        <span class="tip-label">BIST (Turkey):</span>
+                                        <p class="tip-desc">
+                                            Track Borsa Istanbul stocks by adding the <b>.IS</b> suffix, for example
+                                            <b>THYAO.IS</b> or <b>ASELS.IS</b>.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
 
                             <span class="divider"></span>
@@ -281,6 +318,7 @@ import AnalogClock from "../widgets/AnalogClock.vue";
 import DigitalClock from "../widgets/DigitalClock.vue";
 import DailyWeatherForecast from "../widgets/DailyWeatherForecast.vue";
 import Stock from "../widgets/Stock.vue";
+import StockSearch from "./StockSearch.vue";
 import QuickLinks from "../widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import TodoList from "../widgets/TodoList.vue";
@@ -312,6 +350,7 @@ export default {
         DigitalClock,
         DailyWeatherForecast,
         Stock,
+        StockSearch,
         QuickLinks,
         WeeklyWeatherForecast,
         TodoList,
@@ -340,6 +379,7 @@ export default {
             stockInfo.tickers = tickers;
             this.settingsStore.setStock(stockInfo);
         },
+
         setOrientation(orientation) {
             const quickLinksInfo = this.settingsStore.quickLinks;
             quickLinksInfo.orientation = orientation;
@@ -520,7 +560,9 @@ export default {
     display: grid;
     grid-template-columns: 40% 60%;
     align-items: center;
-    height: 50px;
+    min-height: 50px;
+    height: auto;
+    padding: 8px 0;
 }
 
 .settings > div > h2 {
@@ -534,6 +576,55 @@ export default {
     height: 1px;
     background: color-mix(in srgb, var(--color-border-line), transparent 20%);
     margin: 10px 0;
+}
+
+/* ── Search Tips Styles ── */
+.settings > .search-tips {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 10px 0;
+}
+
+.tips-title {
+    font-family: Satoshi-Bold;
+    font-size: 0.75rem;
+    color: var(--color-tertiary-text);
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    opacity: 0.7;
+}
+
+.tips-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tip-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tip-label {
+    font-family: Satoshi-Bold;
+    color: var(--color-secondary-text);
+    font-size: 0.75rem;
+}
+
+.tip-desc {
+    color: var(--color-tertiary-text);
+    font-family: Satoshi-Regular;
+    font-size: 0.75rem;
+    margin: 0;
+    line-height: 1.1rem;
+}
+
+.tip-desc b {
+    color: var(--color-secondary-text);
+    font-family: Satoshi-Bold;
 }
 
 /* ── Widget grid ── */
