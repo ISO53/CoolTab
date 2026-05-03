@@ -562,7 +562,6 @@ export default {
     align-items: center;
     min-height: 50px;
     height: auto;
-    padding: 8px 0;
 }
 
 .settings > div > h2 {
