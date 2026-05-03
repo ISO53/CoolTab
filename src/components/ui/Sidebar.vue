@@ -182,49 +182,13 @@
                             <span class="divider"></span>
 
                             <div>
-                                <h2>Stocks</h2>
-                                <StockSearch v-model="settingsStore.stock.tickers" :onSelect="setTickers" />
-                            </div>
-
-                            <div class="search-tips">
-                                <p class="tips-title">Search Guide</p>
-                                <div class="tips-content">
-                                    <div class="tip-section">
-                                        <span class="tip-label">Stocks:</span>
-                                        <p class="tip-desc">
-                                            Use standard tickers like <b>AAPL</b>. For international markets, add a
-                                            suffix like <b>VOW3.DE</b> (Germany) or <b>OR.PA</b> (France).
-                                        </p>
-                                    </div>
-                                    <div class="tip-section">
-                                        <span class="tip-label">Crypto:</span>
-                                        <p class="tip-desc">
-                                            Track coins by using pair symbols such as <b>BTC-USD</b>, <b>ETH-EUR</b>, or
-                                            <b>SOL-GBP</b>.
-                                        </p>
-                                    </div>
-                                    <div class="tip-section">
-                                        <span class="tip-label">Currencies:</span>
-                                        <p class="tip-desc">
-                                            Monitor Forex pairs by adding the <b>=X</b> suffix, for example
-                                            <b>EURUSD=X</b> or <b>JPY=X</b>.
-                                        </p>
-                                    </div>
-                                    <div class="tip-section">
-                                        <span class="tip-label">Commodities:</span>
-                                        <p class="tip-desc">
-                                            Use futures symbols like <b>GC=F</b> for Gold, <b>SI=F</b> for Silver, or
-                                            <b>CL=F</b> for Oil.
-                                        </p>
-                                    </div>
-                                    <div class="tip-section">
-                                        <span class="tip-label">BIST (Turkey):</span>
-                                        <p class="tip-desc">
-                                            Track Borsa Istanbul stocks by adding the <b>.IS</b> suffix, for example
-                                            <b>THYAO.IS</b> or <b>ASELS.IS</b>.
-                                        </p>
-                                    </div>
+                                <div class="title-with-action">
+                                    <h2>Stocks</h2>
+                                    <button class="help-btn" @click="showStockGuide = true" title="Show Search Guide">
+                                        <i class="material-icons-outlined">help_outline</i>
+                                    </button>
                                 </div>
+                                <StockSearch v-model="settingsStore.stock.tickers" :onSelect="setTickers" />
                             </div>
 
                             <span class="divider"></span>
@@ -295,6 +259,8 @@
                 </button>
             </div>
         </Transition>
+
+        <StockGuidePopup :show="showStockGuide" @close="showStockGuide = false" />
     </div>
 </template>
 
@@ -322,6 +288,7 @@ import StockSearch from "./StockSearch.vue";
 import QuickLinks from "../widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import TodoList from "../widgets/TodoList.vue";
+import StockGuidePopup from "./StockGuidePopup.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -354,11 +321,13 @@ export default {
         QuickLinks,
         WeeklyWeatherForecast,
         TodoList,
+        StockGuidePopup,
     },
     data() {
         return {
             isOpen: false,
             selectedOption: null,
+            showStockGuide: false,
         };
     },
     methods: {
@@ -564,10 +533,11 @@ export default {
     height: auto;
 }
 
-.settings > div > h2 {
+.settings > div h2 {
     text-wrap: nowrap;
     font-size: 1rem;
     font-weight: bold;
+    margin: 0;
 }
 
 .divider {
@@ -624,6 +594,31 @@ export default {
 .tip-desc b {
     color: var(--color-secondary-text);
     font-family: Satoshi-Bold;
+}
+
+/* ── Help Button ── */
+.title-with-action {
+    display: flex;
+    align-items: center;
+}
+
+.help-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: bottom;
+    justify-content: left;
+    color: var(--color-tertiary-text);
+    transition: color 250ms ease;
+}
+
+.help-btn:hover {
+    color: var(--color-secondary-text);
+}
+
+.help-btn i {
+    font-size: 1.2rem;
 }
 
 /* ── Widget grid ── */
