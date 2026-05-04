@@ -10,7 +10,7 @@
                 </defs>
 
                 <path
-                    v-if="pathData"
+                    v-if="pathData && settingsStore.widgetBackground !== 'Transparent'"
                     :d="pathData + ' L 100 100 L 0 100 Z'"
                     fill="url(#live-gradient)"
                     stroke="none"
