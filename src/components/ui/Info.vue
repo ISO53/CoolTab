@@ -30,7 +30,7 @@
                 <li>
                     <a href="https://open-meteo.com/" target="_blank">Open-Meteo.com</a> for providing weather info.
                 </li>
-                <li><a href="https://polygon.io/" target="_blank">Polygon.io</a> for providing stock market info.</li>
+                <li><a href="https://finance.yahoo.com/" target="_blank">Yahoo Finance</a> for providing stock market info.</li>
                 <li>
                     <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> for providing weather icons.
                 </li>
