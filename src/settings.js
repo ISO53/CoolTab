@@ -16,6 +16,7 @@ export const useSettingsStore = defineStore("settings", {
         widgets: getWidgets(),
         widgetAreaColumns: parseInt(localStorage.getItem("widget-area-columns")) || 20,
         weeklyWeatherInfo: getWeeklyWeatherInfo(),
+        hourlyWeatherInfo: getHourlyWeatherInfo(),
         widgetBackground: localStorage.getItem("widget-background") || "Color",
         colors: getColors(),
         colorPalette: getColorPalette(),
@@ -27,6 +28,7 @@ export const useSettingsStore = defineStore("settings", {
         todoItems: getTodoItems(),
         todoMaxTasks: parseInt(localStorage.getItem("todo-max-tasks")) || 25,
         analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
+        hourlyWeatherRotation: localStorage.getItem("hourly-weather-rotation") || "Enabled",
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -153,6 +155,13 @@ export const useSettingsStore = defineStore("settings", {
             }
             this.weeklyWeatherInfo = weather;
             storeInLocalStorage("weekly-weather-info", JSON.stringify(weather));
+        },
+        setHourlyWeatherInfo(weather) {
+            if (weather && weather.lastUpdated && typeof weather.lastUpdated === "string") {
+                weather.lastUpdated = new Date(weather.lastUpdated);
+            }
+            this.hourlyWeatherInfo = weather;
+            storeInLocalStorage("hourly-weather-info", JSON.stringify(weather));
         },
         setWidgetBackground(background) {
             this.widgetBackground = background;
@@ -284,9 +293,11 @@ export const useSettingsStore = defineStore("settings", {
             if (settings.currentWeatherInfo !== undefined) this.setCurrentWeatherInfo(settings.currentWeatherInfo);
             if (settings.stock !== undefined) this.setStock(settings.stock);
             if (settings.weeklyWeatherInfo !== undefined) this.setWeeklyWeatherInfo(settings.weeklyWeatherInfo);
+            if (settings.hourlyWeatherInfo !== undefined) this.setHourlyWeatherInfo(settings.hourlyWeatherInfo);
             if (settings.todoItems !== undefined) this.setTodoItems(settings.todoItems);
             if (settings.todoMaxTasks !== undefined) this.setTodoMaxTasks(settings.todoMaxTasks);
             if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
+            if (settings.hourlyWeatherRotation !== undefined) this.setHourlyWeatherRotation(settings.hourlyWeatherRotation);
         },
         getStyleSnapshot() {
             return {
@@ -305,9 +316,11 @@ export const useSettingsStore = defineStore("settings", {
                 currentWeatherInfo: JSON.parse(JSON.stringify(this.currentWeatherInfo)),
                 stock: JSON.parse(JSON.stringify(this.stock)),
                 weeklyWeatherInfo: JSON.parse(JSON.stringify(this.weeklyWeatherInfo)),
+                hourlyWeatherInfo: JSON.parse(JSON.stringify(this.hourlyWeatherInfo)),
                 todoItems: JSON.parse(JSON.stringify(this.todoItems)),
                 todoMaxTasks: this.todoMaxTasks,
                 analogClockStyle: this.analogClockStyle,
+                hourlyWeatherRotation: this.hourlyWeatherRotation,
             };
         },
         async importStyleById(styleId) {
@@ -398,6 +411,10 @@ export const useSettingsStore = defineStore("settings", {
         setAnalogClockStyle(style) {
             this.analogClockStyle = style;
             storeInLocalStorage("analog-clock-style", style);
+        },
+        setHourlyWeatherRotation(rotation) {
+            this.hourlyWeatherRotation = rotation;
+            storeInLocalStorage("hourly-weather-rotation", rotation);
         },
     },
 });
@@ -616,6 +633,15 @@ function getWidgets() {
             selected: true,
         },
         {
+            name: "HourlyWeatherForecast",
+            x: 7,
+            y: 3,
+            width: 6,
+            height: 3,
+            resize: "2/1",
+            selected: false,
+        },
+        {
             name: "TodoList",
             x: 17,
             y: 0,
@@ -678,6 +704,47 @@ function getWeeklyWeatherInfo() {
             {date: "", img: "", high: 25, low: 15},
             {date: "", img: "", high: 25, low: 15},
         ],
+    };
+
+    let parsed = null;
+    if (info) {
+        try {
+            parsed = JSON.parse(info);
+        } catch (e) {
+            return def;
+        }
+        parsed.lastUpdated = new Date(parsed.lastUpdated);
+        return parsed;
+    }
+
+    return def;
+}
+
+/**
+ * Returns the default hourly weather data structure.
+ *
+ * @returns {{
+ *   city: String,
+ *   hours: Array<{time: String, temp: Number, rain: Number, wind: Number}>,
+ *   air_quality: {aqi: Number, label: String},
+ *   lastUpdated: Date
+ * }}
+ **/
+function getHourlyWeatherInfo() {
+    const info = localStorage.getItem("hourly-weather-info");
+    const def = {
+        city: "City",
+        hours: [
+            { time: "00:00", temp: 20, rain: 0, wind: 10 },
+            { time: "01:00", temp: 20, rain: 0, wind: 10 },
+            { time: "02:00", temp: 20, rain: 0, wind: 10 },
+            { time: "03:00", temp: 20, rain: 0, wind: 10 },
+            { time: "04:00", temp: 20, rain: 0, wind: 10 },
+            { time: "05:00", temp: 20, rain: 0, wind: 10 },
+            { time: "06:00", temp: 20, rain: 0, wind: 10 },
+            { time: "07:00", temp: 20, rain: 0, wind: 10 },
+        ],
+        air_quality: { aqi: 0, label: "Good" },
     };
 
     let parsed = null;

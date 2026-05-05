@@ -245,6 +245,17 @@
                                     :onSelect="setTodoMaxTasks"
                                 />
                             </div>
+
+                            <span class="divider"></span>
+
+                            <div>
+                                <h2>Hourly Weather Rotation</h2>
+                                <SelectButton
+                                    v-model="settingsStore.hourlyWeatherRotation"
+                                    :options="['Enabled', 'Disabled']"
+                                    :onSelect="setHourlyWeatherRotation"
+                                />
+                            </div>
                         </div>
                     </Tab>
                     <Tab :label="'About'" :icon="'info'">
@@ -288,6 +299,7 @@ import StockSearch from "./StockSearch.vue";
 import QuickLinks from "../widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import TodoList from "../widgets/TodoList.vue";
+import HourlyWeatherForecast from "../widgets/HourlyWeatherForecast.vue";
 import StockGuidePopup from "./StockGuidePopup.vue";
 import {useSettingsStore} from "@/settings";
 
@@ -321,6 +333,7 @@ export default {
         QuickLinks,
         WeeklyWeatherForecast,
         TodoList,
+        HourlyWeatherForecast,
         StockGuidePopup,
     },
     data() {
@@ -383,6 +396,9 @@ export default {
         },
         setAnalogClockStyle(style) {
             this.settingsStore.setAnalogClockStyle(style);
+        },
+        setHourlyWeatherRotation(rotation) {
+            this.settingsStore.setHourlyWeatherRotation(rotation);
         },
         setWidgetSelected(widget, isSelected) {
             widget.selected = isSelected;

@@ -43,6 +43,7 @@ import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
 import Buttons from "./components/ui/Buttons.vue";
 import ShareStyle from "./components/ui/ShareStyle.vue";
 import TodoList from "./components/widgets/TodoList.vue";
+import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
 import {useSettingsStore} from "./settings";
 
 export default {
@@ -72,6 +73,7 @@ export default {
         Buttons,
         ShareStyle,
         TodoList,
+        HourlyWeatherForecast,
     },
     data() {
         return {
