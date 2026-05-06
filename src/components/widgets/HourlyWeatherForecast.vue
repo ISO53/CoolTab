@@ -221,7 +221,7 @@ export default {
                 const currentIndex = metrics.indexOf(this.activeMetric);
                 const nextIndex = (currentIndex + 1) % metrics.length;
                 this.activeMetric = metrics[nextIndex];
-            }, 5000);
+            }, 8000);
         },
         stopRotation() {
             if (this.metricRotationInterval) {
