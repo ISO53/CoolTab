@@ -4,7 +4,8 @@
             <div class="top-section">
                 <div class="city-info">
                     <h1>{{ weather.city || "Loading..." }}</h1>
-                    <h2>AQI: {{ weather.air_quality?.aqi || 0 }} ({{ weather.air_quality?.label || '...' }})</h2>
+                    <h2>AQI: {{ weather.air_quality?.aqi || 0 }}</h2>
+                    <h3>{{ weather.air_quality?.label || '...' }}</h3>
                 </div>
 
                 <div class="top-controls">
@@ -268,6 +269,14 @@ export default {
 .city-info h2 {
     font-size: 9cqh;
     line-height: 9cqh;
+    margin: 0;
+    font-family: Satoshi-Light;
+    color: var(--color-secondary-text);
+}
+
+.city-info h3 {
+    font-size: 5cqh;
+    line-height: 5cqh;
     margin: 0;
     font-family: Satoshi-Light;
     color: var(--color-secondary-text);
