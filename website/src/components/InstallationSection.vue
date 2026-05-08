@@ -41,21 +41,24 @@
 
 <style scoped>
 .install-section {
-    padding: 100px 20px;
+    padding: 120px 20px;
 }
 
 .header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 80px;
 }
 
-h2 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+.header h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
 }
 
-p {
+.header p {
     color: var(--text-muted);
+    font-size: 1.1rem;
 }
 
 .platform-grid {

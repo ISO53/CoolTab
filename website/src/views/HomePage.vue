@@ -1,7 +1,7 @@
 <template>
     <div class="home-page">
         <HeroSection />
-        <AboutSection />
+        <WidgetSection />
         <ThemeDemo />
         <FeatureScroll />
         <PrivacySection />
@@ -19,7 +19,7 @@
 
 <script setup>
 import HeroSection from "../components/HeroSection.vue";
-import AboutSection from "../components/AboutSection.vue";
+import WidgetSection from "../components/WidgetSection.vue";
 import ThemeDemo from "../components/ThemeDemo.vue";
 import FeatureScroll from "../components/FeatureScroll.vue";
 import PrivacySection from "../components/PrivacySection.vue";
@@ -58,5 +58,18 @@ import InstallationSection from "../components/InstallationSection.vue";
 
 h2 {
     font-size: 2.5rem;
+}
+@media (max-width: 768px) {
+    .bottom-cta {
+        margin-top: 60px;
+    }
+    
+    .cta-box {
+        padding: 40px 20px;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
 }
 </style>

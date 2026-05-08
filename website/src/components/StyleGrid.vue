@@ -1,21 +1,15 @@
 <template>
     <div class="style-grid">
         <div v-if="loading" class="loading">Loading styles...</div>
-        <div v-else v-for="style in styles" :key="style._id" class="style-card glass-panel">
-            <div
-                class="card-image"
-                :style="{
-                    backgroundImage: `url(${style.preview})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }"
-            ></div>
-            <div class="card-info">
-                <h3>{{ style.name }}</h3>
-                <p>Created on {{ formatDate(style.createdAt) }}</p>
-                <button class="btn-apply" @click="copyId(style._id)">
-                    {{ copiedId === style._id ? "Copied!" : "Copy ID" }}
-                </button>
+        <div v-else v-for="style in styles" :key="style._id" class="style-card">
+            <div class="image-container">
+                <img :src="style.preview" :alt="style.name" class="style-image" />
+                <div class="card-overlay">
+                    <div class="info-glass">
+                        <h3>{{ style.name }}</h3>
+                        <p>{{ formatDate(style.createdAt) }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -26,7 +20,6 @@ import {ref, onMounted} from "vue";
 
 const styles = ref([]);
 const loading = ref(true);
-const copiedId = ref(null);
 
 const formatDate = (dateString) => {
     if (!dateString) return "Unknown date";
@@ -35,20 +28,6 @@ const formatDate = (dateString) => {
         month: "short",
         day: "numeric",
     });
-};
-
-const copyId = async (id) => {
-    try {
-        await navigator.clipboard.writeText(id);
-        copiedId.value = id;
-        setTimeout(() => {
-            if (copiedId.value === id) {
-                copiedId.value = null;
-            }
-        }, 2000);
-    } catch (err) {
-        console.error("Failed to copy!", err);
-    }
 };
 
 onMounted(async () => {
@@ -67,88 +46,105 @@ onMounted(async () => {
 
 <style scoped>
 .style-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
+    column-count: 2;
+    column-gap: 16px;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 .loading {
-    grid-column: 1 / -1;
     text-align: center;
-    padding: 50px;
+    padding: 100px;
     font-size: 1.2rem;
     color: var(--text-muted);
 }
 
 .style-card {
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    background: var(--bg-card);
+    break-inside: avoid;
+    margin-bottom: 16px;
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
+    overflow: hidden;
 }
 
-.style-card:hover {
-    transform: translateY(-5px);
-}
-
-.card-image {
-    height: 200px;
+.image-container {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #1a1a1a;
+    width: 100%;
+    display: block;
+    line-height: 0;
+}
+
+.style-image {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
+    padding: 24px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: flex-end;
+    line-height: normal;
+}
+
+.info-glass {
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.2);
+    gap: 12px;
+    white-space: nowrap;
+    /* Animation Properties */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mock-widgets {
-    display: flex;
-    gap: 10px;
+.style-card:hover .info-glass {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.widget-stub {
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-}
-
-.card-info {
-    padding: 20px;
-}
-
-.card-info h3 {
-    margin-bottom: 5px;
-}
-
-.card-info p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-}
-
-.btn-apply {
-    width: 100%;
-    padding: 10px;
-    background: transparent;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s;
+.info-glass h3 {
+    font-size: 0.95rem;
     font-weight: 600;
+    margin: 0;
+    color: white;
 }
 
-.btn-apply:hover {
-    background: white;
-    color: #1a1a1a;
+.info-glass p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.7rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-glass p::before {
+    content: "";
+    width: 3px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+    .style-grid {
+        column-count: 1;
+    }
 }
 </style>

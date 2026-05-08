@@ -69,12 +69,19 @@ const handleMove = (e) => {
 
 <style scoped>
 .theme-demo {
-    padding: 100px 20px 40px;
+    padding: 120px 20px 60px;
     text-align: center;
 }
 
 .demo-header {
-    margin-bottom: 40px;
+    margin-bottom: 80px;
+}
+
+.demo-header h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
 }
 
 .comparison-slider {
@@ -139,5 +146,19 @@ const handleMove = (e) => {
     align-items: center;
     justify-content: center;
     position: relative;
+}
+@media (max-width: 768px) {
+    .demo-header h2 {
+        font-size: 2.25rem;
+    }
+    
+    .comparison-slider {
+        height: 300px;
+    }
+    
+    .theme-image {
+        width: auto;
+        height: 100%;
+    }
 }
 </style>
