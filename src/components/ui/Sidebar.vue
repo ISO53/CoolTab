@@ -300,6 +300,7 @@ import QuickLinks from "../widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import TodoList from "../widgets/TodoList.vue";
 import HourlyWeatherForecast from "../widgets/HourlyWeatherForecast.vue";
+import MonthlyCalendar from "../widgets/MonthlyCalendar.vue";
 import StockGuidePopup from "./StockGuidePopup.vue";
 import {useSettingsStore} from "@/settings";
 
@@ -334,6 +335,7 @@ export default {
         WeeklyWeatherForecast,
         TodoList,
         HourlyWeatherForecast,
+        MonthlyCalendar,
         StockGuidePopup,
     },
     data() {

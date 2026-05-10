@@ -588,6 +588,15 @@ function getWidgets() {
             selected: true,
         },
         {
+            name: "MonthlyCalendar",
+            x: 11,
+            y: 6,
+            width: 4,
+            height: 4,
+            resize: "square",
+            selected: false,
+        },
+        {
             name: "AnalogClock",
             x: 3,
             y: 6,
