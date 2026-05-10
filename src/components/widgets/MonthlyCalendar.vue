@@ -3,11 +3,11 @@
         <div class="monthly-calendar">
             <div class="calendar-header">
                 <div class="nav-btn" @click="prevMonth">
-                    <Svg name="chevron_left" class_name="material-icons-outlined nav-icon" />
+                    <Svg name="chevron_left" class_name="material-icons-outlined nav-icon"></Svg>
                 </div>
                 <div class="month-display">{{ monthName }} {{ currentYear }}</div>
                 <div class="nav-btn" @click="nextMonth">
-                    <Svg name="chevron_right" class_name="material-icons-outlined nav-icon" />
+                    <Svg name="chevron_right" class_name="material-icons-outlined nav-icon"></Svg>
                 </div>
             </div>
             <div class="calendar-grid">
