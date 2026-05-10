@@ -282,22 +282,17 @@ export const useSettingsStore = defineStore("settings", {
             if (settings.backgroundImageFileName !== undefined)
                 this.setBackgroundImageFileName(settings.backgroundImageFileName);
             if (settings.backgroundSize !== undefined) this.setBackgroundSize(settings.backgroundSize);
-            if (settings.searchEngine !== undefined) this.setSearchEngine(settings.searchEngine);
-            if (settings.openSearchResultIn !== undefined) this.setOpenSearchResultIn(settings.openSearchResultIn);
+            // We no longer override searchEngine, openSearchResultIn, quickLinks, stock, todoMaxTasks, and hourlyWeatherRotation from styles
             if (settings.widgetBackground !== undefined) this.setWidgetBackground(settings.widgetBackground);
             if (settings.colors !== undefined) this.setColors(settings.colors);
             if (settings.colorPalette !== undefined) this.setColorPalette(settings.colorPalette);
             if (settings.widgets !== undefined) this.setWidgets(settings.widgets);
             if (settings.widgetAreaColumns !== undefined) this.setWidgetAreaColumns(settings.widgetAreaColumns);
-            if (settings.quickLinks !== undefined) this.setQuickLinks(settings.quickLinks);
             if (settings.currentWeatherInfo !== undefined) this.setCurrentWeatherInfo(settings.currentWeatherInfo);
-            if (settings.stock !== undefined) this.setStock(settings.stock);
             if (settings.weeklyWeatherInfo !== undefined) this.setWeeklyWeatherInfo(settings.weeklyWeatherInfo);
             if (settings.hourlyWeatherInfo !== undefined) this.setHourlyWeatherInfo(settings.hourlyWeatherInfo);
             if (settings.todoItems !== undefined) this.setTodoItems(settings.todoItems);
-            if (settings.todoMaxTasks !== undefined) this.setTodoMaxTasks(settings.todoMaxTasks);
             if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
-            if (settings.hourlyWeatherRotation !== undefined) this.setHourlyWeatherRotation(settings.hourlyWeatherRotation);
         },
         getStyleSnapshot() {
             return {
@@ -305,22 +300,16 @@ export const useSettingsStore = defineStore("settings", {
                     this.backgroundImage && this.backgroundImage.startsWith("blob:") ? null : this.backgroundImage,
                 backgroundImageFileName: this.backgroundImageFileName,
                 backgroundSize: this.backgroundSize,
-                searchEngine: this.searchEngine,
-                openSearchResultIn: this.openSearchResultIn,
                 widgetBackground: this.widgetBackground,
                 colors: JSON.parse(JSON.stringify(this.colors)),
                 colorPalette: JSON.parse(JSON.stringify(this.colorPalette)),
                 widgets: JSON.parse(JSON.stringify(this.widgets)),
                 widgetAreaColumns: this.widgetAreaColumns,
-                quickLinks: JSON.parse(JSON.stringify(this.quickLinks)),
                 currentWeatherInfo: JSON.parse(JSON.stringify(this.currentWeatherInfo)),
-                stock: JSON.parse(JSON.stringify(this.stock)),
                 weeklyWeatherInfo: JSON.parse(JSON.stringify(this.weeklyWeatherInfo)),
                 hourlyWeatherInfo: JSON.parse(JSON.stringify(this.hourlyWeatherInfo)),
                 todoItems: JSON.parse(JSON.stringify(this.todoItems)),
-                todoMaxTasks: this.todoMaxTasks,
                 analogClockStyle: this.analogClockStyle,
-                hourlyWeatherRotation: this.hourlyWeatherRotation,
             };
         },
         async importStyleById(styleId) {
