@@ -118,7 +118,7 @@ export default {
             this.loading = true;
             this.error = false;
             try {
-                const res = await fetch("https://cool-tab-api.vercel.app/api/get-styles-basic");
+                const res = await fetch("https://cool-tab-api.vercel.app/api/get-styles?type=basic");
                 if (res.ok) {
                     this.styles = await res.json();
                 } else {

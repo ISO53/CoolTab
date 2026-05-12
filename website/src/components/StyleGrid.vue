@@ -32,7 +32,7 @@ const formatDate = (dateString) => {
 
 onMounted(async () => {
     try {
-        const response = await fetch("https://cool-tab-api.vercel.app/api/get-styles-basic");
+        const response = await fetch("https://cool-tab-api.vercel.app/api/get-styles?type=basic");
         if (response.ok) {
             styles.value = await response.json();
         }
