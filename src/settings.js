@@ -60,9 +60,11 @@ export const useSettingsStore = defineStore("settings", {
         },
         async loadBackgroundImage() {
             try {
-                const blob = await getItem("background-image");
-                if (blob instanceof Blob) {
-                    this.backgroundImage = URL.createObjectURL(blob);
+                const stored = await getItem("background-image");
+                if (stored instanceof Blob) {
+                    this.backgroundImage = URL.createObjectURL(stored);
+                } else if (typeof stored === "string" && stored.trim() !== "") {
+                    this.backgroundImage = stored;
                 }
             } catch (e) {
                 console.error("Failed to load background image:", e);

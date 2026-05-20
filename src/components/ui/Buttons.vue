@@ -1,7 +1,12 @@
 <template>
     <Sidebar ref="sidebarRef" />
     <ShareStyle ref="shareStyleRef" />
+    <WallpaperGallery ref="wallpaperGalleryRef" />
     <div class="buttons" :class="{revealed: isRevealed}">
+        <button @click.stop="toggleWallpaperGallery" class="button" title="Wallpaper gallery">
+            <Svg :class_name="'material-icons-outlined'" :name="'image'"></Svg>
+        </button>
+
         <button @click="toggleSharePopup" class="button" title="Share this style!">
             <Svg :class_name="'material-icons-outlined'" :name="'share'"></Svg>
         </button>
@@ -19,6 +24,7 @@
 <script>
 import Sidebar from "@/components/ui/Sidebar.vue";
 import ShareStyle from "./ShareStyle.vue";
+import WallpaperGallery from "./WallpaperGallery.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -30,6 +36,7 @@ export default {
     components: {
         Sidebar,
         ShareStyle,
+        WallpaperGallery,
     },
     data() {
         return {
@@ -69,6 +76,9 @@ export default {
         toggleSharePopup() {
             this.$refs.shareStyleRef.toggleShareStyle();
         },
+        toggleWallpaperGallery() {
+            this.$refs.wallpaperGalleryRef.toggle();
+        },
     },
 };
 </script>
@@ -104,6 +114,9 @@ export default {
     transition-delay: 25ms;
 }
 .buttons .button:nth-child(3) {
+    transition-delay: 50ms;
+}
+.buttons .button:nth-child(4) {
     transition-delay: 75ms;
 }
 

@@ -22,6 +22,7 @@ body {
     min-height: 100vh;
     color: var(--color-secondary-text);
     background: var(--color-primary-background);
+    overflow: hidden;
     transition:
         color 0.5s,
         background-color 0.5s;
