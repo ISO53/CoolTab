@@ -2,7 +2,7 @@
     <div
         class="background"
         :style="{
-            backgroundImage: 'url(' + settingsStore.backgroundImage + ')',
+            backgroundImage: settingsStore.backgroundImage ? 'url(' + settingsStore.backgroundImage + ')' : 'none',
             backgroundSize: settingsStore.backgroundSize,
             backgroundColor: settingsStore.colors.color_primary_background,
         }"
