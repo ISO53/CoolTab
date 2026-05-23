@@ -52,7 +52,12 @@ export default {
     mounted() {
         this.getCurrentWeatherInfo();
         this.calculateRotation();
-        setInterval(this.calculateRotation, 60_000);
+        this.timer = setInterval(this.calculateRotation, 60_000);
+    },
+    beforeUnmount() {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
     },
     methods: {
         convertTimeToMinutes(time) {

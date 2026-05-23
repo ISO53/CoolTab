@@ -29,7 +29,12 @@ export default {
     },
     mounted() {
         this.updateClock();
-        setInterval(this.updateClock, 1000);
+        this.timer = setInterval(this.updateClock, 1000);
+    },
+    beforeUnmount() {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
     },
     methods: {
         updateClock() {
