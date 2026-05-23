@@ -467,7 +467,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 560px;
+    width: 630px;
     height: 100vh;
     background-color: var(--color-primary-background);
     z-index: 10000;
