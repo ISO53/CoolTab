@@ -34,6 +34,9 @@
                 <li>
                     <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> for providing weather icons.
                 </li>
+                <li>
+                    <a href="https://peapix.com/" target="_blank">Peapix.com</a> for providing wallpapers.
+                </li>
             </ul>
         </div>
     </div>
