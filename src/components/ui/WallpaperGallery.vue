@@ -2,7 +2,8 @@
     <div v-if="isOpen && hoveredName" class="wallpaper-name">{{ hoveredName }}</div>
     <Transition name="slide">
         <div v-if="isOpen" class="gallery" v-click-outside="close">
-            <button class="nav-btn" @click="prev">
+            <div class="page-indicator">Page {{ page + 1 }} / {{ totalPages }}</div>
+            <button class="nav-btn" @click="prev" :disabled="page === 0">
                 <Svg :class_name="'material-icons-outlined'" :name="'chevron_left'"></Svg>
             </button>
 
@@ -19,7 +20,7 @@
                 </div>
             </div>
 
-            <button class="nav-btn" @click="next">
+            <button class="nav-btn" @click="next" :disabled="isLastPage || loading">
                 <Svg :class_name="'material-icons-outlined'" :name="'chevron_right'"></Svg>
             </button>
         </div>
@@ -43,6 +44,8 @@ export default {
             isOpen: false,
             wallpapers: [],
             page: 0,
+            totalItems: 0,
+            loading: false,
             hoveredId: null,
             hoveredName: null,
             savedImage: null,
@@ -52,6 +55,12 @@ export default {
         visibleWallpapers() {
             const start = this.page * PAGE_SIZE;
             return this.wallpapers.slice(start, start + PAGE_SIZE);
+        },
+        totalPages() {
+            return Math.ceil(this.totalItems / PAGE_SIZE) || 1;
+        },
+        isLastPage() {
+            return this.page + 1 >= this.totalPages;
         },
     },
     methods: {
@@ -69,34 +78,42 @@ export default {
             this.isOpen = false;
             this.restoreBackground();
         },
-        async fetchWallpapers() {
+        async fetchWallpapers(p = 1) {
+            if (this.loading) return;
+            this.loading = true;
             try {
-                const seed = new Date().toISOString().slice(0, 10);
-                const res = await fetch(`https://cool-tab-api.vercel.app/api/search-wallpapers?seed=${seed}&limit=20&page=1`);
-                this.wallpapers = await res.json();
-                this.page = 0;
+                const res = await fetch(`https://cool-tab-api.vercel.app/api/search-wallpapers?limit=20&page=${p}`);
+                const data = await res.json();
+                if (p === 1) {
+                    this.wallpapers = data.wallpapers;
+                } else {
+                    this.wallpapers.push(...data.wallpapers);
+                }
+                this.totalItems = data.totalItems;
             } catch (e) {
                 console.error("Failed to fetch wallpapers:", e);
+            } finally {
+                this.loading = false;
             }
         },
         prev() {
             if (this.page > 0) this.page--;
         },
         next() {
-            this.page++;
-            if ((this.page + 1) * PAGE_SIZE >= this.wallpapers.length) this.loadMore();
-        },
-        async loadMore() {
-            try {
-                const seed = new Date().toISOString().slice(0, 10);
-                const apiPage = Math.floor(this.wallpapers.length / 20) + 1;
-                const res = await fetch(
-                    `https://cool-tab-api.vercel.app/api/search-wallpapers?seed=${seed}&limit=20&page=${apiPage}`,
-                );
-                const more = await res.json();
-                if (more.length) this.wallpapers.push(...more);
-            } catch (e) {
-                console.error("Failed to load more wallpapers:", e);
+            if (this.isLastPage || this.loading) return;
+
+            const nextLocalPage = this.page + 1;
+            const nextStart = nextLocalPage * PAGE_SIZE;
+
+            if (nextStart < this.wallpapers.length) {
+                this.page = nextLocalPage;
+            } else {
+                const nextApiPage = Math.floor(this.wallpapers.length / 20) + 1;
+                this.fetchWallpapers(nextApiPage).then(() => {
+                    if (nextStart < this.wallpapers.length) {
+                        this.page = nextLocalPage;
+                    }
+                });
             }
         },
         onHover(wp) {
@@ -164,6 +181,22 @@ export default {
     z-index: 9000;
 }
 
+.page-indicator {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: color-mix(in srgb, var(--color-primary-background), transparent 40%);
+    backdrop-filter: blur(10px);
+    color: var(--color-primary-text);
+    border: 2px solid var(--color-border-line);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-family: Satoshi-Bold;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
 .nav-btn {
     background: color-mix(in srgb, var(--color-primary-background), transparent 40%);
     border: 2px solid var(--color-border-line);
@@ -175,11 +208,16 @@ export default {
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(10px);
-    transition: border-color 200ms ease;
+    transition: border-color 200ms ease, opacity 200ms ease;
 }
 
-.nav-btn:hover {
+.nav-btn:hover:not(:disabled) {
     border-color: var(--color-secondary-text);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .nav-btn i {
@@ -191,6 +229,8 @@ export default {
     display: flex;
     gap: 8px;
     align-items: center;
+    min-width: 632px; /* 5 * 120 + 4 * 8 + 2 * 2 (borders) */
+    justify-content: center;
 }
 
 .thumb {
