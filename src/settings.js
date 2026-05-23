@@ -29,6 +29,7 @@ export const useSettingsStore = defineStore("settings", {
         todoMaxTasks: parseInt(localStorage.getItem("todo-max-tasks")) || 25,
         analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
         hourlyWeatherRotation: localStorage.getItem("hourly-weather-rotation") || "Enabled",
+        rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -406,6 +407,10 @@ export const useSettingsStore = defineStore("settings", {
         setHourlyWeatherRotation(rotation) {
             this.hourlyWeatherRotation = rotation;
             storeInLocalStorage("hourly-weather-rotation", rotation);
+        },
+        setRememberWallpaperPage(choice) {
+            this.rememberWallpaperPage = choice === "Enabled";
+            storeInLocalStorage("remember-wallpaper-page", choice);
         },
     },
 });

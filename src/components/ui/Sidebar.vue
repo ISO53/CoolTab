@@ -256,6 +256,17 @@
                                     :onSelect="setHourlyWeatherRotation"
                                 />
                             </div>
+
+                            <span class="divider"></span>
+
+                            <div>
+                                <h2>Remember Wallpaper Page</h2>
+                                <SelectButton
+                                    v-model="rememberWallpaperPageText"
+                                    :options="['Enabled', 'Disabled']"
+                                    :onSelect="setRememberWallpaperPage"
+                                />
+                            </div>
                         </div>
                     </Tab>
                     <Tab :label="'About'" :icon="'info'">
@@ -345,6 +356,11 @@ export default {
             showStockGuide: false,
         };
     },
+    computed: {
+        rememberWallpaperPageText() {
+            return this.settingsStore.rememberWallpaperPage ? "Enabled" : "Disabled";
+        },
+    },
     methods: {
         toggleSidebar() {
             this.isOpen = !this.isOpen;
@@ -401,6 +417,9 @@ export default {
         },
         setHourlyWeatherRotation(rotation) {
             this.settingsStore.setHourlyWeatherRotation(rotation);
+        },
+        setRememberWallpaperPage(choice) {
+            this.settingsStore.setRememberWallpaperPage(choice);
         },
         setWidgetSelected(widget, isSelected) {
             widget.selected = isSelected;

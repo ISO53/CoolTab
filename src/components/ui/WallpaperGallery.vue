@@ -8,16 +8,21 @@
             </button>
 
             <div class="previews">
-                <div
-                    v-for="wp in visibleWallpapers"
-                    :key="wp._id"
-                    class="thumb"
-                    @mouseenter="onHover(wp)"
-                    @mouseleave="onLeave"
-                >
-                    <img :src="wp.preview_url" />
-                    <button v-if="hoveredId === wp._id" class="apply-btn" @click.stop="apply(wp)">Apply</button>
-                </div>
+                <template v-for="wp in visibleWallpapers">
+                    <div
+                        v-if="wp"
+                        :key="wp._id"
+                        class="thumb"
+                        @mouseenter="onHover(wp)"
+                        @mouseleave="onLeave"
+                    >
+                        <img :src="wp.preview_url" />
+                        <button v-if="hoveredId === wp._id" class="apply-btn" @click.stop="apply(wp)">Apply</button>
+                    </div>
+                    <div v-else class="thumb loading-thumb">
+                        <div class="loader"></div>
+                    </div>
+                </template>
             </div>
 
             <button class="nav-btn" @click="next" :disabled="isLastPage || loading">
@@ -63,12 +68,27 @@ export default {
             return this.page + 1 >= this.totalPages;
         },
     },
+    watch: {
+        page(newVal) {
+            if (this.settingsStore.rememberWallpaperPage) {
+                localStorage.setItem("last-wallpaper-page", newVal);
+            }
+        },
+    },
     methods: {
         async toggle() {
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
                 this.savedImage = this.settingsStore.backgroundImage;
-                if (!this.wallpapers.length) await this.fetchWallpapers();
+                if (this.settingsStore.rememberWallpaperPage) {
+                    this.page = parseInt(localStorage.getItem("last-wallpaper-page")) || 0;
+                } else {
+                    this.page = 0;
+                }
+                if (!this.wallpapers.length || !this.wallpapers[this.page * PAGE_SIZE]) {
+                    const apiPage = Math.floor((this.page * PAGE_SIZE) / 20) + 1;
+                    await this.fetchWallpapers(apiPage);
+                }
             } else {
                 this.restoreBackground();
             }
@@ -84,11 +104,16 @@ export default {
             try {
                 const res = await fetch(`https://cool-tab-api.vercel.app/api/search-wallpapers?limit=20&page=${p}`);
                 const data = await res.json();
-                if (p === 1) {
-                    this.wallpapers = data.wallpapers;
-                } else {
-                    this.wallpapers.push(...data.wallpapers);
+
+                const startIndex = (p - 1) * 20;
+                // Fill gaps if any
+                if (this.wallpapers.length < startIndex) {
+                    for (let i = this.wallpapers.length; i < startIndex; i++) {
+                        this.wallpapers[i] = null;
+                    }
                 }
+                this.wallpapers.splice(startIndex, data.wallpapers.length, ...data.wallpapers);
+
                 this.totalItems = data.totalItems;
             } catch (e) {
                 console.error("Failed to fetch wallpapers:", e);
@@ -97,7 +122,13 @@ export default {
             }
         },
         prev() {
-            if (this.page > 0) this.page--;
+            if (this.page > 0) {
+                this.page--;
+                if (!this.wallpapers[this.page * PAGE_SIZE]) {
+                    const apiPage = Math.floor((this.page * PAGE_SIZE) / 20) + 1;
+                    this.fetchWallpapers(apiPage);
+                }
+            }
         },
         next() {
             if (this.isLastPage || this.loading) return;
@@ -105,14 +136,12 @@ export default {
             const nextLocalPage = this.page + 1;
             const nextStart = nextLocalPage * PAGE_SIZE;
 
-            if (nextStart < this.wallpapers.length) {
+            if (this.wallpapers[nextStart]) {
                 this.page = nextLocalPage;
             } else {
-                const nextApiPage = Math.floor(this.wallpapers.length / 20) + 1;
+                const nextApiPage = Math.floor(nextStart / 20) + 1;
                 this.fetchWallpapers(nextApiPage).then(() => {
-                    if (nextStart < this.wallpapers.length) {
-                        this.page = nextLocalPage;
-                    }
+                    this.page = nextLocalPage;
                 });
             }
         },
@@ -253,6 +282,27 @@ export default {
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+.loading-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color-primary-background), transparent 60%);
+}
+
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-border-line);
+    border-top: 2px solid var(--color-primary-text);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .apply-btn {
