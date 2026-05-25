@@ -143,7 +143,7 @@
 }
 
 .copyright {
-    text-align: left;
+    text-align: center;
     color: rgba(255, 255, 255, 0.25);
     font-size: 0.85rem;
     letter-spacing: 0.02em;
