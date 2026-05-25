@@ -16,7 +16,6 @@
                 <div class="feature-content">
                     <div class="top-info">
                         <div class="feature-icon" v-html="feature.icon"></div>
-                        <div class="feature-badge" v-if="feature.badge">{{ feature.badge }}</div>
                     </div>
                     <div class="text-group">
                         <h3>{{ feature.title }}</h3>
@@ -36,42 +35,36 @@ const features = [
         title: "Productivity Hub",
         description: "Stay focused with built-in task management and high-speed search. No more tab clutter.",
         size: "large-wide",
-        badge: "Core",
         icon: '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>',
     },
     {
         title: "Live Intelligence",
         description: "Real-time stock tracking and weather forecasts.",
         size: "standard",
-        badge: "Live",
         icon: '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
     },
     {
         title: "Privacy First",
         description: "Your data stays local. We don't track your browsing habits or sell your information.",
         size: "standard",
-        badge: "Secure",
         icon: '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
     },
     {
         title: "Infinite Flexibility",
         description: "Arrange and resize widgets freely. Our revamped sidebar makes management intuitive.",
         size: "large-wide",
-        badge: "Flex",
         icon: '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>',
     },
     {
         title: "Beautifully Yours",
         description: "Minimal themes curated to match your aesthetic perfectly.",
         size: "large-wide",
-        badge: "Style",
         icon: '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>',
     },
     {
         title: "Smart Search",
         description: "Quick access to your favorite search engines.",
         size: "standard",
-        badge: "Speed",
         icon: '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
     },
 ];
@@ -99,11 +92,10 @@ onMounted(() => {
 <style scoped>
 .features-section {
     padding: 120px 20px;
-    background: var(--bg-dark);
 }
 
 .section-header {
-    text-align: center;
+    text-align: left;
     margin-bottom: 80px;
 }
 
@@ -238,16 +230,6 @@ onMounted(() => {
     justify-content: center;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.feature-badge {
-    padding: 4px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .text-group {

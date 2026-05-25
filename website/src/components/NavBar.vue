@@ -8,8 +8,8 @@
 
             <div class="nav-links">
                 <a href="#/" :class="{ 'active-link': currentPath === '#/' || currentPath === '' || currentPath === '#' }">Home</a>
-                <a href="#features" @click="handleScroll">Features</a>
                 <a href="#/style" :class="{ 'active-link': currentPath === '#/style' }">Styles</a>
+                <a href="#/benchmarks" :class="{ 'active-link': currentPath === '#/benchmarks' }">Benchmarks</a>
             </div>
 
             <div class="nav-actions">

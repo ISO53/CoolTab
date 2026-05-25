@@ -26,7 +26,7 @@ import MockWidget from './MockWidget.vue';
 
 <style scoped>
 .stock-widget {
-    --accent: #4ea8ff;
+    --accent: rgba(255, 255, 255, 0.3);
     padding: 15px;
     height: 100%;
     display: flex;
@@ -58,7 +58,7 @@ import MockWidget from './MockWidget.vue';
 
 .diff {
     font-size: 7cqw;
-    color: #00f5d4;
+    color: rgba(255, 255, 255, 0.5);
     margin: 2px 0;
 }
 

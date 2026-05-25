@@ -12,12 +12,12 @@
             </div>
             <div class="graph-area">
                 <svg viewBox="0 0 400 100" preserveAspectRatio="none">
-                    <path d="M 0 80 Q 50 20 100 50 T 200 40 T 300 60 T 400 30" stroke="#ffbd2e" stroke-width="3" fill="none" />
+                    <path d="M 0 80 Q 50 20 100 50 T 200 40 T 300 60 T 400 30" stroke="rgba(255, 255, 255, 0.3)" stroke-width="3" fill="none" />
                     <path d="M 0 80 Q 50 20 100 50 T 200 40 T 300 60 T 400 30 L 400 100 L 0 100 Z" fill="url(#weatherGrad)" />
                     <defs>
                         <linearGradient id="weatherGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#ffbd2e" stop-opacity="0.2" />
-                            <stop offset="100%" stop-color="#ffbd2e" stop-opacity="0" />
+                            <stop offset="0%" stop-color="white" stop-opacity="0.1" />
+                            <stop offset="100%" stop-color="white" stop-opacity="0" />
                         </linearGradient>
                     </defs>
                 </svg>

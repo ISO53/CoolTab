@@ -14,6 +14,7 @@ export function useNavigation() {
   const currentComponent = computed(() => {
     const path = currentPath.value.replace('#', '') || '/'
     if (path === '/style') return 'StylePage'
+    if (path === '/benchmarks') return 'BenchmarkPage'
     return 'HomePage'
   })
 

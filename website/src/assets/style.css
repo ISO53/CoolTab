@@ -28,7 +28,7 @@
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-blur: 30px;
 
-    --accent-gradient: linear-gradient(135deg, #F0E68C, #DAA520);
+    --accent-gradient: linear-gradient(135deg, #ffffff, #888888);
 
     --nav-height: 70px;
 }
@@ -41,13 +41,14 @@
 
 body {
     font-family: var(--font-main);
-    background-color: var(--bg-dark);
+    background-color: #050505;
     background-image:
         linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000000 70%);
+        radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 100%);
     background-size: 50px 50px, 50px 50px, 100% 100%;
     background-repeat: repeat, repeat, no-repeat;
+    background-attachment: scroll, scroll, fixed;
     color: var(--text-main);
     min-height: 100vh;
     overflow-x: hidden;
@@ -125,4 +126,10 @@ a {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+    h1, h2, h3, h4, h5, h6, p {
+        text-align: left !important;
+    }
 }

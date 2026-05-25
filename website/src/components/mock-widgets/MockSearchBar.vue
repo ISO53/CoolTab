@@ -3,7 +3,6 @@
         <div class="search-widget">
             <div class="search-container">
                 <div class="search-box">
-                    <span class="icon">🔍</span>
                     <span class="placeholder">Search anything...</span>
                 </div>
                 <div class="engines">
@@ -74,8 +73,8 @@ import MockWidget from './MockWidget.vue';
 }
 
 .engine.active {
-    background: #4ea8ff;
-    color: black;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
 }
 
 .shortcuts {

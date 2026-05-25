@@ -100,7 +100,7 @@ onUnmounted(() => clearInterval(timer));
 .second {
     width: 1px;
     height: 40%;
-    background: #ff4fd8;
+    background: rgba(255, 255, 255, 0.4);
     z-index: 4;
 }
 

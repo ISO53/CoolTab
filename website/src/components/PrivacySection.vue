@@ -2,7 +2,7 @@
     <section id="privacy" class="privacy-section container">
         <div class="feature-block">
             <div class="content">
-                <div class="label-badge">Security & Transparency</div>
+                <span class="section-label">Security & Transparency</span>
                 <h3>Private by Default, Open by Design</h3>
                 <p>
                     We believe your browser data is yours alone. CoolTab operates entirely locally on your device. No
@@ -11,7 +11,7 @@
                     for anyone to audit, contribute to, or fork. Built by the community, for the community.
                 </p>
             </div>
-            <div class="visual glow-effect gold">
+            <div class="visual glow-effect">
                 <svg
                     width="120"
                     height="120"
@@ -56,17 +56,14 @@
     max-width: 600px;
 }
 
-.label-badge {
+.section-label {
     display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
+    color: var(--text-muted);
     font-size: 0.8rem;
-    letter-spacing: 1px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 h3 {
@@ -125,12 +122,12 @@ p {
 @media (max-width: 1000px) {
     .feature-block {
         flex-direction: column;
-        text-align: center;
+        text-align: left;
         gap: 40px;
     }
 
     .content {
-        margin: 0 auto;
+        margin: 0;
     }
 
     .visual {

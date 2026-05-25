@@ -34,7 +34,7 @@ import MockWidget from './MockWidget.vue';
 .month {
     font-size: 8cqw;
     font-weight: 700;
-    color: #ff4fd8;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .day {
@@ -65,6 +65,6 @@ import MockWidget from './MockWidget.vue';
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #ff4fd8;
+    background: rgba(255, 255, 255, 0.4);
 }
 </style>

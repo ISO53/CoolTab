@@ -2,9 +2,11 @@
     <div class="home-page">
         <HeroSection />
         <WidgetSection />
-        <ThemeDemo />
+        <CapabilityCarousel />
         <FeatureScroll />
         <PrivacySection />
+        <BenchmarkSection />
+        <FAQSection />
         <InstallationSection />
 
         <!-- CTA Section -->
@@ -20,10 +22,12 @@
 <script setup>
 import HeroSection from "../components/HeroSection.vue";
 import WidgetSection from "../components/WidgetSection.vue";
-import ThemeDemo from "../components/ThemeDemo.vue";
+import CapabilityCarousel from "../components/CapabilityCarousel.vue";
 import FeatureScroll from "../components/FeatureScroll.vue";
 import PrivacySection from "../components/PrivacySection.vue";
 import InstallationSection from "../components/InstallationSection.vue";
+import BenchmarkSection from "../components/BenchmarkSection.vue";
+import FAQSection from "../components/FAQSection.vue";
 </script>
 
 <style scoped>

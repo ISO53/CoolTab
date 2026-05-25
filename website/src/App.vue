@@ -13,13 +13,15 @@ import NavBar from './components/NavBar.vue'
 import Footer from './components/Footer.vue'
 import HomePage from './views/HomePage.vue'
 import StylePage from './views/StylePage.vue'
+import BenchmarkPage from './views/BenchmarkPage.vue'
 import { useNavigation } from './navigation'
 
 const { currentComponent } = useNavigation()
 
 const components = {
   HomePage,
-  StylePage
+  StylePage,
+  BenchmarkPage
 }
 </script>
 

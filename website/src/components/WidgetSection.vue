@@ -63,7 +63,7 @@ const row3 = [
             <div class="text-wrapper">
                 <h2 class="widgets-title">A Widget for Everything</h2>
                 <p class="widgets-subtitle">
-                    Experience your actual dashboard widgets in action. 
+                    Experience your actual dashboard widgets in action.
                     From real-time stock tracking to weather forecasts and smart calendars—all seamlessly integrated into your new tab.
                 </p>
             </div>
@@ -93,6 +93,7 @@ const row3 = [
     flex-direction: column;
     justify-content: center;
     opacity: 0.5;
+    filter: blur(1px);
 }
 
 .widgets-grid {
@@ -165,18 +166,18 @@ const row3 = [
     .widgets-section {
         height: auto;
         padding: 80px 0;
-        text-align: center;
+        text-align: left;
     }
 
     .widgets-content {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .text-wrapper {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         max-width: 100%;
     }
 

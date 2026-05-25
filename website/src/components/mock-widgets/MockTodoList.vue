@@ -69,8 +69,8 @@ const todos = [
 }
 
 .todo-item.done .checkbox {
-    background: #00f5d4;
-    border-color: #00f5d4;
-    color: black;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
 }
 </style>
