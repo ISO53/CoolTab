@@ -176,7 +176,14 @@ export default {
         },
 
         getState(id, action) {
-            return this.states[id]?.[action] || "idle";
+            if (this.states[id]?.[action]) {
+                return this.states[id][action];
+            }
+            if (action === "save") {
+                const isSaved = this.settingsStore.userStyles?.some((s) => s._id === id);
+                if (isSaved) return "done";
+            }
+            return "idle";
         },
 
         getIcon(id, action) {

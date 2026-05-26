@@ -317,6 +317,12 @@ export const useSettingsStore = defineStore("settings", {
         },
         async importStyleById(styleId) {
             try {
+                if (!Array.isArray(this.userStyles)) this.userStyles = [];
+                const existing = this.userStyles.find(s => s._id === styleId);
+                if (existing) {
+                    return {success: true, style: existing};
+                }
+
                 const response = await fetch(`https://cool-tab-api.vercel.app/api/get-style?id=${styleId}`);
                 if (response.ok) {
                     const style = await response.json();
@@ -327,7 +333,6 @@ export const useSettingsStore = defineStore("settings", {
                             createdAt: new Date().toISOString(),
                         };
 
-                        if (!Array.isArray(this.userStyles)) this.userStyles = [];
                         this.userStyles.push(importedStyle);
                         storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
                         return {success: true, style: importedStyle};
