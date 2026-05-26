@@ -50,7 +50,10 @@ export default {
             const md = settingsStore.releaseNotes && settingsStore.releaseNotes.body;
             if (!md) return "";
             try {
-                return marked.parse(md);
+                return marked.parse(md, {
+                    mangle: false,
+                    headerIds: false,
+                });
             } catch (e) {
                 return "<pre>Could not render release notes</pre>";
             }
