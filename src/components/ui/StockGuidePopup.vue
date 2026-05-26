@@ -110,6 +110,7 @@
 <script>
 export default {
     name: "StockGuidePopup",
+    emits: ["close"],
     props: {
         show: {
             type: Boolean,
