@@ -9,15 +9,15 @@
         <div class="info-section">
             <div class="info-item">
                 <span class="label">Version</span>
-                <span class="value">{{ appVersion }}</span>
+                <span class="value"><a href="https://iso53.github.io/CoolTab/#/changes" target="_blank" title="See what's new in this version">{{ appVersion }}</a></span>
             </div>
             <div class="info-item">
                 <span class="label">Created by</span>
-                <span class="value"><a href="https://github.com/iso53" target="_blank">iso53</a></span>
+                <span class="value"><a href="https://github.com/iso53" target="_blank" title="Visit creator's GitHub profile">iso53</a></span>
             </div>
             <div class="info-item">
                 <span class="label">Source Code</span>
-                <span class="value"><a href="https://github.com/iso53/cooltab" target="_blank">GitHub</a></span>
+                <span class="value"><a href="https://github.com/iso53/cooltab" target="_blank" title="View the open-source code on GitHub">GitHub</a></span>
             </div>
         </div>
 
