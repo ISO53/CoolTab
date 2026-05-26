@@ -32,7 +32,7 @@ import {useSettingsStore} from "@/settings";
 import Widget from "./Widget.vue";
 
 export default {
-    name: "WeekyWeatherForecast",
+    name: "WeeklyWeatherForecast",
     components: {
         Widget,
     },
