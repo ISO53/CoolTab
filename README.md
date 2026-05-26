@@ -65,10 +65,13 @@
     ```bash
     npm run build
     ```
-4. Copy the `manifest.json` (for chrome) or `firefox_manifest.json` (for firefox) file to `/dist` folder depending which browser you are building for.
-   > If you copied the `firefox_manifest.json` to `/dist` folder make sure to change the file name back to `manifest.json` after you've copied it.
-5. Go to `/dist` folder and zip the project files and upload it to chrome or firefox for testing, development or any other stuff.
-   > If you want to run the project in development mode, just run `npm run dev`.
+    The build process automatically generates optimized versions for both browsers:
+    -   `/dist/chrome`: For Chromium-based browsers (Chrome, Edge, Brave, etc.).
+    -   `/dist/firefox`: For Firefox.
+
+4. **Deployment & Testing**
+    Zip the contents of either the `/dist/chrome` or `/dist/firefox` folder and upload it to your browser's extension management page for testing.
+    > If you want to run the project in development mode, just run `npm run dev`.
 
 
 ## Application UI
