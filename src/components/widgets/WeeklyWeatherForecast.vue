@@ -3,22 +3,22 @@
         <div class="weekly-weather-forecast">
             <div class="curr">
                 <div class="curr-info">
-                    <Svg :class_name="weather.curr.img"></Svg>
-                    <h1>{{ weather.curr.temperature + "°" }}</h1>
+                    <Svg :class_name="weather.curr?.img || ''"></Svg>
+                    <h1>{{ (weather.curr?.temperature ?? 0) + "°" }}</h1>
                     <div class="high-low">
-                        <h5>{{ "H " + weather.curr.high + "°" }}</h5>
-                        <h5>{{ "L " + weather.curr.low + "°" }}</h5>
+                        <h5>{{ "H " + (weather.curr?.high ?? 0) + "°" }}</h5>
+                        <h5>{{ "L " + (weather.curr?.low ?? 0) + "°" }}</h5>
                     </div>
                 </div>
                 <div class="city-and-weather">
-                    <h2>{{ weather.curr.city }}</h2>
-                    <h2>{{ weather.curr.weather }}</h2>
+                    <h2>{{ weather.curr?.city || '' }}</h2>
+                    <h2>{{ weather.curr?.weather || '' }}</h2>
                 </div>
             </div>
             <div class="forecast">
                 <div class="day" v-for="(item, index) in weather.week" :key="index">
-                    <h1>{{ days[new Date(item.date).getDay()] }}</h1>
-                    <Svg :class_name="item.img"></Svg>
+                    <h1>{{ item.date ? days[new Date(item.date).getDay()] : '' }}</h1>
+                    <Svg :class_name="item.img || ''"></Svg>
                     <h2>{{ item.high + "°" }}</h2>
                     <h2>{{ item.low + "°" }}</h2>
                 </div>
@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         async getWeeklyWeatherInfo() {
-            if (this.settingsStore.weeklyWeatherInfo.lastUpdated) {
+            if (this.settingsStore.weeklyWeatherInfo?.lastUpdated) {
                 // compare this.settingsStore.weeklyWeatherInfo.lastUpdated with current time and check if 3 hours passed
                 const now = new Date();
                 const diff = now - this.settingsStore.weeklyWeatherInfo.lastUpdated;
@@ -61,13 +61,17 @@ export default {
                 if (diff <= 10_800_000) return;
             }
 
-            // Fetch the data
-            const response = await fetch("https://cool-tab-api.vercel.app/api/weekly-weather");
-            const data = await response.json();
-
-            this.weather = data;
-            this.weather.lastUpdated = new Date().toISOString();
-            this.settingsStore.setWeeklyWeatherInfo(this.weather);
+            try {
+                const response = await fetch("https://cool-tab-api.vercel.app/api/weekly-weather");
+                if (response.ok) {
+                    const data = await response.json();
+                    data.lastUpdated = new Date().toISOString();
+                    this.weather = data;
+                    this.settingsStore.setWeeklyWeatherInfo(data);
+                }
+            } catch (e) {
+                console.error("Error fetching weekly weather:", e);
+            }
         },
     },
 };

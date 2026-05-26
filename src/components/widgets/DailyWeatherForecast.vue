@@ -61,16 +61,21 @@ export default {
     },
     methods: {
         convertTimeToMinutes(time) {
+            if (!time || !time.includes(":")) return 0;
             const [hour, minute] = time.split(":");
             const hour24 = parseInt(hour);
             const minuteVal = parseInt(minute);
 
-            return hour24 * 60 + minuteVal;
+            return (isNaN(hour24) ? 0 : hour24) * 60 + (isNaN(minuteVal) ? 0 : minuteVal);
         },
         calculateRotation() {
+            if (!this.weather.sunrise || !this.weather.sunset) return;
+
             const sunriseMinutes = this.convertTimeToMinutes(this.weather.sunrise);
             const sunsetMinutes = this.convertTimeToMinutes(this.weather.sunset);
             const totalDayMinutes = sunsetMinutes - sunriseMinutes;
+
+            if (totalDayMinutes <= 0) return;
 
             const now = new Date();
             const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -78,8 +83,8 @@ export default {
             let sunPosition = (currentMinutes - sunriseMinutes) / totalDayMinutes;
             this.rotation = sunPosition * 180;
         },
-        getCurrentWeatherInfo() {
-            if (this.settingsStore.currentWeatherInfo.lastUpdated) {
+        async getCurrentWeatherInfo() {
+            if (this.settingsStore.currentWeatherInfo?.lastUpdated) {
                 // compare this.settingsStore.currentWeatherInfo.lastUpdated with current time and check if 1 hour passed
                 const now = new Date();
                 const diff = now - this.settingsStore.currentWeatherInfo.lastUpdated;
@@ -88,9 +93,10 @@ export default {
                 if (diff <= 3_600_000) return;
             }
 
-            fetch("https://cool-tab-api.vercel.app/api/current-weather")
-                .then((response) => response.json())
-                .then((data) => {
+            try {
+                const response = await fetch("https://cool-tab-api.vercel.app/api/current-weather");
+                if (response.ok) {
+                    const data = await response.json();
                     this.weather.sunrise = data.sunrise;
                     this.weather.sunset = data.sunset;
                     this.weather.temperature = data.temp_c + "°";
@@ -100,10 +106,10 @@ export default {
 
                     this.calculateRotation();
                     this.settingsStore.setCurrentWeatherInfo(this.weather);
-                })
-                .catch((error) => {
-                    console.error("Error fetching weather data:", error);
-                });
+                }
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+            }
         },
     },
 };

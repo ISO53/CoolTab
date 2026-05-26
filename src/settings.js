@@ -49,8 +49,11 @@ export const useSettingsStore = defineStore("settings", {
                     const blob = await response.blob();
                     await this.setBackgroundImage(blob, saveToDb);
                 } catch (e) {
-                    console.error("Failed to fetch remote background image:", e);
-                    this.backgroundImage = null;
+                    console.error("Failed to fetch remote background image, falling back to direct URL:", e);
+                    this.backgroundImage = image;
+                    if (saveToDb) {
+                        await setItem("background-image", image);
+                    }
                 }
             } else {
                 this.backgroundImage = null;
