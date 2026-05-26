@@ -52,7 +52,7 @@
 <script>
 import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
-import { YAHOO_QUERY1_BASE } from "@/utils/api";
+import { YAHOO_QUERY1_BASE, fetchYahoo } from "@/utils/api";
 
 export default {
     name: "Stock",
@@ -143,8 +143,7 @@ export default {
 
             for (const ticker of tickers) {
                 try {
-                    const res = await fetch(`${YAHOO_QUERY1_BASE}/v8/finance/chart/${encodeURIComponent(ticker)}?range=1d&interval=1m`);
-                    const data = await res.json();
+                    const data = await fetchYahoo(`${YAHOO_QUERY1_BASE}/v8/finance/chart/${encodeURIComponent(ticker)}?range=1d&interval=1m`);
                     
                     if (data.chart && data.chart.result && data.chart.result.length > 0) {
                         const result = data.chart.result[0];

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import {YAHOO_QUERY2_BASE} from "@/utils/api";
+import {YAHOO_QUERY2_BASE, fetchYahoo} from "@/utils/api";
 
 export default {
     name: "StockSearch",
@@ -100,10 +100,9 @@ export default {
         },
         async performSearch() {
             try {
-                const res = await fetch(
+                const data = await fetchYahoo(
                     `${YAHOO_QUERY2_BASE}/v1/finance/search?q=${encodeURIComponent(this.inputValue.trim())}`,
                 );
-                const data = await res.json();
                 this.searchResults = data.quotes || [];
             } catch (error) {
                 console.error("Yahoo Finance search error:", error);
