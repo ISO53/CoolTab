@@ -10,6 +10,7 @@
                 <a href="#/" :class="{ 'active-link': currentPath === '#/' || currentPath === '' || currentPath === '#' }">Home</a>
                 <a href="#/style" :class="{ 'active-link': currentPath === '#/style' }">Styles</a>
                 <a href="#/benchmarks" :class="{ 'active-link': currentPath === '#/benchmarks' }">Benchmarks</a>
+                <a href="#/releases" :class="{ 'active-link': currentPath === '#/releases' }">Releases</a>
             </div>
 
             <div class="nav-actions">
