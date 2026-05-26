@@ -9,7 +9,7 @@
         <div class="info-section">
             <div class="info-item">
                 <span class="label">Version</span>
-                <span class="value"><a href="https://iso53.github.io/CoolTab/#/changes" target="_blank" title="See what's new in this version">{{ appVersion }}</a></span>
+                <span class="value"><a href="https://iso53.github.io/CoolTab/#/releases" target="_blank" title="See what's new in this version">{{ appVersion }}</a></span>
             </div>
             <div class="info-item">
                 <span class="label">Created by</span>

@@ -9,7 +9,7 @@
             <div class="toast-content">
                 <span class="toast-text">
                     CoolTab has been successfully updated!
-                    <a href="https://iso53.github.io/CoolTab/#/changes" target="_blank" class="changes-link" @click="dismiss">See changes</a>
+                    <a href="https://iso53.github.io/CoolTab/#/releases" target="_blank" class="changes-link" @click="dismiss">See changes</a>
                 </span>
             </div>
         </div>
