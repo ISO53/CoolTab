@@ -9,6 +9,10 @@
     "background": {
         "scripts": ["background.js"]
     },
+    "host_permissions": [
+        "https://query1.finance.yahoo.com/*",
+        "https://query2.finance.yahoo.com/*"
+    ],
     "browser_specific_settings": {
         "gecko": {
             "id": "cooltab@github.io",
