@@ -49,11 +49,8 @@ export const useSettingsStore = defineStore("settings", {
                     const blob = await response.blob();
                     await this.setBackgroundImage(blob, saveToDb);
                 } catch (e) {
-                    console.error("Failed to fetch remote background image, falling back to direct URL:", e);
-                    this.backgroundImage = image;
-                    if (saveToDb) {
-                        await setItem("background-image", image);
-                    }
+                    console.error("Failed to fetch remote background image:", e);
+                    this.backgroundImage = null;
                 }
             } else {
                 this.backgroundImage = null;
@@ -346,8 +343,8 @@ export const useSettingsStore = defineStore("settings", {
             try {
                 const snapshot = this.getStyleSnapshot();
 
-                // Handle background image upload if it's a custom blob
-                if (this.backgroundImage && this.backgroundImage.startsWith("blob:")) {
+                // Always handle background image upload if it exists
+                if (this.backgroundImage) {
                     try {
                         const response = await fetch(this.backgroundImage);
                         const blob = await response.blob();
@@ -361,9 +358,8 @@ export const useSettingsStore = defineStore("settings", {
                         snapshot.backgroundImage = newBlob.url;
                     } catch (uploadError) {
                         console.error("Failed to upload background image to Vercel Blob:", uploadError);
-                        // Continue without background or handle error?
-                        // For now, we'll continue with null background if upload fails
-                        snapshot.backgroundImage = null;
+                        // If upload fails, snapshot.backgroundImage remains as is from getStyleSnapshot()
+                        // which might be a remote URL or null.
                     }
                 }
 
