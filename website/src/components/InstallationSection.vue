@@ -45,7 +45,7 @@
 }
 
 .header {
-    text-align: left;
+    text-align: center;
     margin-bottom: 80px;
 }
 
@@ -75,6 +75,10 @@
     gap: 20px;
     padding: 30px;
     color: var(--text-main);
+}
+
+.platform-card:hover {
+    box-shadow: none;
 }
 
 .platform-icon {
