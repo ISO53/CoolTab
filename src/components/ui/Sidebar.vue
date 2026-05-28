@@ -584,41 +584,7 @@ export default {
     margin: 10px 0;
 }
 
-/* ── Search Tips Styles ── */
-.settings > .search-tips {
-    display: block;
-    width: 100%;
-    height: auto;
-    padding: 10px 0;
-}
 
-.tips-title {
-    font-family: Satoshi-Bold;
-    font-size: 0.75rem;
-    color: var(--color-tertiary-text);
-    margin: 0 0 12px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05rem;
-    opacity: 0.7;
-}
-
-.tips-content {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.tip-section {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.tip-label {
-    font-family: Satoshi-Bold;
-    color: var(--color-secondary-text);
-    font-size: 0.75rem;
-}
 
 .tip-desc {
     color: var(--color-tertiary-text);

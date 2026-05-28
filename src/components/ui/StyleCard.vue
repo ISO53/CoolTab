@@ -140,12 +140,6 @@ export default {
     border-radius: 5px;
 }
 
-.placeholder {
-    color: var(--color-tertiary-text);
-    font-size: 0.8rem;
-    text-align: center;
-}
-
 .style-info {
     padding: 8px 12px;
     flex: 1;
