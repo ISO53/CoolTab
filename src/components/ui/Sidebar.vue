@@ -32,7 +32,7 @@
                                 <h2>Widget Background</h2>
                                 <SelectButton
                                     v-model="settingsStore.widgetBackground"
-                                    :options="['Color', 'Transparent', 'Blur']"
+                                    :options="['Color', 'Transparent', 'Blur', 'Glass']"
                                     :onSelect="setWidgetBackground"
                                 />
                             </div>
