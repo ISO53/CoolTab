@@ -1,60 +1,18 @@
 <script setup>
-import MockDigitalClock from './mock-widgets/MockDigitalClock.vue';
-import MockStock from './mock-widgets/MockStock.vue';
-import MockHourlyWeather from './mock-widgets/MockHourlyWeather.vue';
-import MockCalendar from './mock-widgets/MockCalendar.vue';
-import MockAnalogClock from './mock-widgets/MockAnalogClock.vue';
-import MockTodoList from './mock-widgets/MockTodoList.vue';
-import MockSearchBar from './mock-widgets/MockSearchBar.vue';
-
-const row1 = [
-    { component: MockDigitalClock },
-    { component: MockStock },
-    { component: MockHourlyWeather },
-    { component: MockCalendar },
-    { component: MockAnalogClock },
-];
-
-const row2 = [
-    { component: MockSearchBar },
-    { component: MockTodoList },
-    { component: MockDigitalClock },
-    { component: MockStock },
-    { component: MockHourlyWeather },
-];
-
-const row3 = [
-    { component: MockStock },
-    { component: MockAnalogClock },
-    { component: MockSearchBar },
-    { component: MockCalendar },
-    { component: MockTodoList },
-];
+import widgetsVideo from '../assets/videos/Widgets-Video.webm';
 </script>
 
 <template>
     <section class="widgets-section">
         <div class="widgets-background">
-            <div class="widgets-grid">
-                <!-- Row 1 -->
-                <div class="widget-row row-0">
-                    <div v-for="(item, j) in [...row1, ...row1]" :key="'r1-'+j" class="widget-wrapper">
-                        <component :is="item.component" />
-                    </div>
-                </div>
-                <!-- Row 2 -->
-                <div class="widget-row row-1">
-                    <div v-for="(item, j) in [...row2, ...row2]" :key="'r2-'+j" class="widget-wrapper">
-                        <component :is="item.component" />
-                    </div>
-                </div>
-                <!-- Row 3 -->
-                <div class="widget-row row-2">
-                    <div v-for="(item, j) in [...row3, ...row3]" :key="'r3-'+j" class="widget-wrapper">
-                        <component :is="item.component" />
-                    </div>
-                </div>
-            </div>
+            <video
+                :src="widgetsVideo"
+                autoplay
+                loop
+                muted
+                playsinline
+                class="widgets-video"
+            ></video>
         </div>
 
         <div class="widgets-overlay"></div>
@@ -96,34 +54,11 @@ const row3 = [
     filter: blur(1px);
 }
 
-.widgets-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.widget-row {
-    display: flex;
-    gap: 20px;
-    width: max-content;
-}
-
-.widget-wrapper {
-    flex-shrink: 0;
-}
-
-.row-0 { animation: slide-left 80s linear infinite; }
-.row-1 { animation: slide-right 70s linear infinite; }
-.row-2 { animation: slide-left 90s linear infinite; }
-
-@keyframes slide-left {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-}
-
-@keyframes slide-right {
-    from { transform: translateX(-50%); }
-    to { transform: translateX(0); }
+.widgets-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .widgets-overlay {
