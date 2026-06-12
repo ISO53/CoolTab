@@ -17,7 +17,7 @@
                                 placeholder="Enter a unique style name"
                                 required
                                 maxlength="50"
-                                :disabled="isMessageShown"
+                                :disabled="isMessageShown || isRateLimited"
                             />
                         </div>
 
@@ -29,7 +29,7 @@
                             in a couple of days after review.
                         </p>
 
-                        <p v-if="errorMessage" class="error-message" :class="{ 'rate-limit-message': isRateLimited }">
+                        <p v-if="errorMessage" :class="{ 'rate-limit-message': isRateLimited }">
                             {{ errorMessage }}
                         </p>
 
@@ -42,7 +42,7 @@
                             >
                                 Cancel
                             </button>
-                            <button type="submit" class="btn-submit" :disabled="isMessageShown">Share Style</button>
+                            <button type="submit" class="btn-submit" :disabled="isMessageShown || isRateLimited">Share Style</button>
                         </div>
                     </form>
                 </div>
@@ -70,17 +70,41 @@ export default {
         };
     },
     methods: {
+        checkRateLimit() {
+            const lastShare = localStorage.getItem("last-share-timestamp");
+            if (lastShare) {
+                const lastShareTime = parseInt(lastShare);
+                const now = Date.now();
+                const oneDay = 24 * 60 * 60 * 1000;
+                if (now - lastShareTime < oneDay) {
+                    return true;
+                }
+            }
+            return false;
+        },
         toggleShareStyle() {
             this.isOpen = !this.isOpen;
             this.styleName = "";
             this.isMessageShown = false;
             this.errorMessage = "";
             this.isRateLimited = false;
+
+            if (this.isOpen && this.checkRateLimit()) {
+                this.isRateLimited = true;
+                this.errorMessage = "You can only share 1 style per day. Please try again tomorrow.";
+            }
         },
         async handleSubmit() {
+            if (this.checkRateLimit()) {
+                this.isRateLimited = true;
+                this.errorMessage = "You can only share 1 style per day. Please try again tomorrow.";
+                return;
+            }
+
             const result = await this.settingsStore.shareUserStyle(this.styleName);
-            
+
             if (result.success) {
+                localStorage.setItem("last-share-timestamp", Date.now().toString());
                 this.isMessageShown = true;
                 this.isRateLimited = false;
                 this.errorMessage = "";
@@ -168,22 +192,8 @@ export default {
     font-weight: 500;
 }
 
-.error-message {
-    color: #ef4444;
-    font-family: Satoshi-Medium;
-    font-size: 0.95rem;
-    text-align: center;
-    padding: 12px 16px;
-    border-radius: 10px;
-    background-color: color-mix(in srgb, #ef4444, transparent 90%);
-    border: 1px solid color-mix(in srgb, #ef4444, transparent 70%);
-    margin-top: -10px;
-}
-
 .rate-limit-message {
-    color: #f59e0b;
-    background-color: color-mix(in srgb, #f59e0b, transparent 90%);
-    border-color: color-mix(in srgb, #f59e0b, transparent 70%);
+    color: var(--color-secondary-text);
 }
 
 .share-form {
