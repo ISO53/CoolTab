@@ -312,6 +312,7 @@ import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import TodoList from "../widgets/TodoList.vue";
 import HourlyWeatherForecast from "../widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "../widgets/MonthlyCalendar.vue";
+import Location from "../widgets/Location.vue";
 import StockGuidePopup from "./StockGuidePopup.vue";
 import {useSettingsStore} from "@/settings";
 
@@ -346,7 +347,8 @@ export default {
         WeeklyWeatherForecast,
         TodoList,
         HourlyWeatherForecast,
-        MonthlyCalendar,
+		MonthlyCalendar,
+		Location,
         StockGuidePopup,
     },
     data() {
@@ -725,7 +727,6 @@ export default {
 .widget-name {
     font-size: 0.8rem;
     font-weight: 700;
-    text-transform: uppercase;
     letter-spacing: 0.05rem;
     color: var(--color-secondary-text);
     transition: color 0.3s ease;

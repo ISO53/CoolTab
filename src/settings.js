@@ -30,6 +30,7 @@ export const useSettingsStore = defineStore("settings", {
         analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
         hourlyWeatherRotation: localStorage.getItem("hourly-weather-rotation") || "Enabled",
         rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
+        location: getLocation(),
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -416,6 +417,13 @@ export const useSettingsStore = defineStore("settings", {
             this.rememberWallpaperPage = choice === "Enabled";
             storeInLocalStorage("remember-wallpaper-page", choice);
         },
+        setLocation(location) {
+            if (location && location.lastUpdated && typeof location.lastUpdated === "string") {
+                location.lastUpdated = new Date(location.lastUpdated);
+            }
+            this.location = location;
+            storeInLocalStorage("location", JSON.stringify(location));
+        },
     },
 });
 
@@ -659,6 +667,15 @@ function getWidgets() {
             resize: "1/2",
             selected: false,
         },
+        {
+            name: "Location",
+            x: 5,
+            y: 6,
+            width: 2,
+            height: 2,
+            resize: "square",
+            selected: false,
+        },
     ];
 
     if (widgets) {
@@ -863,4 +880,31 @@ function getTodoItems() {
         }
     }
     return [];
+}
+
+/**
+ * @returns {{ip: String, city: String, lat: Number, lon: Number, lastUpdated: Date}}
+ */
+function getLocation() {
+    const info = localStorage.getItem("location");
+    const def = {
+        ip: "",
+        city: "",
+        lat: 20,
+        lon: 20,
+        lastUpdated: null,
+    };
+
+    let parsed = null;
+    if (info) {
+        try {
+            parsed = JSON.parse(info);
+        } catch (e) {
+            return def;
+        }
+        parsed.lastUpdated = new Date(parsed.lastUpdated);
+        return parsed;
+    }
+
+    return def;
 }
