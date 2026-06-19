@@ -312,9 +312,13 @@ import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
 import TodoList from "../widgets/TodoList.vue";
 import HourlyWeatherForecast from "../widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "../widgets/MonthlyCalendar.vue";
-import Location from "../widgets/Location.vue";
 import StockGuidePopup from "./StockGuidePopup.vue";
 import {useSettingsStore} from "@/settings";
+import {defineAsyncComponent} from "vue";
+
+// Location widget is lazy loaded because it loads cobe library, a WebGL-based 3D globe library that
+// should not be loaded to RAM if the user doesn't use the widget.
+const Location = defineAsyncComponent(() => import("../widgets/Location.vue"));
 
 export default {
     name: "Sidebar",

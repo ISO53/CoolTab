@@ -1,10 +1,14 @@
 <template>
     <div class="app">
         <Background />
-        <Sidebar />
+        <Sidebar ref="sidebarRef" />
         <NewFeaturesPanel />
-        <Buttons />
-        <ShareStyle />
+        <Buttons
+            @toggle-sidebar="toggleSidebar"
+            @toggle-share="toggleSharePopup"
+            @toggle-edit="toggleEditArea"
+        />
+        <ShareStyle ref="shareStyleRef" />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="this.settingsStore.colors.color_secondary_text">
                 <GridItem
@@ -45,8 +49,12 @@ import ShareStyle from "./components/ui/ShareStyle.vue";
 import TodoList from "./components/widgets/TodoList.vue";
 import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "./components/widgets/MonthlyCalendar.vue";
-import Location from "./components/widgets/Location.vue";
-import {useSettingsStore} from "./settings";
+import { useSettingsStore } from "./settings";
+import { defineAsyncComponent } from "vue";
+
+// Location widget is lazy loaded because it loads cobe library, a WebGL-based 3D globe library that
+// should not be loaded to RAM if the user doesn't use the widget.
+const Location = defineAsyncComponent(() => import("./components/widgets/Location.vue"));
 
 export default {
     name: "App",
@@ -87,6 +95,12 @@ export default {
     methods: {
         toggleEditArea() {
             this.editing = !this.editing;
+        },
+        toggleSidebar() {
+            this.$refs.sidebarRef.toggleSidebar();
+        },
+        toggleSharePopup() {
+            this.$refs.shareStyleRef.toggleShareStyle();
         },
         updateWidgetPosition(index, {x, y}) {
             const widgets = this.settingsStore.widgets;

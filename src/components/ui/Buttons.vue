@@ -1,6 +1,4 @@
 <template>
-    <Sidebar ref="sidebarRef" />
-    <ShareStyle ref="shareStyleRef" />
     <WallpaperGallery ref="wallpaperGalleryRef" />
     <div class="buttons" :class="{revealed: isRevealed}">
         <button @click.stop="toggleWallpaperGallery" class="button" title="Wallpaper gallery">
@@ -22,8 +20,6 @@
 </template>
 
 <script>
-import Sidebar from "@/components/ui/Sidebar.vue";
-import ShareStyle from "./ShareStyle.vue";
 import WallpaperGallery from "./WallpaperGallery.vue";
 import {useSettingsStore} from "@/settings";
 
@@ -34,8 +30,6 @@ export default {
         return {settingsStore};
     },
     components: {
-        Sidebar,
-        ShareStyle,
         WallpaperGallery,
     },
     data() {
@@ -68,13 +62,13 @@ export default {
             this.isRevealed = inZone;
         },
         toggleEditArea() {
-            this.$parent.toggleEditArea();
+            this.$emit("toggle-edit");
         },
         toggleSidebar() {
-            this.$refs.sidebarRef.toggleSidebar();
+            this.$emit("toggle-sidebar");
         },
         toggleSharePopup() {
-            this.$refs.shareStyleRef.toggleShareStyle();
+            this.$emit("toggle-share");
         },
         toggleWallpaperGallery() {
             this.$refs.wallpaperGalleryRef.toggle();

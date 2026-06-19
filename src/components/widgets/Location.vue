@@ -4,9 +4,9 @@
             <!-- Location Info -->
             <div class="location-info">
                 <p class="city-info">{{ city }}</p>
-		        <p class="latlon">{{ lat }}° {{ lon }}°</p>
-           		<p class="hemisphere">{{ Number(lat) >= 0 ? "Northern" : "Southern" }} Hemisphere</p>
-                <p class="ip-info">IPv4: {{ ip }}</p>
+		        <p>{{ lat }}° {{ lon }}°</p>
+           		<p>{{ Number(lat) >= 0 ? "Northern" : "Southern" }} Hemisphere</p>
+                <p>IPv4: {{ ip }}</p>
             </div>
 
             <!-- Globe -->
@@ -255,30 +255,15 @@ export default {
     left: 0;
     padding: 10px;
     z-index: 3;
+    font-family: Satoshi-Light;
+    font-size: 6cqw;
+    line-height: 6cqw;
 }
 
 .city-info {
     font-size: 12cqw;
     line-height: 12cqw;
     font-family: Satoshi-Black;
-}
-
-.latlon {
-    font-size: 6cqw;
-    line-height: 6cqw;
-    font-family: Satoshi-Medium;
-}
-
-.hemisphere {
-    font-size: 6cqw;
-    line-height: 6cqw;
-    font-family: Satoshi-Medium;
-}
-
-.ip-info {
-    font-size: 5cqw;
-    line-height: 5cqw;
-    font-family: Satoshi-Light;
 }
 
 .globe-container {
