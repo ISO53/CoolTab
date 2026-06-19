@@ -47,10 +47,14 @@ export default {
     },
     mounted() {
         this.updateClock();
-        this.timer = setInterval(this.updateClock, 10);
+        const update = () => {
+            this.updateClock();
+            this.timer = requestAnimationFrame(update);
+        };
+        this.timer = requestAnimationFrame(update);
     },
     beforeUnmount() {
-        clearInterval(this.timer);
+        cancelAnimationFrame(this.timer);
     },
     methods: {
         updateClock() {
