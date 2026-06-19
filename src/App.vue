@@ -45,6 +45,7 @@ import ShareStyle from "./components/ui/ShareStyle.vue";
 import TodoList from "./components/widgets/TodoList.vue";
 import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "./components/widgets/MonthlyCalendar.vue";
+import Location from "./components/widgets/Location.vue";
 import {useSettingsStore} from "./settings";
 
 export default {
@@ -76,6 +77,7 @@ export default {
         TodoList,
         HourlyWeatherForecast,
         MonthlyCalendar,
+        Location,
     },
     data() {
         return {
