@@ -5,7 +5,8 @@
             <div class="location-info">
                 <p class="city-info">{{ city }}</p>
 		        <p class="latlon">{{ lat }}° {{ lon }}°</p>
-                <h1 class="ip-info">IPv4: {{ ip }}</h1>
+           		<p class="hemisphere">{{ Number(lat) >= 0 ? "Northern" : "Southern" }} Hemisphere</p>
+                <p class="ip-info">IPv4: {{ ip }}</p>
             </div>
 
             <!-- Globe -->
@@ -153,7 +154,7 @@ export default {
                 dark: isDark ? 1 : 0,
                 diffuse: 1.2,
                 mapSamples: 16000,
-                mapBrightness: 2,
+                mapBrightness: 8,
                 baseColor: baseColor,
                 markerColor: mc,
                 glowColor: glowColor,
@@ -164,7 +165,7 @@ export default {
             // Start the manual animation loop
             const updatePhi = () => {
                 if (!this.globeInstance) return;
-                this.phi += 0.0005;
+                this.phi += 0.0004;
                 this.globeInstance.update({ phi: this.phi });
                 this.animationFrameId = requestAnimationFrame(updatePhi);
             };
@@ -263,14 +264,20 @@ export default {
 }
 
 .latlon {
-    font-size: 8cqw;
-    line-height: 8cqw;
+    font-size: 6cqw;
+    line-height: 6cqw;
+    font-family: Satoshi-Medium;
+}
+
+.hemisphere {
+    font-size: 6cqw;
+    line-height: 6cqw;
     font-family: Satoshi-Medium;
 }
 
 .ip-info {
-    font-size: 6cqw;
-    line-height: 6cqw;
+    font-size: 5cqw;
+    line-height: 5cqw;
     font-family: Satoshi-Light;
 }
 
@@ -287,6 +294,7 @@ export default {
 }
 
 .globe-canvas {
+	opacity: 50%;
     width: 100%;
     height: 100%;
 }
