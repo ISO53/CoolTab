@@ -641,6 +641,15 @@ function getWidgets() {
             selected: true,
         },
         {
+            name: "LargeStock",
+            x: 13,
+            y: 8,
+            width: 4,
+            height: 2,
+            resize: "2/1",
+            selected: false,
+        },
+        {
             name: "WeeklyWeatherForecast",
             x: 7,
             y: 0,

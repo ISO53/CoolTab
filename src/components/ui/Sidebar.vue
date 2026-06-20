@@ -306,6 +306,7 @@ import AnalogClock from "../widgets/AnalogClock.vue";
 import DigitalClock from "../widgets/DigitalClock.vue";
 import DailyWeatherForecast from "../widgets/DailyWeatherForecast.vue";
 import Stock from "../widgets/Stock.vue";
+import LargeStock from "../widgets/LargeStock.vue";
 import StockSearch from "./StockSearch.vue";
 import QuickLinks from "../widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
@@ -346,6 +347,7 @@ export default {
         DigitalClock,
         DailyWeatherForecast,
         Stock,
+        LargeStock,
         StockSearch,
         QuickLinks,
         WeeklyWeatherForecast,
