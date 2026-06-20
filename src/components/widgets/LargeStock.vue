@@ -83,7 +83,6 @@ export default {
     data() {
         return {
             selected: 0,
-            selectedRange: "1D",
             stockDataCache: {},
             lastUpdated: null,
             intervalId: null,
@@ -92,6 +91,15 @@ export default {
         };
     },
     computed: {
+        selectedRange: {
+            get() {
+                const range = this.settingsStore.largeStockRange;
+                return RANGE_OPTIONS.some((option) => option.label === range) ? range : "1D";
+            },
+            set(value) {
+                this.settingsStore.setLargeStockRange(value);
+            },
+        },
         currentTicker() {
             const tickers = this.settingsStore.stock.tickers;
             if (!tickers || !tickers.length) return null;
