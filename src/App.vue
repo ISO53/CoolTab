@@ -41,6 +41,7 @@ import AnalogClock from "@/components/widgets/AnalogClock.vue";
 import DigitalClock from "@/components/widgets/DigitalClock.vue";
 import DailyWeatherForecast from "./components/widgets/DailyWeatherForecast.vue";
 import Stock from "./components/widgets/Stock.vue";
+import LargeStock from "./components/widgets/LargeStock.vue";
 import QuickLinks from "./components/widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
 import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
@@ -77,6 +78,7 @@ export default {
         DigitalClock,
         DailyWeatherForecast,
         Stock,
+        LargeStock,
         QuickLinks,
         WeeklyWeatherForecast,
         NewFeaturesPanel,

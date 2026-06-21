@@ -29,6 +29,7 @@ export const useSettingsStore = defineStore("settings", {
         todoMaxTasks: parseInt(localStorage.getItem("todo-max-tasks")) || 25,
         analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
         hourlyWeatherRotation: localStorage.getItem("hourly-weather-rotation") || "Enabled",
+        largeStockRange: localStorage.getItem("large-stock-range") || "1D",
         rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
         location: getLocation(),
     }),
@@ -413,6 +414,10 @@ export const useSettingsStore = defineStore("settings", {
             this.hourlyWeatherRotation = rotation;
             storeInLocalStorage("hourly-weather-rotation", rotation);
         },
+        setLargeStockRange(range) {
+            this.largeStockRange = range;
+            storeInLocalStorage("large-stock-range", range);
+        },
         setRememberWallpaperPage(choice) {
             this.rememberWallpaperPage = choice === "Enabled";
             storeInLocalStorage("remember-wallpaper-page", choice);
@@ -639,6 +644,15 @@ function getWidgets() {
             height: 2,
             resize: "square",
             selected: true,
+        },
+        {
+            name: "LargeStock",
+            x: 13,
+            y: 8,
+            width: 4,
+            height: 2,
+            resize: "2/1",
+            selected: false,
         },
         {
             name: "WeeklyWeatherForecast",
