@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/914102e2-b625-4a47-92f4-1c8b38e5a0e6">
+  <img src="https://github.com/user-attachments/assets/21aa3b31-9713-412c-8da1-59fa9d41912e">
 </p>
 
 <p align="center">
-    <b>Cool Tab</b> is a customizable New Tab page built with Vue.js.
+    <b>CoolTab</b> is a fast & memory efficient customizable New Tab built with Vue.js.
 </p>
 
 <br>
@@ -29,12 +29,22 @@
 
 ## Table of Contents
 
+-   [What is Cooltab](#what-is-cooltab)
 -   [Features](#features)
 -   [Installation](#installation)
 -   [Application UI](#application-ui)
 -   [Contributing](#contributing)
 -   [License](#license)
 
+## What is CoolTab
+
+Picture a new tab with a tremendous amount of customization. Colors, borders, backgrounds, wallpapers, and widgets... all while running circles around your browser's stock new tab in speed and memory usage. Sounds like a dream? Open your eyes, it's right in front of you.
+
+**CoolTab** is a lightweight, highly customizable new tab extension built with Vue.js, available for all major browsers. Instead of locking you into one fixed layout, CoolTab gives you a flexible canvas of draggable, resizable widgets, search bar, quick links, clock, calendar, weather, stocks, a 3D location globe, and more. So you can build a new tab experience that actually fits the way you work and browse.
+
+Every detail is yours to control: pick a background image, color, or wallpaper, adjust sizing, choose your search engine, and arrange widgets exactly how you like them. Your layout is saved automatically, so it's there the moment you open a new tab. Don't just take our word for the speed and efficiency claims, check out the [benchmarks](https://iso53.github.io/CoolTab/#/benchmarks) yourself.
+
+Whether you want a minimal, distraction-free tab or a fully-loaded dashboard with weather, stocks, and a clock at a glance, Cool Tab adapts to you.
 
 ## Features
 -   **Customizable Background:** Set a background image, color, and size to personalize your new tab experience.
@@ -75,12 +85,7 @@
 
 
 ## Application UI
-![1 2 0_0](https://github.com/user-attachments/assets/2a9a99c0-6f41-4490-8a83-ce776d0c14df)
-![1 2 0_1](https://github.com/user-attachments/assets/3e5b0da5-9684-484c-a363-1dd42666cda9)
-![1 2 0_2](https://github.com/user-attachments/assets/33185a3a-cfb2-48db-93be-b1bb8edd875c)
-![1 2 0_3](https://github.com/user-attachments/assets/2bf39321-bc65-4d69-b29d-86e652b1f057)
-![1 2 0_4](https://github.com/user-attachments/assets/289729ed-1cb9-402a-8b59-9e390933880e)
-![1 2 0_5](https://github.com/user-attachments/assets/e5b56a83-1153-4c24-b5c3-693c50a125dc)
+You can check different styles of the application UI created by the community by clicking [here](https://iso53.github.io/CoolTab/#/style)!
 
 
 ## Contributing
