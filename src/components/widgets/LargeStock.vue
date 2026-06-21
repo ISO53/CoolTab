@@ -12,7 +12,7 @@
                                     {{ hoverDateDisplay || '‎' }}
                                 </span>
                             </div>
-                            <h1 class="diff">{{ diffPercentDisplay }}</h1>
+                            <h1 class="diff" :style="{ opacity: hoverPoint ? 0 : 1, pointerEvents: hoverPoint ? 'none' : 'auto' }">{{ diffPercentDisplay }}</h1>
                         </div>
                     </div>
 
@@ -48,7 +48,24 @@
                             <stop offset="0%" stop-color="var(--color-tertiary-text)" stop-opacity="1" />
                             <stop offset="100%" stop-color="var(--color-tertiary-text)" stop-opacity="0" />
                         </linearGradient>
+                        <linearGradient id="grid-line-gradient" x1="0" y1="4" x2="0" y2="86" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="var(--color-secondary-text)" stop-opacity="0" />
+                            <stop offset="100%" stop-color="var(--color-secondary-text)" stop-opacity="0.5" />
+                        </linearGradient>
                     </defs>
+
+                    <template v-for="(label, index) in xAxisLabels" :key="'grid-x-' + index">
+                        <line
+                            v-if="index !== 0 && index !== xAxisLabels.length - 1"
+                            :x1="label.xPercent"
+                            :y1="chartLayout.margins.top"
+                            :x2="label.xPercent"
+                            :y2="chartLayout.plotBottom"
+                            stroke="url(#grid-line-gradient)"
+                            stroke-width="0.5"
+                            vector-effect="non-scaling-stroke"
+                        />
+                    </template>
 
                     <line
                         :x1="chartLayout.margins.left"
@@ -143,13 +160,13 @@ const RANGE_OPTIONS = [
 ];
 
 const CHART_MARGIN = {
-    left: 3,
-    right: 3,
+    left: 2,
+    right: 2,
     bottom: 14,
     top: 4,
 };
 
-const TARGET_POINTS = 300;
+const TARGET_POINTS = 100;
 
 export default {
     name: "LargeStock",
@@ -256,7 +273,7 @@ export default {
             if (!this.chartSeries.length) return [];
 
             const lastIndex = this.chartSeries.length - 1;
-            const indices = [0, 0.25, 0.5, 0.75, 1].map((ratio) => Math.round(ratio * lastIndex));
+            const indices = [0, 1/6, 2/6, 3/6, 4/6, 5/6, 1].map((ratio) => Math.round(ratio * lastIndex));
             const points = [...new Set(indices)].map((index) => this.chartSeries[index]);
 
             const seen = new Set();
@@ -493,7 +510,7 @@ export default {
 }
 
 .axis-line {
-    stroke: var(--color-tertiary-text);
+    stroke: var(--color-secondary-text);
     stroke-width: 0.35;
     vector-effect: non-scaling-stroke;
     opacity: 0.5;
@@ -507,9 +524,9 @@ export default {
 
 .axis-label {
     position: absolute;
-    color: var(--color-tertiary-text);
-    font-size: 6cqh;
-    line-height: 6cqh;
+    color: var(--color-secondary-text);
+    font-size: 4cqh;
+    line-height: 4cqh;
     white-space: nowrap;
 }
 
@@ -619,6 +636,9 @@ export default {
     padding: 1.5cqh 3cqh;
     margin: 0;
     font-family: Satoshi-Medium;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .price {
