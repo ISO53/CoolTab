@@ -44,7 +44,7 @@ Picture a new tab with a tremendous amount of customization. Colors, borders, ba
 
 Every detail is yours to control: pick a background image, color, or wallpaper, adjust sizing, choose your search engine, and arrange widgets exactly how you like them. Your layout is saved automatically, so it's there the moment you open a new tab. Don't just take our word for the speed and efficiency claims, check out the [benchmarks](https://iso53.github.io/CoolTab/#/benchmarks) yourself.
 
-Whether you want a minimal, distraction-free tab or a fully-loaded dashboard with weather, stocks, and a clock at a glance, Cool Tab adapts to you.
+Whether you want a minimal, distraction-free tab or a fully-loaded dashboard with weather, stocks, and a clock at a glance, CoolTab adapts to you.
 
 ## Features
 -   **Customizable Background:** Set a background image, color, and size to personalize your new tab experience.
