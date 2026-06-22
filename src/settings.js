@@ -40,7 +40,7 @@ export const useSettingsStore = defineStore("settings", {
             }
 
             if (image instanceof Blob) {
-                const processed = await this.processImage(image);
+                const processed = await processImage(image);
                 this.backgroundImage = URL.createObjectURL(processed);
                 if (saveToDb) {
                     await setItem("background-image", processed);
@@ -72,45 +72,6 @@ export const useSettingsStore = defineStore("settings", {
             } catch (e) {
                 console.error("Failed to load background image:", e);
             }
-        },
-        processImage(file) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    const screenWidth = window.screen.width * window.devicePixelRatio;
-                    const screenHeight = window.screen.height * window.devicePixelRatio;
-
-                    let width = img.width;
-                    let height = img.height;
-
-                    // Only scale down if image is larger than screen resolution
-                    if (width > screenWidth || height > screenHeight) {
-                        const ratio = Math.min(screenWidth / width, screenHeight / height);
-                        width = Math.floor(width * ratio);
-                        height = Math.floor(height * ratio);
-
-                        const canvas = document.createElement("canvas");
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext("2d");
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Use high quality since we are in IndexedDB now
-                        canvas.toBlob(
-                            (blob) => {
-                                resolve(blob || file);
-                            },
-                            "image/jpeg",
-                            0.95,
-                        );
-                    } else {
-                        // Image is smaller than screen, keep original
-                        resolve(file);
-                    }
-                };
-                img.onerror = () => resolve(file);
-                img.src = URL.createObjectURL(file);
-            });
         },
         setBackgroundSize(size) {
             this.backgroundSize = size;
@@ -189,44 +150,18 @@ export const useSettingsStore = defineStore("settings", {
             this.colorPalette = palette;
             storeInLocalStorage("color-palette", JSON.stringify(palette));
         },
-        setSavedVersion(version) {
-            this.savedVersion = version;
-            storeInLocalStorage("saved-version", version);
-        },
         dismissUpdatePopup() {
+
             this.setSavedVersion(this.currentVersion);
             this.showUpdatePopup = false;
         },
-        hideUpdatePopup() {
-            this.showUpdatePopup = false;
-        },
-        async fetchReleaseForVersion(version) {
-            try {
-                const latest = await fetch(`https://cool-tab-api.vercel.app/api/latest-release`);
-                if (latest.ok) {
-                    const json = await latest.json();
-                    this.releaseNotes = {
-                        tag_name: json.tag_name,
-                        name: json.name,
-                        body: json.body,
-                        html_url: json.html_url,
-                        published_at: json.published_at,
-                    };
-                    return this.releaseNotes;
-                }
-            } catch (e) {
-                console.log(e);
-            }
-            return null;
-        },
         async checkVersionOnStart() {
-            // Compare savedVersion and currentVersion; if current > saved, fetch notes and show popup
+            // Compare savedVersion and currentVersion; if current > saved, show popup
             try {
                 const cur = this.currentVersion || "0.0.0";
                 const saved = this.savedVersion || "0.0.0";
                 if (compareVersions(cur, saved) === 1) {
                     // updated
-                    await this.fetchReleaseForVersion(cur);
                     this.showUpdatePopup = true;
                 }
             } catch (e) {
@@ -238,7 +173,7 @@ export const useSettingsStore = defineStore("settings", {
                 id: Date.now().toString(),
                 name: name,
                 createdAt: new Date().toISOString(),
-                settings: this.getStyleSnapshot(),
+                settings: getStyleSnapshot(),
             };
 
             // If there's a custom background image, save a copy for this style
@@ -271,7 +206,7 @@ export const useSettingsStore = defineStore("settings", {
             const styleList = this.userStyles;
             const style = styleList ? styleList.find((t) => t.id === styleId) : null;
             if (style && style.settings) {
-                await this.applyStyleSettings(style.settings);
+                await applyStyleSettings(style.settings);
 
                 // Load style-specific background if it exists
                 const styleBlob = await getItem(`style-image-${styleId}`);
@@ -279,43 +214,6 @@ export const useSettingsStore = defineStore("settings", {
                     await this.setBackgroundImage(styleBlob);
                 }
             }
-        },
-        async applyStyleSettings(settings) {
-            if (settings.backgroundImage !== undefined) {
-                await this.setBackgroundImage(settings.backgroundImage);
-            }
-            if (settings.backgroundImageFileName !== undefined)
-                this.setBackgroundImageFileName(settings.backgroundImageFileName);
-            if (settings.backgroundSize !== undefined) this.setBackgroundSize(settings.backgroundSize);
-            // We no longer override searchEngine, openSearchResultIn, quickLinks, stock, todoMaxTasks, and hourlyWeatherRotation from styles
-            if (settings.widgetBackground !== undefined) this.setWidgetBackground(settings.widgetBackground);
-            if (settings.colors !== undefined) this.setColors(settings.colors);
-            if (settings.colorPalette !== undefined) this.setColorPalette(settings.colorPalette);
-            if (settings.widgets !== undefined) this.setWidgets(settings.widgets);
-            if (settings.widgetAreaColumns !== undefined) this.setWidgetAreaColumns(settings.widgetAreaColumns);
-            if (settings.currentWeatherInfo !== undefined) this.setCurrentWeatherInfo(settings.currentWeatherInfo);
-            if (settings.weeklyWeatherInfo !== undefined) this.setWeeklyWeatherInfo(settings.weeklyWeatherInfo);
-            if (settings.hourlyWeatherInfo !== undefined) this.setHourlyWeatherInfo(settings.hourlyWeatherInfo);
-            if (settings.todoItems !== undefined) this.setTodoItems(settings.todoItems);
-            if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
-        },
-        getStyleSnapshot() {
-            return {
-                backgroundImage:
-                    this.backgroundImage && this.backgroundImage.startsWith("blob:") ? null : this.backgroundImage,
-                backgroundImageFileName: this.backgroundImageFileName,
-                backgroundSize: this.backgroundSize,
-                widgetBackground: this.widgetBackground,
-                colors: JSON.parse(JSON.stringify(this.colors)),
-                colorPalette: JSON.parse(JSON.stringify(this.colorPalette)),
-                widgets: JSON.parse(JSON.stringify(this.widgets)),
-                widgetAreaColumns: this.widgetAreaColumns,
-                currentWeatherInfo: JSON.parse(JSON.stringify(this.currentWeatherInfo)),
-                weeklyWeatherInfo: JSON.parse(JSON.stringify(this.weeklyWeatherInfo)),
-                hourlyWeatherInfo: JSON.parse(JSON.stringify(this.hourlyWeatherInfo)),
-                todoItems: JSON.parse(JSON.stringify(this.todoItems)),
-                analogClockStyle: this.analogClockStyle,
-            };
         },
         async importStyleById(styleId) {
             try {
@@ -348,7 +246,7 @@ export const useSettingsStore = defineStore("settings", {
         },
         async shareUserStyle(styleName) {
             try {
-                const snapshot = this.getStyleSnapshot();
+                const snapshot = getStyleSnapshot();
 
                 // Always handle background image upload if it exists
                 if (this.backgroundImage) {
@@ -359,7 +257,7 @@ export const useSettingsStore = defineStore("settings", {
                         // Upload to Vercel Blob
                         const newBlob = await upload(this.backgroundImageFileName || "background.jpg", blob, {
                             access: "public",
-                            handleUploadUrl: "https://cool-tab-api.vercel.app/api/upload-image", // Path to your backend upload handler
+                            handleUploadUrl: "https://cool-tab-api.vercel.app/api/upload-image",
                         });
 
                         snapshot.backgroundImage = newBlob.url;
@@ -428,7 +326,41 @@ export const useSettingsStore = defineStore("settings", {
             }
             this.location = location;
             storeInLocalStorage("location", JSON.stringify(location));
-        },
+		},
+		setSavedVersion(version) {
+		    this.savedVersion = version;
+		    storeInLocalStorage("saved-version", version);
+		},
+		getStyleSnapshot() {
+		    return {
+		        backgroundImage:
+		            this.backgroundImage && this.backgroundImage.startsWith("blob:") ? null : this.backgroundImage,
+		        backgroundImageFileName: this.backgroundImageFileName,
+		        backgroundSize: this.backgroundSize,
+		        widgetBackground: this.widgetBackground,
+		        colors: JSON.parse(JSON.stringify(this.colors)),
+		        colorPalette: JSON.parse(JSON.stringify(this.colorPalette)),
+		        widgets: JSON.parse(JSON.stringify(this.widgets)),
+		        widgetAreaColumns: this.widgetAreaColumns,
+		        analogClockStyle: this.analogClockStyle,
+		    };
+		},
+		async applyStyleSettings(settings) {
+		    if (settings.backgroundImage !== undefined) {
+		        await this.setBackgroundImage(settings.backgroundImage);
+		    }
+		    if (settings.backgroundImageFileName !== undefined)
+		        this.setBackgroundImageFileName(settings.backgroundImageFileName);
+		    if (settings.backgroundSize !== undefined) this.setBackgroundSize(settings.backgroundSize);
+		    // We no longer override searchEngine, openSearchResultIn, quickLinks, stock, todoMaxTasks,
+		    // hourlyWeatherRotation, todoItems, hourlyWeatherInfo, weeklyWeatherInfo and currentWeatherInfo from styles
+		    if (settings.widgetBackground !== undefined) this.setWidgetBackground(settings.widgetBackground);
+		    if (settings.colors !== undefined) this.setColors(settings.colors);
+		    if (settings.colorPalette !== undefined) this.setColorPalette(settings.colorPalette);
+		    if (settings.widgets !== undefined) this.setWidgets(settings.widgets);
+		    if (settings.widgetAreaColumns !== undefined) this.setWidgetAreaColumns(settings.widgetAreaColumns);
+		    if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
+		}
     },
 });
 
@@ -921,4 +853,49 @@ function getLocation() {
     }
 
     return def;
+}
+
+/**
+ * Scales an image down to fit the screen resolution if it is larger; otherwise, keeps the original.
+ * @param {File} file - The image file to process.
+ * @returns {Promise<Blob|File>} Resolves to a compressed JPEG Blob if resized, or the original File.
+ */
+function processImage(file) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            const screenWidth = window.screen.width * window.devicePixelRatio;
+            const screenHeight = window.screen.height * window.devicePixelRatio;
+
+            let width = img.width;
+            let height = img.height;
+
+            // Only scale down if image is larger than screen resolution
+            if (width > screenWidth || height > screenHeight) {
+                const ratio = Math.min(screenWidth / width, screenHeight / height);
+                width = Math.floor(width * ratio);
+                height = Math.floor(height * ratio);
+
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Use high quality since we are in IndexedDB now
+                canvas.toBlob(
+                    (blob) => {
+                        resolve(blob || file);
+                    },
+                    "image/jpeg",
+                    0.95,
+                );
+            } else {
+                // Image is smaller than screen, keep original
+                resolve(file);
+            }
+        };
+        img.onerror = () => resolve(file);
+        img.src = URL.createObjectURL(file);
+    });
 }

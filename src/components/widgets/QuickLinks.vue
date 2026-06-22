@@ -1,5 +1,5 @@
 <template>
-    <Widget style="height: unset;">
+    <Widget>
         <div
             class="quick-links"
             :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'"
@@ -64,7 +64,7 @@ export default {
                         blob = await response.blob();
                         await setItem(`favicon-${url}`, blob);
                     }
-                    
+
                     if (blob instanceof Blob) {
                         newFaviconUrls[url] = URL.createObjectURL(blob);
                         updated = true;
@@ -83,39 +83,53 @@ export default {
 </script>
 
 <style scoped>
-.quick-links {
-    padding: 8px 12px 8px 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.quick-links :deep(a) {
+    all: unset;
+    display: block;
+    cursor: pointer;
 }
 
-.quick-links a {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    overflow: hidden;
+.quick-links :deep(a::after) {
+    display: none;
+}
+
+.quick-links {
+	width: 100%;
+	height: 100%;
+    display: flex;
+    container-type: size;
+    padding: 5px;
+    justify-content: center;
+    gap: 12px;
 }
 
 .vertical {
-    width: 50px;
-    height: 100%;
     flex-direction: column;
-    row-gap: 10px;
+}
+
+.vertical a {
+    width: 100cqw;
+    height: 100cqw;
+}
+
+.vertical > a > .link {
+	width: 100%;
 }
 
 .horizontal {
-    width: 100%;
-    height: 50px;
     flex-direction: row;
-    column-gap: 10px;
+}
+
+.horizontal a {
+    width: 100cqh;
+    height: 100cqh;
+}
+
+.horizontal > a > .link {
+    height: 100%;
 }
 
 .link {
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    object-fit: contain;
     filter: grayscale(100%);
     transition: filter 250ms ease;
 }
