@@ -1,5 +1,5 @@
 <template>
-    <Widget style="height: unset" class="widget">
+    <Widget>
         <div class="search-bar">
             <Svg class="search-logo" :class_name="'material-icons-outlined'" :name="'search'"></Svg>
 
@@ -68,7 +68,6 @@ export default {
 <style scoped>
 .search-bar {
     width: 100%;
-    height: 50px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

@@ -1,5 +1,5 @@
 <template>
-    <Widget style="height: unset;">
+    <Widget>
         <div
             class="quick-links"
             :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'"
@@ -64,7 +64,7 @@ export default {
                         blob = await response.blob();
                         await setItem(`favicon-${url}`, blob);
                     }
-                    
+
                     if (blob instanceof Blob) {
                         newFaviconUrls[url] = URL.createObjectURL(blob);
                         updated = true;
@@ -92,7 +92,6 @@ export default {
 
 .quick-links a {
     width: 30px;
-    height: 30px;
     object-fit: contain;
     overflow: hidden;
 }
