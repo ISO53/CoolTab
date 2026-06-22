@@ -68,15 +68,16 @@ export default {
 <style scoped>
 .search-bar {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 8px;
-    transition: color 250ms ease;
+    padding: 1cqh;
+    container-type: size;
 }
 
 .search-logo {
-    height: 100%;
+    height: 100cqh;
 }
 
 .search-input {
@@ -84,8 +85,8 @@ export default {
     border: none;
     background-color: transparent;
     color: var(--color-secondary-text);
-    padding: 0 8px 0 8px;
-    font-size: 1rem;
+    margin-left: 5cqh;
+    font-size: 60cqh;
 }
 
 .search-input::placeholder {
