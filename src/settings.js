@@ -151,7 +151,8 @@ export const useSettingsStore = defineStore("settings", {
             storeInLocalStorage("color-palette", JSON.stringify(palette));
         },
         dismissUpdatePopup() {
-            setSavedVersion(this.currentVersion);
+
+            this.setSavedVersion(this.currentVersion);
             this.showUpdatePopup = false;
         },
         async checkVersionOnStart() {
@@ -325,7 +326,41 @@ export const useSettingsStore = defineStore("settings", {
             }
             this.location = location;
             storeInLocalStorage("location", JSON.stringify(location));
-        },
+		},
+		setSavedVersion(version) {
+		    this.savedVersion = version;
+		    storeInLocalStorage("saved-version", version);
+		},
+		getStyleSnapshot() {
+		    return {
+		        backgroundImage:
+		            this.backgroundImage && this.backgroundImage.startsWith("blob:") ? null : this.backgroundImage,
+		        backgroundImageFileName: this.backgroundImageFileName,
+		        backgroundSize: this.backgroundSize,
+		        widgetBackground: this.widgetBackground,
+		        colors: JSON.parse(JSON.stringify(this.colors)),
+		        colorPalette: JSON.parse(JSON.stringify(this.colorPalette)),
+		        widgets: JSON.parse(JSON.stringify(this.widgets)),
+		        widgetAreaColumns: this.widgetAreaColumns,
+		        analogClockStyle: this.analogClockStyle,
+		    };
+		},
+		async applyStyleSettings(settings) {
+		    if (settings.backgroundImage !== undefined) {
+		        await this.setBackgroundImage(settings.backgroundImage);
+		    }
+		    if (settings.backgroundImageFileName !== undefined)
+		        this.setBackgroundImageFileName(settings.backgroundImageFileName);
+		    if (settings.backgroundSize !== undefined) this.setBackgroundSize(settings.backgroundSize);
+		    // We no longer override searchEngine, openSearchResultIn, quickLinks, stock, todoMaxTasks,
+		    // hourlyWeatherRotation, todoItems, hourlyWeatherInfo, weeklyWeatherInfo and currentWeatherInfo from styles
+		    if (settings.widgetBackground !== undefined) this.setWidgetBackground(settings.widgetBackground);
+		    if (settings.colors !== undefined) this.setColors(settings.colors);
+		    if (settings.colorPalette !== undefined) this.setColorPalette(settings.colorPalette);
+		    if (settings.widgets !== undefined) this.setWidgets(settings.widgets);
+		    if (settings.widgetAreaColumns !== undefined) this.setWidgetAreaColumns(settings.widgetAreaColumns);
+		    if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
+		}
     },
 });
 
@@ -863,55 +898,4 @@ function processImage(file) {
         img.onerror = () => resolve(file);
         img.src = URL.createObjectURL(file);
     });
-}
-
-/**
- * Sets and persists the saved version.
- * @param {string|number} version - The version to save.
- * @returns {void}
- */
-function setSavedVersion(version) {
-    this.savedVersion = version;
-    storeInLocalStorage("saved-version", version);
-}
-
-/**
- * Applies the provided style settings to the instance.
- * @param {Object} settings - The style settings object.
- * @returns {Promise<void>} Resolves when all settings, including asynchronous ones, are applied.
- */
-async function applyStyleSettings(settings) {
-    if (settings.backgroundImage !== undefined) {
-        await this.setBackgroundImage(settings.backgroundImage);
-    }
-    if (settings.backgroundImageFileName !== undefined)
-        this.setBackgroundImageFileName(settings.backgroundImageFileName);
-    if (settings.backgroundSize !== undefined) this.setBackgroundSize(settings.backgroundSize);
-    // We no longer override searchEngine, openSearchResultIn, quickLinks, stock, todoMaxTasks,
-    // hourlyWeatherRotation, todoItems, hourlyWeatherInfo, weeklyWeatherInfo and currentWeatherInfo from styles
-    if (settings.widgetBackground !== undefined) this.setWidgetBackground(settings.widgetBackground);
-    if (settings.colors !== undefined) this.setColors(settings.colors);
-    if (settings.colorPalette !== undefined) this.setColorPalette(settings.colorPalette);
-    if (settings.widgets !== undefined) this.setWidgets(settings.widgets);
-    if (settings.widgetAreaColumns !== undefined) this.setWidgetAreaColumns(settings.widgetAreaColumns);
-    if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
-}
-
-/**
- * Returns a serializable snapshot of the current style settings.
- * Blob URLs used as background images are omitted.
- */
-function getStyleSnapshot() {
-    return {
-        backgroundImage:
-            this.backgroundImage && this.backgroundImage.startsWith("blob:") ? null : this.backgroundImage,
-        backgroundImageFileName: this.backgroundImageFileName,
-        backgroundSize: this.backgroundSize,
-        widgetBackground: this.widgetBackground,
-        colors: JSON.parse(JSON.stringify(this.colors)),
-        colorPalette: JSON.parse(JSON.stringify(this.colorPalette)),
-        widgets: JSON.parse(JSON.stringify(this.widgets)),
-        widgetAreaColumns: this.widgetAreaColumns,
-        analogClockStyle: this.analogClockStyle,
-    };
 }
