@@ -99,7 +99,8 @@ export default {
     display: flex;
     container-type: size;
     padding: 5px;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 12px;
 }
 
 .vertical {
