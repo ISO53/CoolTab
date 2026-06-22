@@ -12,33 +12,6 @@
                         <div class="settings">
                             <h2 class="page-title">Customization</h2>
 
-                            <div>
-                                <h2>Background Image</h2>
-                                <FileChooser />
-                            </div>
-
-                            <div>
-                                <h2>Image Size</h2>
-                                <SelectButton
-                                    v-model="settingsStore.backgroundSize"
-                                    :options="['Auto', 'Cover', 'Contain']"
-                                    :onSelect="setBackgroundSize"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Widget Background</h2>
-                                <SelectButton
-                                    v-model="settingsStore.widgetBackground"
-                                    :options="['Color', 'Transparent', 'Blur', 'Glass']"
-                                    :onSelect="setWidgetBackground"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
                             <p style="width: auto; text-align: center; margin: 10px">
                                 You can select from predefined themes.
                             </p>
@@ -140,6 +113,33 @@
                     <Tab :label="'Settings'" :icon="'tune'">
                         <div class="settings">
                             <h2 class="page-title">Settings</h2>
+
+                            <div>
+                                <h2>Background Image</h2>
+                                <FileChooser />
+                            </div>
+
+                            <div>
+                                <h2>Image Size</h2>
+                                <SelectButton
+                                    v-model="settingsStore.backgroundSize"
+                                    :options="['Auto', 'Cover', 'Contain']"
+                                    :onSelect="setBackgroundSize"
+                                />
+                            </div>
+
+                            <span class="divider"></span>
+
+                            <div>
+                                <h2>Widget Background</h2>
+                                <SelectButton
+                                    v-model="settingsStore.widgetBackground"
+                                    :options="['Color', 'Transparent', 'Blur', 'Glass']"
+                                    :onSelect="setWidgetBackground"
+                                />
+                            </div>
+
+                            <span class="divider"></span>
 
                             <div>
                                 <h2>Search Engine</h2>
