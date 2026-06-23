@@ -1,5 +1,4 @@
 <template>
-    <WallpaperGallery ref="wallpaperGalleryRef" />
     <div class="buttons" :class="{revealed: isRevealed}">
         <button @click.stop="toggleWallpaperGallery" class="button" title="Wallpaper gallery">
             <Svg :class_name="'material-icons-outlined'" :name="'image'"></Svg>
@@ -20,7 +19,6 @@
 </template>
 
 <script>
-import WallpaperGallery from "./WallpaperGallery.vue";
 import {useSettingsStore} from "@/settings";
 
 export default {
@@ -28,9 +26,6 @@ export default {
     setup() {
         const settingsStore = useSettingsStore();
         return {settingsStore};
-    },
-    components: {
-        WallpaperGallery,
     },
     data() {
         return {
@@ -71,7 +66,7 @@ export default {
             this.$emit("toggle-share");
         },
         toggleWallpaperGallery() {
-            this.$refs.wallpaperGalleryRef.toggle();
+            this.$emit("toggle-wallpaper");
         },
     },
 };
