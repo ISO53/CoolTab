@@ -778,8 +778,7 @@ function getColors() {
 function getColorPalette() {
     const palette = localStorage.getItem("color-palette");
     const def = {
-        theme: "dark",
-        color: "green",
+        theme: "Dark",
     };
 
     let parsed = null;
