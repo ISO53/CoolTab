@@ -263,6 +263,27 @@ export default {
 </script>
 
 <style>
+.settings {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.settings > div {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    align-items: center;
+    min-height: 50px;
+    height: auto;
+}
+
+.settings > div h2 {
+    text-wrap: nowrap;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+}
+
 .page-title {
     font-family: Satoshi-Bold;
     font-size: 1.2rem;
