@@ -7,7 +7,8 @@
 		</div>
 		<div ref="slider" class="color-slider">
 			<div>
-				<h3>Subtle</h3>
+				<h3>Dull</h3>
+				<h3>Pastel</h3>
 				<h3>Vibrant</h3>
 			</div>
 			<input
@@ -133,6 +134,7 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	gap: 20px;
 }
 
 .color-ring {
@@ -148,12 +150,6 @@ export default {
 	border-radius: 50%;
 }
 
-.color-slider {
-	display: flex;
-	justify-content: center;
-	height: fit-content;
-}
-
 .color-slider input[type="range"]::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;
@@ -167,11 +163,13 @@ export default {
 
 /* Firefox */
 .color-slider input[type="range"]::-moz-range-thumb {
-	width: 24px;
-	height: 24px;
-	border-radius: 50%;
-	background: white;
-	border: none;
+	appearance: none;
+	width: 16px;
+	height: 35px;
+	border: 5px solid var(--color-primary-background);
+	border-radius: 10px;
+	margin: 2px;
+	cursor: e-resize;
 }
 
 .center {
@@ -203,7 +201,9 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	height: fit-content;
 	align-items: center;
+	font-size: 12px;
 }
 
 .color-slider > div {
@@ -211,7 +211,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 	color: var(--color-tertiary-text);
 }
 </style>
