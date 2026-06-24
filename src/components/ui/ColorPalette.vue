@@ -17,8 +17,8 @@
 				min="0"
 				max="0.45"
 				step="0.01"
-				v-model="chroma"
-				@input="updateChroma"
+				:value="chroma"
+				@input="onChromaInput"
 				:style="chromaBarStyle"
 			/>
 		</div>
@@ -32,12 +32,15 @@ export default {
 		return {
 			size: 220,
 			thickness: 40,
-			hue: 0,
-			chroma: 0.5,
 			fixed_lightness: 0.7,
 			dragging: false,
 		};
 	},
+	props: {
+		hue: { type: Number, default: 0 },
+		chroma: { type: Number, default: 0.5 },
+	},
+	emits: ["update:hue", "update:chroma"],
 	computed: {
 		center() {
 			return this.size / 2;
@@ -46,7 +49,7 @@ export default {
 			return this.size / 2 - this.thickness / 2;
 		},
 		angleRad() {
-			return (this.hue * Math.PI) / 180;
+			return ((this.hue - 90) * Math.PI) / 180;
 		},
 		thumbX() {
 			return this.center + this.radius * Math.cos(this.angleRad);
@@ -58,7 +61,7 @@ export default {
 			return {
 				left: `${this.thumbX}px`,
 				top: `${this.thumbY}px`,
-				background: `oklch(${this.fixed_lightness} ${this.chroma} ${this.hue + 90})`,
+				background: `oklch(${this.fixed_lightness} ${this.chroma} ${this.hue})`,
 			};
 		},
 		ringStyle() {
@@ -77,8 +80,8 @@ export default {
 			};
 		},
 		chromaBarStyle() {
-			const start = `oklch(${this.fixed_lightness} 0 ${this.hue + 90})`;
-			const end = `oklch(${this.fixed_lightness} 0.45 ${this.hue + 90})`;
+			const start = `oklch(${this.fixed_lightness} 0 ${this.hue})`;
+			const end = `oklch(${this.fixed_lightness} 0.45 ${this.hue})`;
 			return {
 				background: `linear-gradient(90deg, ${start}, ${end})`,
 				borderRadius: "10px",
@@ -94,11 +97,9 @@ export default {
 			const rect = this.$refs.ring.getBoundingClientRect();
 			const x = e.clientX - rect.left - this.center;
 			const y = e.clientY - rect.top - this.center;
-			let angle = Math.atan2(y, x);
-			angle = (angle * 180) / Math.PI;
+			let angle = Math.atan2(y, x) * (180 / Math.PI) + 90; // +90 to match conic-gradient origin
 			if (angle < 0) angle += 360;
-			this.hue = angle;
-			this.$emit("update:hue", this.hue);
+			this.$emit("update:hue", angle);
 		},
 		startDrag(e) {
 			this.dragging = true;
@@ -106,9 +107,9 @@ export default {
 			window.addEventListener("mousemove", this.onMove);
 			window.addEventListener("mouseup", this.stopDrag);
 		},
-		updateChroma(e) {
-			// v-model already updated chroma; emit and force a repaint if needed
-			this.$emit("update:chroma", this.chroma);
+		onChromaInput(e) {
+			const v = parseFloat(e.target.value);
+			if (!isNaN(v)) this.$emit("update:chroma", v);
 		},
 		onMove(e) {
 			if (!this.dragging) return;
