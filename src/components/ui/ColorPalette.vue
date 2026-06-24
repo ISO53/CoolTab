@@ -4,7 +4,6 @@
 			<div class="ring" :style="ringStyle"></div>
 			<div class="center"></div>
 			<div class="thumb" :style="thumbStyle" @mousedown="startDrag" />
-			<!-- <div class="selected-color" :style="getSelectedColor"></div> -->
 		</div>
 		<div ref="slider" class="color-slider">
 			<div>
@@ -74,12 +73,6 @@ export default {
 					oklch(${this.fixed_lightness} ${this.chroma} 315),
 					oklch(${this.fixed_lightness} ${this.chroma} 360)
 				)`,
-			};
-		},
-		getSelectedColor() {
-			return {
-				// Lightness, Chroma, Hue
-				background: `oklch(${this.fixed_lightness} ${this.chroma} ${this.hue + 90})`,
 			};
 		},
 		chromaBarStyle() {
@@ -189,15 +182,6 @@ export default {
 	height: 140px;
 	border-radius: 50%;
 	background: var(--color-primary-background);
-}
-
-.selected-color {
-	position: absolute;
-	top: 40px;
-	left: 40px;
-	width: 140px;
-	height: 140px;
-	border-radius: 50%;
 }
 
 .thumb {
