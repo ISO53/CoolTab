@@ -1,284 +1,233 @@
 <template>
-    <div class="color-palette">
-        <button class="switch-theme-button" @click="this.invert">
-            <Svg
-                :class_name="'material-icons-outlined'"
-                :name="'invert_colors'"
-                :class="{inverted: this.settingsStore.colorPalette.theme === 'dark'}"
-            ></Svg>
-            Switch Theme
-        </button>
-
-        <div class="colors">
-            <div
-                v-for="(color, key) in theme[settingsStore.colorPalette.theme]"
-                :key="key"
-                :style="{
-                    backgroundImage: `radial-gradient(ellipse at center, ${color.color_primary_background}, ${color.color_secondary_background}, ${color.color_tertiary_background})`,
-                }"
-                class="color-item"
-                @click="() => chooseTheme(color)"
-            >
-                <h1 :style="`color: ${color.color_secondary_text};`">A</h1>
-            </div>
-        </div>
-    </div>
+	<div class="color-palette">
+		<div ref="ring" class="color-ring">
+			<div class="ring" :style="ringStyle"></div>
+			<div class="center"></div>
+			<div class="thumb" :style="thumbStyle" @mousedown="startDrag" />
+			<!-- <div class="selected-color" :style="getSelectedColor"></div> -->
+		</div>
+		<div ref="slider" class="color-slider">
+			<div>
+				<h3>Subtle</h3>
+				<h3>Vibrant</h3>
+			</div>
+			<input
+				class="slider-input"
+				type="range"
+				min="0"
+				max="0.45"
+				step="0.01"
+				v-model="chroma"
+				@input="updateChroma"
+				:style="chromaBarStyle"
+			/>
+		</div>
+	</div>
 </template>
 
 <script>
-import {useSettingsStore} from "@/settings";
-
 export default {
-    name: "ColorPalette",
-    setup() {
-        const settingsStore = useSettingsStore();
-        return {settingsStore};
-    },
-    data() {
-        return {
-            theme: {
-                dark: {
-                    green: {
-                        color_primary_text: "rgb(250, 250, 250)", // Bright white
-                        color_secondary_text: "rgb(200, 255, 200)", // Light greenish-white
-                        color_tertiary_text: "rgb(100, 175, 100)", // Muted green
-
-                        color_primary_background: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_background: "rgb(20, 30, 20)", // Dark green-tinted gray
-                        color_tertiary_background: "rgb(35, 50, 35)", // Subtly brighter gray-green
-
-                        color_border_line: "rgb(50, 75, 50)", // Very low-saturation green
-                    },
-                    red: {
-                        color_primary_text: "rgb(250, 250, 250)", // Bright white
-                        color_secondary_text: "rgb(255, 200, 200)", // Light pinkish-white
-                        color_tertiary_text: "rgb(175, 100, 100)", // Muted red
-
-                        color_primary_background: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_background: "rgb(30, 20, 20)", // Dark red-tinted gray
-                        color_tertiary_background: "rgb(50, 35, 35)", // Subtly brighter gray-red
-
-                        color_border_line: "rgb(75, 50, 50)", // Very low-saturation red
-                    },
-                    yellow: {
-                        color_primary_text: "rgb(250, 250, 250)", // Bright white
-                        color_secondary_text: "rgb(255, 255, 200)", // Light yellowish-white
-                        color_tertiary_text: "rgb(175, 175, 100)", // Muted yellow
-
-                        color_primary_background: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_background: "rgb(30, 30, 20)", // Dark yellow-tinted gray
-                        color_tertiary_background: "rgb(50, 50, 35)", // Subtly brighter gray-yellow
-
-                        color_border_line: "rgb(75, 75, 50)", // Very low-saturation yellow
-                    },
-                    blue: {
-                        color_primary_text: "rgb(250, 250, 250)", // Bright white
-                        color_secondary_text: "rgb(200, 200, 255)", // Light blueish-white
-                        color_tertiary_text: "rgb(100, 100, 175)", // Muted blue
-
-                        color_primary_background: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_background: "rgb(20, 20, 30)", // Dark blue-tinted gray
-                        color_tertiary_background: "rgb(35, 35, 50)", // Subtly brighter gray-blue
-
-                        color_border_line: "rgb(50, 50, 75)", // Very low-saturation blue
-                    },
-                    purple: {
-                        color_primary_text: "rgb(250, 250, 250)", // Bright white
-                        color_secondary_text: "rgb(225, 200, 255)", // Light purpleish-white
-                        color_tertiary_text: "rgb(150, 100, 175)", // Muted purple
-
-                        color_primary_background: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_background: "rgb(25, 20, 30)", // Dark purple-tinted gray
-                        color_tertiary_background: "rgb(40, 35, 50)", // Subtly brighter gray-purple
-
-                        color_border_line: "rgb(60, 50, 75)", // Very low-saturation purple
-                    },
-                    orange: {
-                        color_primary_text: "rgb(250, 250, 250)", // Bright white
-                        color_secondary_text: "rgb(255, 200, 150)", // Light orange-tinted white
-                        color_tertiary_text: "rgb(175, 100, 50)", // Muted orange
-
-                        color_primary_background: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_background: "rgb(30, 25, 20)", // Dark orange-tinted gray
-                        color_tertiary_background: "rgb(50, 40, 35)", // Subtly brighter gray-orange
-
-                        color_border_line: "rgb(75, 50, 35)", // Very low-saturation orange
-                    },
-                    grayscale: {
-                        color_primary_text: "rgb(255, 255, 255)", // White
-                        color_secondary_text: "rgb(200, 200, 200)", // Light gray
-                        color_tertiary_text: "rgb(100, 100, 100)", // Medium gray
-
-                        color_primary_background: "rgb(0, 0, 0)", // Black
-                        color_secondary_background: "rgb(25, 25, 25)", // Dark gray
-                        color_tertiary_background: "rgb(50, 50, 50)", // Medium-dark gray
-
-                        color_border_line: "rgb(75, 75, 75)", // Subtle border gray
-                    },
-                },
-                light: {
-                    green: {
-                        color_primary_text: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_text: "rgb(50, 150, 50)", // Medium-dark green
-                        color_tertiary_text: "rgb(100, 175, 100)", // Muted green
-
-                        color_primary_background: "rgb(245, 255, 245)", // Light green-tinted white
-                        color_secondary_background: "rgb(230, 250, 230)", // Subtle greenish background
-                        color_tertiary_background: "rgb(210, 240, 210)", // Light pastel green
-
-                        color_border_line: "rgb(200, 225, 200)", // Very low-saturation green
-                    },
-                    red: {
-                        color_primary_text: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_text: "rgb(150, 50, 50)", // Medium-dark red
-                        color_tertiary_text: "rgb(175, 100, 100)", // Muted red
-
-                        color_primary_background: "rgb(255, 245, 245)", // Light pinkish-white
-                        color_secondary_background: "rgb(250, 230, 230)", // Subtle pink background
-                        color_tertiary_background: "rgb(240, 210, 210)", // Light pastel pink
-
-                        color_border_line: "rgb(225, 200, 200)", // Very low-saturation red
-                    },
-                    yellow: {
-                        color_primary_text: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_text: "rgb(150, 150, 50)", // Medium-dark yellow
-                        color_tertiary_text: "rgb(175, 175, 100)", // Muted yellow
-
-                        color_primary_background: "rgb(255, 255, 245)", // Light yellowish-white
-                        color_secondary_background: "rgb(250, 250, 230)", // Subtle yellow background
-                        color_tertiary_background: "rgb(240, 240, 210)", // Light pastel yellow
-
-                        color_border_line: "rgb(225, 225, 200)", // Very low-saturation yellow
-                    },
-                    blue: {
-                        color_primary_text: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_text: "rgb(50, 50, 150)", // Medium-dark blue
-                        color_tertiary_text: "rgb(100, 100, 175)", // Muted blue
-
-                        color_primary_background: "rgb(245, 245, 255)", // Light blueish-white
-                        color_secondary_background: "rgb(230, 230, 250)", // Subtle blue background
-                        color_tertiary_background: "rgb(210, 210, 240)", // Light pastel blue
-
-                        color_border_line: "rgb(200, 200, 225)", // Very low-saturation blue
-                    },
-                    purple: {
-                        color_primary_text: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_text: "rgb(100, 50, 150)", // Medium-dark purple
-                        color_tertiary_text: "rgb(150, 100, 175)", // Muted purple
-
-                        color_primary_background: "rgb(250, 245, 255)", // Light purpleish-white
-                        color_secondary_background: "rgb(240, 230, 250)", // Subtle purple background
-                        color_tertiary_background: "rgb(230, 210, 240)", // Light pastel purple
-
-                        color_border_line: "rgb(220, 200, 225)", // Very low-saturation purple
-                    },
-                    orange: {
-                        color_primary_text: "rgb(0, 0, 0)", // Almost black
-                        color_secondary_text: "rgb(175, 100, 50)", // Medium-dark orange
-                        color_tertiary_text: "rgb(200, 150, 100)", // Muted orange
-
-                        color_primary_background: "rgb(255, 250, 245)", // Light orange-tinted white
-                        color_secondary_background: "rgb(250, 235, 220)", // Subtle orange background
-                        color_tertiary_background: "rgb(240, 215, 200)", // Light pastel orange
-
-                        color_border_line: "rgb(225, 200, 175)", // Very low-saturation orange
-                    },
-                    grayscale: {
-                        color_primary_text: "rgb(0, 0, 0)", // Black
-                        color_secondary_text: "rgb(75, 75, 75)", // Dark gray
-                        color_tertiary_text: "rgb(150, 150, 150)", // Medium gray
-
-                        color_primary_background: "rgb(255, 255, 255)", // White
-                        color_secondary_background: "rgb(230, 230, 230)", // Light gray
-                        color_tertiary_background: "rgb(200, 200, 200)", // Medium-light gray
-
-                        color_border_line: "rgb(180, 180, 180)", // Subtle border gray
-                    },
-                },
-            },
-        };
-    },
-    methods: {
-        invert() {
-            this.settingsStore.setColorPalette({
-                theme: this.settingsStore.colorPalette.theme === "dark" ? "light" : "dark",
-                color: this.settingsStore.colorPalette.color,
-            });
-        },
-        chooseTheme(colors) {
-            this.settingsStore.setColors(colors);
-        }
-    },
+	name: "ColorPalette",
+	data() {
+		return {
+			size: 220,
+			thickness: 40,
+			hue: 0,
+			chroma: 0.5,
+			fixed_lightness: 0.7,
+			dragging: false,
+		};
+	},
+	computed: {
+		center() {
+			return this.size / 2;
+		},
+		radius() {
+			return this.size / 2 - this.thickness / 2;
+		},
+		angleRad() {
+			return (this.hue * Math.PI) / 180;
+		},
+		thumbX() {
+			return this.center + this.radius * Math.cos(this.angleRad);
+		},
+		thumbY() {
+			return this.center + this.radius * Math.sin(this.angleRad);
+		},
+		thumbStyle() {
+			return {
+				left: `${this.thumbX}px`,
+				top: `${this.thumbY}px`,
+				background: `oklch(${this.fixed_lightness} ${this.chroma} ${this.hue + 90})`,
+			};
+		},
+		ringStyle() {
+			return {
+				background: `conic-gradient(
+					oklch(${this.fixed_lightness} ${this.chroma} 0),
+					oklch(${this.fixed_lightness} ${this.chroma} 45),
+					oklch(${this.fixed_lightness} ${this.chroma} 90),
+					oklch(${this.fixed_lightness} ${this.chroma} 135),
+					oklch(${this.fixed_lightness} ${this.chroma} 180),
+					oklch(${this.fixed_lightness} ${this.chroma} 225),
+					oklch(${this.fixed_lightness} ${this.chroma} 270),
+					oklch(${this.fixed_lightness} ${this.chroma} 315),
+					oklch(${this.fixed_lightness} ${this.chroma} 360)
+				)`,
+			};
+		},
+		getSelectedColor() {
+			return {
+				// Lightness, Chroma, Hue
+				background: `oklch(${this.fixed_lightness} ${this.chroma} ${this.hue + 90})`,
+			};
+		},
+		chromaBarStyle() {
+			const start = `oklch(${this.fixed_lightness} 0 ${this.hue + 90})`;
+			const end = `oklch(${this.fixed_lightness} 0.45 ${this.hue + 90})`;
+			return {
+				background: `linear-gradient(90deg, ${start}, ${end})`,
+				borderRadius: "10px",
+				border: "none",
+				appearance: "none",
+				width: "100%",
+				padding: "0 5px 0 1px",
+			};
+		},
+	},
+	methods: {
+		updateHue(e) {
+			const rect = this.$refs.ring.getBoundingClientRect();
+			const x = e.clientX - rect.left - this.center;
+			const y = e.clientY - rect.top - this.center;
+			let angle = Math.atan2(y, x);
+			angle = (angle * 180) / Math.PI;
+			if (angle < 0) angle += 360;
+			this.hue = angle;
+			this.$emit("update:hue", this.hue);
+		},
+		startDrag(e) {
+			this.dragging = true;
+			this.updateHue(e);
+			window.addEventListener("mousemove", this.onMove);
+			window.addEventListener("mouseup", this.stopDrag);
+		},
+		updateChroma(e) {
+			// v-model already updated chroma; emit and force a repaint if needed
+			this.$emit("update:chroma", this.chroma);
+		},
+		onMove(e) {
+			if (!this.dragging) return;
+			this.updateHue(e);
+		},
+		stopDrag() {
+			this.dragging = false;
+			window.removeEventListener("mousemove", this.onMove);
+			window.removeEventListener("mouseup", this.stopDrag);
+		},
+	},
+	beforeUnmount() {
+		window.removeEventListener("mousemove", this.onMove);
+		window.removeEventListener("mouseup", this.stopDrag);
+	},
 };
 </script>
 
 <style scoped>
 .color-palette {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: 10px;
-    justify-content: space-between;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
-.inverted {
-    transform: rotateY(180deg);
+.color-ring {
+	position: relative;
+	user-select: none;
+	width: 220px;
+	height: 220px;
 }
 
-.colors {
-    display: flex;
-    border-radius: 10px;
-    border: 2px solid var(--color-border-line);
-    overflow: hidden;
-    width: 100%;
+.ring {
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
 }
 
-.color-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    user-select: none;
-    cursor: pointer;
+.color-slider {
+	display: flex;
+	justify-content: center;
+	height: fit-content;
 }
 
-.color-item h1 {
-    font-family: Satoshi-Regular;
-    transition: transform 250ms ease;
+.color-slider input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 16px;
+	height: 35px;
+	border: 5px solid var(--color-primary-background);
+	border-radius: 10px;
+	margin: 2px;
+	cursor: e-resize;
 }
 
-.color-item:hover h1 {
-    font-family: Satoshi-Black;
+/* Firefox */
+.color-slider input[type="range"]::-moz-range-thumb {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: white;
+	border: none;
 }
 
-.switch-theme-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border: 2px solid var(--color-border-line);
-    border-radius: 10px;
-    background-color: var(--color-secondary-background);
-    color: var(--color-secondary-text);
-    font-family: Satoshi-Medium;
-    font-size: 1rem;
-    padding: 8px 12px 8px 12px;
-    column-gap: 10px;
-    cursor: pointer;
-    transition: color 250ms ease;
+.center {
+	position: absolute;
+	top: 40px;
+	left: 40px;
+	width: 140px;
+	height: 140px;
+	border-radius: 50%;
+	background: var(--color-primary-background);
 }
 
-.switch-theme-button i {
-    transition: color 250ms ease, transform 250ms ease;
+.selected-color {
+	position: absolute;
+	top: 40px;
+	left: 40px;
+	width: 140px;
+	height: 140px;
+	border-radius: 50%;
 }
 
-.switch-theme-button:hover {
-    color: var(--color-primary-text);
+.thumb {
+	position: absolute;
+	cursor: grab;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 5px solid var(--color-primary-background);
+	transform: translate(-50%, -50%);
 }
 
-.switch-theme-button:hover i {
-    color: var(--color-primary-text);
+.thumb:active {
+	cursor: grabbing;
+}
+
+.color-slider {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.color-slider > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	color: var(--color-tertiary-text);
 }
 </style>
