@@ -151,7 +151,6 @@ export const useSettingsStore = defineStore("settings", {
             storeInLocalStorage("color-palette", JSON.stringify(palette));
         },
         dismissUpdatePopup() {
-
             this.setSavedVersion(this.currentVersion);
             this.showUpdatePopup = false;
         },
@@ -173,7 +172,7 @@ export const useSettingsStore = defineStore("settings", {
                 id: Date.now().toString(),
                 name: name,
                 createdAt: new Date().toISOString(),
-                settings: getStyleSnapshot(),
+                settings: this.getStyleSnapshot(),
             };
 
             // If there's a custom background image, save a copy for this style
@@ -206,7 +205,7 @@ export const useSettingsStore = defineStore("settings", {
             const styleList = this.userStyles;
             const style = styleList ? styleList.find((t) => t.id === styleId) : null;
             if (style && style.settings) {
-                await applyStyleSettings(style.settings);
+                await this.applyStyleSettings(style.settings);
 
                 // Load style-specific background if it exists
                 const styleBlob = await getItem(`style-image-${styleId}`);
@@ -246,7 +245,7 @@ export const useSettingsStore = defineStore("settings", {
         },
         async shareUserStyle(styleName) {
             try {
-                const snapshot = getStyleSnapshot();
+                const snapshot = this.getStyleSnapshot();
 
                 // Always handle background image upload if it exists
                 if (this.backgroundImage) {
@@ -779,8 +778,7 @@ function getColors() {
 function getColorPalette() {
     const palette = localStorage.getItem("color-palette");
     const def = {
-        theme: "dark",
-        color: "green",
+        theme: "Dark",
     };
 
     let parsed = null;

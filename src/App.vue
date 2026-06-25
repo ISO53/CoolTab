@@ -7,7 +7,9 @@
             @toggle-sidebar="toggleSidebar"
             @toggle-share="toggleSharePopup"
             @toggle-edit="toggleEditArea"
+            @toggle-wallpaper="toggleWallpaper"
         />
+        <WallpaperGallery ref="wallpaperRef" />
         <ShareStyle ref="shareStyleRef" />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="this.settingsStore.colors.color_secondary_text">
@@ -46,6 +48,7 @@ import QuickLinks from "./components/widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
 import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
 import Buttons from "./components/ui/Buttons.vue";
+import WallpaperGallery from "@/components/ui/WallpaperGallery.vue";
 import ShareStyle from "./components/ui/ShareStyle.vue";
 import TodoList from "./components/widgets/TodoList.vue";
 import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
@@ -83,6 +86,7 @@ export default {
         WeeklyWeatherForecast,
         NewFeaturesPanel,
         Buttons,
+        WallpaperGallery,
         ShareStyle,
         TodoList,
         HourlyWeatherForecast,
@@ -103,6 +107,11 @@ export default {
         },
         toggleSharePopup() {
             this.$refs.shareStyleRef.toggleShareStyle();
+        },
+        toggleWallpaper() {
+            if (this.$refs.wallpaperRef && this.$refs.wallpaperRef.toggle) {
+                this.$refs.wallpaperRef.toggle();
+            }
         },
         updateWidgetPosition(index, {x, y}) {
             const widgets = this.settingsStore.widgets;

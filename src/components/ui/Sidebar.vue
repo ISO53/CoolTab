@@ -7,319 +7,50 @@
         <Transition name="slide">
             <div v-show="isOpen" class="slide">
                 <Tabs :selected="'Customization'">
-                    <!-- Customization -->
                     <Tab :label="'Customization'" :icon="'palette'">
-                        <div class="settings">
-                            <h2 class="page-title">Customization</h2>
-
-                            <div>
-                                <h2>Background Image</h2>
-                                <FileChooser />
-                            </div>
-
-                            <div>
-                                <h2>Image Size</h2>
-                                <SelectButton
-                                    v-model="settingsStore.backgroundSize"
-                                    :options="['Auto', 'Cover', 'Contain']"
-                                    :onSelect="setBackgroundSize"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Widget Background</h2>
-                                <SelectButton
-                                    v-model="settingsStore.widgetBackground"
-                                    :options="['Color', 'Transparent', 'Blur', 'Glass']"
-                                    :onSelect="setWidgetBackground"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <p style="width: auto; text-align: center; margin: 10px">
-                                You can select from predefined themes.
-                            </p>
-
-                            <div style="display: flex; height: auto">
-                                <ColorPalette></ColorPalette>
-                            </div>
-
-                            <p style="width: auto; text-align: center; margin: 10px">
-                                Or you can create your own custom theme.
-                            </p>
-
-                            <div>
-                                <h2>Background Color #1</h2>
-                                <ColorChooser
-                                    v-model="settingsStore.colors.color_primary_background"
-                                    :onSelect="setColors"
-                                />
-                            </div>
-                            <div>
-                                <h2>Background Color #2</h2>
-                                <ColorChooser
-                                    v-model="settingsStore.colors.color_secondary_background"
-                                    :onSelect="setColors"
-                                />
-                            </div>
-                            <div>
-                                <h2>Background Color #3</h2>
-                                <ColorChooser
-                                    v-model="settingsStore.colors.color_tertiary_background"
-                                    :onSelect="setColors"
-                                />
-                            </div>
-                            <div>
-                                <h2>Text Color #1</h2>
-                                <ColorChooser v-model="settingsStore.colors.color_primary_text" :onSelect="setColors" />
-                            </div>
-                            <div>
-                                <h2>Text Color #2</h2>
-                                <ColorChooser
-                                    v-model="settingsStore.colors.color_secondary_text"
-                                    :onSelect="setColors"
-                                />
-                            </div>
-                            <div>
-                                <h2>Text Color #3</h2>
-                                <ColorChooser
-                                    v-model="settingsStore.colors.color_tertiary_text"
-                                    :onSelect="setColors"
-                                />
-                            </div>
-                            <div>
-                                <h2>Border Color</h2>
-                                <ColorChooser v-model="settingsStore.colors.color_border_line" :onSelect="setColors" />
-                            </div>
-                        </div>
+                        <Customization />
                     </Tab>
 
-                    <!-- My Styles -->
                     <Tab :label="'Styles'" :icon="'style'">
                         <Styles />
                     </Tab>
 
-                    <!-- Community Styles -->
                     <Tab :label="'Community'" :icon="'explore'">
                         <CommunityStyles />
                     </Tab>
 
-                    <!-- Widgets -->
                     <Tab :label="'Widgets'" :icon="'widgets'">
-                        <h2 class="page-title">Widgets</h2>
-                        <div class="widget-grid">
-                            <div
-                                v-for="(widget, index) in settingsStore.widgets"
-                                :key="index"
-                                class="widget-card"
-                                :class="{
-                                    active: widget.selected,
-                                    inactive: !widget.selected,
-                                }"
-                                @click="setWidgetSelected(widget, !widget.selected)"
-                            >
-                                <div v-if="widget.selected" class="card-indicator">
-                                    <Svg :class_name="'material-icons-outlined'" :name="'check_circle'"></Svg>
-                                </div>
-                                <div class="preview-container">
-                                    <div class="preview-wrapper">
-                                        <component :is="widget.name" class="widget-preview" />
-                                    </div>
-                                </div>
-                                <div class="widget-info">
-                                    <span class="widget-name">{{ formatWidgetName(widget.name) }}</span>
-                                </div>
-                            </div>
-                        </div>
+                        <Widgets />
                     </Tab>
 
-                    <!-- Settings -->
                     <Tab :label="'Settings'" :icon="'tune'">
-                        <div class="settings">
-                            <h2 class="page-title">Settings</h2>
-
-                            <div>
-                                <h2>Search Engine</h2>
-                                <DropdownSelect
-                                    v-model="settingsStore.searchEngine"
-                                    :values="[
-                                        'Google',
-                                        'Bing',
-                                        'DuckDuckGo',
-                                        'Yahoo',
-                                        'Ecosia',
-                                        'Yandex',
-                                        'Startpage',
-                                        'Swisscows',
-                                    ]"
-                                    :onSelect="setSearchEngine"
-                                />
-                            </div>
-
-                            <div>
-                                <h2>Open Result In</h2>
-                                <SelectButton
-                                    v-model="settingsStore.openSearchResultIn"
-                                    :options="['Current Tab', 'New Tab']"
-                                    :onSelect="setOpenSearchResultIn"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Analog Clock Style</h2>
-                                <SelectButton
-                                    v-model="settingsStore.analogClockStyle"
-                                    :options="['Minimal', 'Classic']"
-                                    :onSelect="setAnalogClockStyle"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <div class="title-with-action">
-                                    <h2>Stocks</h2>
-                                    <button class="help-btn" @click="showStockGuide = true" title="Show Search Guide">
-                                        <i class="material-icons-outlined">help_outline</i>
-                                    </button>
-                                </div>
-                                <StockSearch v-model="settingsStore.stock.tickers" :onSelect="setTickers" />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Quick Links</h2>
-                                <DropdownList
-                                    v-model="this.settingsStore.quickLinks.links"
-                                    :text="'link'"
-                                    :onSelect="setQuickLinks"
-                                />
-                            </div>
-
-                            <div>
-                                <h2>Quick Links Orientation</h2>
-                                <SelectButton
-                                    v-model="settingsStore.quickLinks.orientation"
-                                    :options="['Vertical', 'Horizontal']"
-                                    :onSelect="setOrientation"
-                                />
-                            </div>
-
-                            <div>
-                                <h2>Open Link In</h2>
-                                <SelectButton
-                                    v-model="settingsStore.quickLinks.open_link_in"
-                                    :options="['Current Tab', 'New Tab']"
-                                    :onSelect="setOpenLinkIn"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Widget Area Columns</h2>
-                                <NumberPicker
-                                    v-model="settingsStore.widgetAreaColumns"
-                                    :min="10"
-                                    :max="80"
-                                    :step="1"
-                                    :onSelect="setWidgetAreaColumns"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Max Todo Tasks</h2>
-                                <NumberPicker
-                                    v-model="settingsStore.todoMaxTasks"
-                                    :min="5"
-                                    :max="100"
-                                    :step="1"
-                                    :onSelect="setTodoMaxTasks"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Hourly Weather Rotation</h2>
-                                <SelectButton
-                                    v-model="settingsStore.hourlyWeatherRotation"
-                                    :options="['Enabled', 'Disabled']"
-                                    :onSelect="setHourlyWeatherRotation"
-                                />
-                            </div>
-
-                            <span class="divider"></span>
-
-                            <div>
-                                <h2>Remember Wallpaper Page</h2>
-                                <SelectButton
-                                    v-model="rememberWallpaperPageText"
-                                    :options="['Enabled', 'Disabled']"
-                                    :onSelect="setRememberWallpaperPage"
-                                />
-                            </div>
-                        </div>
+                        <Settings />
                     </Tab>
+
                     <Tab :label="'About'" :icon="'info'">
                         <Info />
                     </Tab>
                 </Tabs>
 
-                <!-- Close button — positioned at the bottom of the icon rail -->
                 <button class="sidebar-close-btn" @click="toggleSidebar" title="Close settings">
                     <i class="material-icons-outlined">arrow_back</i>
                     <span class="close-tooltip">Close</span>
                 </button>
             </div>
         </Transition>
-
-        <StockGuidePopup :show="showStockGuide" @close="showStockGuide = false" />
     </div>
 </template>
 
 <script>
-import ColorChooser from "./ColorChooser.vue";
-import DropdownSelect from "./DropdownSelect.vue";
-import FileChooser from "./FileChooser.vue";
-import SelectButton from "./SelectButton.vue";
-import DropdownList from "./DropdownList.vue";
 import Tabs from "./Tabs.vue";
 import Tab from "./Tab.vue";
-import NumberPicker from "./NumberPicker.vue";
-import ToggleSwitch from "./ToggleSwitch.vue";
-import ColorPalette from "./ColorPalette.vue";
 import Styles from "./Styles.vue";
 import CommunityStyles from "./CommunityStyles.vue";
 import Info from "./Info.vue";
-import SearchBar from "../widgets/SearchBar.vue";
-import Calendar from "../widgets/Calendar.vue";
-import AnalogClock from "../widgets/AnalogClock.vue";
-import DigitalClock from "../widgets/DigitalClock.vue";
-import DailyWeatherForecast from "../widgets/DailyWeatherForecast.vue";
-import Stock from "../widgets/Stock.vue";
-import LargeStock from "../widgets/LargeStock.vue";
-import StockSearch from "./StockSearch.vue";
-import QuickLinks from "../widgets/QuickLinks.vue";
-import WeeklyWeatherForecast from "../widgets/WeeklyWeatherForecast.vue";
-import TodoList from "../widgets/TodoList.vue";
-import HourlyWeatherForecast from "../widgets/HourlyWeatherForecast.vue";
-import MonthlyCalendar from "../widgets/MonthlyCalendar.vue";
-import StockGuidePopup from "./StockGuidePopup.vue";
+import Customization from "./Customization.vue";
+import Settings from "./Settings.vue";
+import Widgets from "./Widgets.vue";
 import {useSettingsStore} from "@/settings";
-import {defineAsyncComponent} from "vue";
-
-// Location widget is lazy loaded because it loads cobe library, a WebGL-based 3D globe library that
-// should not be loaded to RAM if the user doesn't use the widget.
-const Location = defineAsyncComponent(() => import("../widgets/Location.vue"));
 
 export default {
     name: "Sidebar",
@@ -328,119 +59,23 @@ export default {
         return {settingsStore};
     },
     components: {
-        FileChooser,
-        ColorChooser,
-        SelectButton,
-        DropdownSelect,
-        DropdownList,
         Tabs,
         Tab,
-        NumberPicker,
-        ToggleSwitch,
-        ColorPalette,
         Styles,
         CommunityStyles,
         Info,
-        SearchBar,
-        Calendar,
-        AnalogClock,
-        DigitalClock,
-        DailyWeatherForecast,
-        Stock,
-        LargeStock,
-        StockSearch,
-        QuickLinks,
-        WeeklyWeatherForecast,
-        TodoList,
-        HourlyWeatherForecast,
-		MonthlyCalendar,
-		Location,
-        StockGuidePopup,
+        Customization,
+        Settings,
+        Widgets,
     },
     data() {
         return {
             isOpen: false,
-            selectedOption: null,
-            showStockGuide: false,
         };
-    },
-    computed: {
-        rememberWallpaperPageText() {
-            return this.settingsStore.rememberWallpaperPage ? "Enabled" : "Disabled";
-        },
     },
     methods: {
         toggleSidebar() {
             this.isOpen = !this.isOpen;
-        },
-        setBackgroundSize(option) {
-            this.settingsStore.setBackgroundSize(option);
-        },
-        setSearchEngine(engine) {
-            this.settingsStore.setSearchEngine(engine);
-        },
-        setOpenSearchResultIn(choice) {
-            this.settingsStore.setOpenSearchResultIn(choice);
-        },
-        setTickers(tickers) {
-            const stockInfo = this.settingsStore.stock;
-            stockInfo.tickers = tickers;
-            this.settingsStore.setStock(stockInfo);
-        },
-
-        setOrientation(orientation) {
-            const quickLinksInfo = this.settingsStore.quickLinks;
-            quickLinksInfo.orientation = orientation;
-            this.settingsStore.setQuickLinks(quickLinksInfo);
-
-            const widgets = this.settingsStore.widgets;
-            widgets
-                .filter((w) => w.name === "QuickLinks")
-                .forEach((w) => {
-                    w.resize = orientation.toLowerCase();
-                    let temp = w.width;
-                    w.width = w.height;
-                    w.height = temp;
-                });
-            this.settingsStore.setWidgets(widgets);
-        },
-        setQuickLinks(links) {
-            const quickLinksInfo = this.settingsStore.quickLinks;
-            quickLinksInfo.links = links;
-            this.settingsStore.setQuickLinks(quickLinksInfo);
-        },
-        setOpenLinkIn(openLinkIn) {
-            const quickLinksInfo = this.settingsStore.quickLinks;
-            quickLinksInfo.open_link_in = openLinkIn;
-            this.settingsStore.setQuickLinks(quickLinksInfo);
-        },
-        setWidgetAreaColumns(columns) {
-            this.settingsStore.setWidgetAreaColumns(columns);
-        },
-        setTodoMaxTasks(max) {
-            this.settingsStore.setTodoMaxTasks(max);
-        },
-        setAnalogClockStyle(style) {
-            this.settingsStore.setAnalogClockStyle(style);
-        },
-        setHourlyWeatherRotation(rotation) {
-            this.settingsStore.setHourlyWeatherRotation(rotation);
-        },
-        setRememberWallpaperPage(choice) {
-            this.settingsStore.setRememberWallpaperPage(choice);
-        },
-        setWidgetSelected(widget, isSelected) {
-            widget.selected = isSelected;
-            this.settingsStore.setWidgets(this.settingsStore.widgets);
-        },
-        setWidgetBackground(background) {
-            this.settingsStore.setWidgetBackground(background);
-        },
-        setColors() {
-            this.settingsStore.setColors(this.settingsStore.colors);
-        },
-        formatWidgetName(name) {
-            return name.replace(/([A-Z])/g, " $1").trim();
         },
     },
 };
@@ -496,7 +131,6 @@ export default {
     transform: translateX(-100%);
 }
 
-/* ── Close button (sits below the icon rail) ── */
 .sidebar-close-btn {
     position: absolute;
     bottom: 14px;
@@ -529,7 +163,6 @@ export default {
     color: var(--color-primary-text);
 }
 
-/* Tooltip on close button */
 .close-tooltip {
     position: absolute;
     left: calc(100% + 10px);
@@ -552,194 +185,5 @@ export default {
 
 .sidebar-close-btn:hover .close-tooltip {
     opacity: 1;
-}
-
-/* ── Page title used across tabs ── */
-.page-title {
-    font-family: Satoshi-Bold;
-    font-size: 1.2rem;
-    color: var(--color-primary-text);
-    margin: 0 0 16px 0;
-    flex-shrink: 0;
-}
-
-/* ── Settings layout ── */
-.settings {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.settings > div {
-    display: grid;
-    grid-template-columns: 40% 60%;
-    align-items: center;
-    min-height: 50px;
-    height: auto;
-}
-
-.settings > div h2 {
-    text-wrap: nowrap;
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0;
-}
-
-.divider {
-    width: 100%;
-    height: 1px;
-    background: color-mix(in srgb, var(--color-border-line), transparent 20%);
-    margin: 10px 0;
-}
-
-
-
-.tip-desc {
-    color: var(--color-tertiary-text);
-    font-family: Satoshi-Regular;
-    font-size: 0.75rem;
-    margin: 0;
-    line-height: 1.1rem;
-}
-
-.tip-desc b {
-    color: var(--color-secondary-text);
-    font-family: Satoshi-Bold;
-}
-
-/* ── Help Button ── */
-.title-with-action {
-    display: flex;
-    align-items: center;
-}
-
-.help-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: bottom;
-    justify-content: left;
-    color: var(--color-tertiary-text);
-    transition: color 250ms ease;
-}
-
-.help-btn:hover {
-    color: var(--color-secondary-text);
-}
-
-.help-btn i {
-    font-size: 1.2rem;
-}
-
-/* ── Widget grid ── */
-.widget-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    padding: 4px 0;
-}
-
-.widget-card {
-    background-color: var(--color-secondary-background);
-    border: 1.5px solid var(--color-border-line);
-    border-radius: 14px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.widget-card:hover {
-    border-color: var(--color-tertiary-text);
-}
-
-.widget-card.active {
-    border-color: var(--color-primary-text);
-    background-color: color-mix(in srgb, var(--color-secondary-background), var(--color-primary-text) 3%);
-}
-
-.widget-card.inactive {
-    opacity: 0.7;
-}
-
-.widget-card.inactive:hover {
-    opacity: 1;
-}
-
-.card-indicator {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 10;
-    color: var(--color-primary-text);
-    background-color: var(--color-primary-background);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.card-indicator i {
-    font-size: 1.1rem !important;
-}
-
-.preview-container {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background-color: var(--color-primary-background);
-    background-image: radial-gradient(circle at 2px 2px, var(--color-border-line) 1px, transparent 0);
-    background-size: 16px 16px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1.5px solid var(--color-border-line);
-    position: relative;
-}
-
-:deep(.preview-container .widget) {
-    background: color-mix(in srgb, var(--color-secondary-background), transparent 80%) !important;
-    backdrop-filter: blur(20px) !important;
-    border: 1px solid var(--color-border-line) !important;
-}
-
-.preview-wrapper {
-    width: 600px;
-    height: 400px;
-    transform: scale(0.3);
-    transform-origin: center;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-}
-
-.widget-card:hover .preview-wrapper {
-    transform: scale(0.33);
-}
-
-.widget-info {
-    padding: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.widget-name {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.05rem;
-    color: var(--color-secondary-text);
-    transition: color 0.3s ease;
-}
-
-.widget-card:hover .widget-name,
-.widget-card.active .widget-name {
-    color: var(--color-primary-text);
 }
 </style>
