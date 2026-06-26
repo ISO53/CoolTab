@@ -41,6 +41,7 @@ export default {
 			this.theme = theme;
 		},
 		setColors(colors) {
+			this.settingsStore.setColorPalette({ color: "default", theme: this.theme });
 			this.settingsStore.setColors(colors);
 		},
 	},

@@ -35,7 +35,7 @@ export default {
 							this.settingsStore.colorPalette.theme === 'Dark' ?
 								`color-mix(in srgb, var(--color-secondary-background), transparent 80%)`
 								:
-								`color-mix(in srgb, var(--color-secondary-background), transparent 50%)`,
+								`color-mix(in srgb, var(--color-secondary-background), transparent 40%)`,
                         backdropFilter: "blur(30px)",
                         border: "2px solid transparent",
                     };
