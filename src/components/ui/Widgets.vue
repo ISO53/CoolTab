@@ -104,6 +104,21 @@ export default {
     padding: 4px 0;
 }
 
+.widget-preview:has(.quick-links.horizontal) {
+	height: 10cqh;
+	width: 50cqw;
+}
+
+.widget-preview:has(.quick-links.vertical) {
+	height: 50cqh;
+	width: 10cqh;
+}
+
+.widget-preview:has(.search-bar) {
+	height: 10cqh;
+	width: 50cqw;
+}
+
 .widget-card {
     background-color: var(--color-secondary-background);
     border: 1.5px solid var(--color-border-line);
