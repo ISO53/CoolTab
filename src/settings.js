@@ -633,7 +633,7 @@ function getWidgets() {
             // Ensure all default widgets exist in widgetsJSON
             def.forEach((defaultWidget) => {
                 if (!widgetMap.has(defaultWidget.name)) {
-                    widgetsJSON.push(defaultWidget);
+                    widgetsJSON.push({...defaultWidget, selected: false});
                 }
             });
 
