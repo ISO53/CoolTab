@@ -16,6 +16,7 @@ export function useNavigation() {
     if (path === '/style') return 'StylePage'
     if (path === '/benchmarks') return 'BenchmarkPage'
     if (path === '/releases') return 'ReleasesPage'
+    if (path === '/uninstall') return 'UninstallPage'
     return 'HomePage'
   })
 
