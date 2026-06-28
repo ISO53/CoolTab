@@ -15,6 +15,7 @@ import HomePage from './views/HomePage.vue'
 import StylePage from './views/StylePage.vue'
 import BenchmarkPage from './views/BenchmarkPage.vue'
 import ReleasesPage from './views/ReleasesPage.vue'
+import UninstallPage from './views/UninstallPage.vue'
 import { useNavigation } from './navigation'
 
 const { currentComponent } = useNavigation()
@@ -23,7 +24,8 @@ const components = {
   HomePage,
   StylePage,
   BenchmarkPage,
-  ReleasesPage
+  ReleasesPage,
+  UninstallPage
 }
 </script>
 
