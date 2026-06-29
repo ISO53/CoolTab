@@ -1,16 +1,20 @@
 <template>
-	<div class="onboarding">
-		<h1>Welcome to CoolTab!</h1>
-		<p>
-			Click below to explore the core features and customization options
-			of CoolTab. You can also relaunch this guided tour at any time from
-			the sidebar.
-		</p>
-		<div class="buttons">
-			<button class="button secondary" @click="skipOnboarding">Skip</button>
-			<button class="button primary" @click="startOnboarding">Get Started</button>
-		</div>
-	</div>
+	<Teleport to="body">
+		<Transition name="onboarding">
+			<div v-if="this.settingsStore.onboarding === 'Enabled'" class="onboarding">
+				<h1>Welcome to CoolTab!</h1>
+				<p>
+					Click below to explore the core features and customization
+					options of CoolTab. You can also relaunch this guided tour
+					at any time from the sidebar.
+				</p>
+				<div class="buttons">
+					<button class="button secondary" @click="skipOnboarding">Skip</button>
+					<button class="button primary" @click="startOnboarding">Get Started</button>
+				</div>
+			</div>
+		</Transition>
+	</Teleport>
 </template>
 
 <script>
@@ -51,6 +55,15 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+}
+
+.onboarding-enter-active, .onboarding-leave-active {
+	transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.onboarding-enter-from, .onboarding-leave-to {
+	transform: scale(0.75);
+	opacity: 0;
 }
 
 .onboarding > h1 {
@@ -98,5 +111,60 @@ export default {
 
 .primary:hover {
 	background-color: var(--color-primary-text);
+}
+</style>
+
+<!-- Add driver.js custom CSS to global styles -->
+<style>
+.driver-popover {
+	background: color-mix(in srgb, var(--color-primary-background), transparent 40%);
+	backdrop-filter: blur(10px);
+	color: var(--color-primary-text);
+	border: 2px solid var(--color-border-line);
+	border-radius: 8px;
+	padding: 16px;
+}
+
+.driver-popover-arrow-side-right {
+	border: 10px solid var(--color-border-line);
+	border-left-color: transparent;
+	border-bottom-color: transparent;
+	border-top-color: transparent;
+}
+
+.driver-popover-title {
+	font-family: Satoshi-Bold;
+}
+
+.driver-popover-description {
+	font-family: Satoshi-Regular;
+}
+
+.driver-popover-footer-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 10px;
+    font-family: Satoshi-Bold;
+    font-size: 0.9rem;
+}
+
+.driver-popover-prev-btn {
+	background-color: transparent !important;
+    color: var(--color-secondary-text);
+    transition: color 200ms ease;
+}
+
+.driver-popover-next-btn {
+	background-color: var(--color-secondary-text) !important;
+    color: var(--color-primary-background);
+    transition: background-color 200ms ease;
+}
+
+.driver-popover-prev-btn:hover {
+	color: var(--color-primary-text);
+}
+
+.driver-popover-next-btn:hover {
+	background-color: var(--color-primary-text) !important;
 }
 </style>
