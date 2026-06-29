@@ -48,19 +48,24 @@
 </template>
 
 <script>
-import {version} from "@/../package.json";
-import {onboarding} from "@/utils/onboarding";
+import { version } from "@/../package.json";
+import { useSettingsStore } from "@/settings";
 
 export default {
     name: "Info",
     data() {
-        return {
+		return {
+			settingsStore: useSettingsStore(),
             appVersion: version,
         };
     },
     methods: {
-        startTour() {
-            onboarding().drive();
+		startTour() {
+			// Close the sidebar first
+			document.querySelector(".sidebar-close-btn").click();
+
+			// Wait for the sidebar to close before opening the onboarding popup
+			setTimeout(() => this.settingsStore.setOnboarding("Enabled"), 200);
         },
     },
 };
