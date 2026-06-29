@@ -3,7 +3,7 @@
         <Background />
         <Sidebar ref="sidebarRef" />
         <NewFeaturesPanel />
-        <Onboarding v-if="this.settingsStore.onboarding === 'Enabled'" />
+        <Onboarding />
         <Buttons
             @toggle-sidebar="toggleSidebar"
             @toggle-share="toggleSharePopup"
