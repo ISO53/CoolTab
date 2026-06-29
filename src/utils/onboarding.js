@@ -8,8 +8,8 @@ export function onboarding() {
 	return new driver({
 		showProgress: true,
 		animate: true,
-		allowClose: true,
-		allowKeyboardControl: true,
+		allowClose: false,
+		allowKeyboardControl: false,
 		onDestroyed: () => {
 			// Clean up UI states when onboarding ends or is skipped
 			const buttonsEl = document.querySelector("#Buttons");
