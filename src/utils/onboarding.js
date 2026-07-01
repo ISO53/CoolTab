@@ -26,6 +26,11 @@ export function onboarding() {
 				}
 			}
 
+			// Re-enable click interaction on buttons manually
+			buttonsEl.childNodes.forEach((child) => {
+				child.style.pointerEvents = "auto";
+			});
+
 			// Ensure onboarding is disabled in settings
 			settingsStore.setOnboarding("Disabled");
 		},
@@ -34,7 +39,7 @@ export function onboarding() {
 				element: "#Buttons",
 				popover: {
 					title: "CoolTab Features Tour",
-					description: "Hover your mouse in this bottom-left corner to reveal the action buttons. Let's travel them one by one!",
+					description: "Hover your mouse in this bottom-left corner to reveal the action buttons. These buttons let's you choose wallpapers, share your style, edit the widgets and access to settings panel.",
 					side: "right",
 					align: "end",
 				},
@@ -53,23 +58,42 @@ export function onboarding() {
 					if (buttonsEl) {
 						buttonsEl.classList.add("revealed");
 					}
+
+					// Disable click interaction on buttons manually
+					buttonsEl.childNodes.forEach((child) => {
+						child.style.pointerEvents = "none";
+					});
 				},
 			},
 			{
 				element: "#Buttons button:nth-child(1)",
 				popover: {
-					title: "Explore Wallpapers",
-					description: "Click here to open the wallpaper gallery. You can browse and select from a variety of beautiful backgrounds to personalize your tab.",
+					title: "Open Gallery",
+					description: "Click here to open the wallpaper gallery.",
 					side: "right",
 					align: "center",
 				},
-				onHighlighted: () => {
-					const btn = document.querySelector("#Buttons button:nth-child(1)");
-					if (btn) {
-						const gallery = document.querySelector(".gallery");
-						if (!gallery) {
-							btn.click();
-						}
+				onHighlightStarted: () => {
+					const gallery = document.querySelector(".gallery");
+					if (!gallery) {
+						const btn = document.querySelector("#Buttons button:nth-child(1)");
+						if (btn) btn.click();
+					}
+				},
+			},
+			{
+				element: ".gallery",
+				popover: {
+					title: "Explore Wallpapers",
+					description: "Here you can browse and select from a variety of beautiful backgrounds to personalize your tab.",
+					side: "top",
+					align: "center",
+				},
+				onDestroyStarted: () => {
+					const gallery = document.querySelector(".gallery");
+					if (!gallery) {
+						const btn = document.querySelector("#Buttons button:nth-child(1)");
+						if (btn) btn.click();
 					}
 				},
 			},
@@ -82,7 +106,7 @@ export function onboarding() {
 					align: "center",
 				},
 				onHighlightStarted: () => {
-					// Close wallpaper gallery if it was opened
+					// Close wallpaper gallery
 					const gallery = document.querySelector(".gallery");
 					if (gallery) {
 						const btn = document.querySelector("#Buttons button:nth-child(1)");
@@ -93,42 +117,54 @@ export function onboarding() {
 			{
 				element: "#Buttons button:nth-child(3)",
 				popover: {
-					title: "Edit Layout Mode",
-					description: "Click this button to toggle edit mode. In edit mode, you can resize widgets and drag them to relocate them anywhere on the layout grid.",
+					title: "Edit Mode",
+					description: "Click here to activate the edit mode.",
 					side: "right",
 					align: "center",
 				},
-				onHighlighted: () => {
+			},
+			{
+				element: ".grid",
+				popover: {
+					title: "Edit Layout Mode",
+					description: "In edit mode, you can resize widgets and drag them to relocate them anywhere on the layout grid.",
+					side: "bottom",
+					align: "center",
+				},
+				onHighlightStarted: () => {
 					const btn = document.querySelector("#Buttons button:nth-child(3)");
-					if (btn) {
-						// Open the edit mode
-						btn.click();
-					}
+					// Open the edit mode
+					if (btn) btn.click();
 				},
 				onDeselected: () => {
 					const btn = document.querySelector("#Buttons button:nth-child(3)");
-					if (btn) {
-						// Close the edit mode on the next step
-						btn.click();
-					}
+					// Close the edit mode on the next step
+					if (btn) btn.click();
 				},
 			},
 			{
 				element: "#Buttons button:nth-child(4)",
 				popover: {
-					title: "Settings Sidebar",
-					description: "Open the sidebar to access more detailed customization options, styles, widget settings, and app info.",
+					title: "Sidebar",
+					description: "Click here to open the sidebar.",
+					side: "right",
+					align: "center",
+				},
+				onHighlightStarted: () => {
+					// Open the sidebar for the next step
+					const btn = document.querySelector("#Buttons button:nth-child(4)");
+					if (btn) btn.click();
+				},
+			},
+			{
+				element: ".tabs-layout",
+				popover: {
+					title: "Customization Tab",
+					description: "On customization tab you can adjust colors of your new tab by selecting from predefined color palettes that supports both light and dark themes.",
 					side: "right",
 					align: "center",
 				},
 				onHighlighted: () => {
-					const btn = document.querySelector("#Buttons button:nth-child(4)");
-					if (btn) {
-						const sidebar = document.querySelector(".slide");
-						if (!sidebar || sidebar.style.display === "none") {
-							btn.click();
-						}
-					}
 					// Ensure we start from the top tab (Customization)
 					setTimeout(() => {
 						const tab = document.querySelector(".rail-btn:nth-child(1)");
@@ -137,20 +173,7 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".rail-btn:nth-child(1)",
-				popover: {
-					title: "Color Palettes",
-					description: "Choose from pre-configured color palettes or create your own custom theme colors for the text, backgrounds, and borders.",
-					side: "right",
-					align: "center",
-				},
-				onHighlighted: () => {
-					const tab = document.querySelector(".rail-btn:nth-child(1)");
-					if (tab) tab.click();
-				},
-			},
-			{
-				element: ".rail-btn:nth-child(2)",
+				element: ".tabs-layout",
 				popover: {
 					title: "Personal Styles",
 					description: "A style is a saved snapshot of all your settings, including background image, layout columns, colors, and active widgets. You can save, manage, and swap your personal styles here.",
@@ -163,7 +186,7 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".rail-btn:nth-child(3)",
+				element: ".tabs-layout",
 				popover: {
 					title: "Community Styles",
 					description: "Check out and apply stunning styles created and shared by other CoolTab users around the world.",
@@ -176,7 +199,7 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".rail-btn:nth-child(4)",
+				element: ".tabs-layout",
 				popover: {
 					title: "Widget Switcher",
 					description: "Enable or disable individual widgets like weather forecasts, clocks, stock tickers, location visualizers, calendars, and todo lists.",
@@ -189,7 +212,7 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".rail-btn:nth-child(5)",
+				element: ".tabs-layout",
 				popover: {
 					title: "General Settings",
 					description: "Customize global preferences for your tab. Here you can configure wallpaper, search engines, search behavior, weather/stock update intervals, layout columns, and background size settings.",
@@ -202,7 +225,7 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".rail-btn:nth-child(6)",
+				element: ".tabs-layout",
 				popover: {
 					title: "About CoolTab",
 					description: "Check the application version, explore release notes, and read more about the features of this tab manager.",
