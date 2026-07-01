@@ -12,7 +12,7 @@ const clickOutside = {
     beforeMount: (el, binding) => {
 		el.clickOutsideEvent = (event) => {
 			// This should not fire when a driver.js tour is active
-            if (body.classList.contains("driver.active")) return;
+            if (document.body.classList.contains("driver.active")) return;
 
 			if (!(el === event.target || el.contains(event.target))) {
                 binding.value();
