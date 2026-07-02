@@ -10,8 +10,11 @@ const app = createApp(App);
 const pinia = createPinia();
 const clickOutside = {
     beforeMount: (el, binding) => {
-        el.clickOutsideEvent = (event) => {
-            if (!(el === event.target || el.contains(event.target))) {
+		el.clickOutsideEvent = (event) => {
+			// This should not fire when a driver.js tour is active
+            if (document.body.classList.contains("driver.active")) return;
+
+			if (!(el === event.target || el.contains(event.target))) {
                 binding.value();
             }
         };

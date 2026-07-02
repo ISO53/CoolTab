@@ -39,18 +39,34 @@
                 </li>
             </ul>
         </div>
+
+        <button class="tour-button" @click="startTour">
+        	<i class="material-icons-outlined">tour</i>
+        	<span>Take a tour</span>
+        </button>
     </div>
 </template>
 
 <script>
-import {version} from "@/../package.json";
+import { version } from "@/../package.json";
+import { useSettingsStore } from "@/settings";
 
 export default {
     name: "Info",
     data() {
-        return {
+		return {
+			settingsStore: useSettingsStore(),
             appVersion: version,
         };
+    },
+    methods: {
+		startTour() {
+			// Close the sidebar first
+			document.querySelector(".sidebar-close-btn").click();
+
+			// Wait for the sidebar to close before opening the onboarding popup
+			setTimeout(() => this.settingsStore.setOnboarding("Enabled"), 200);
+        },
     },
 };
 </script>
@@ -155,5 +171,53 @@ export default {
 
 .thanks-list a:hover {
     text-decoration: underline;
+}
+
+.tour-button {
+   position: absolute;
+   bottom: 20px;
+   right: 20px;
+   width: 50px;
+   height: 50px;
+   display: flex;
+   align-items: center;
+   justify-content: flex-start;
+   padding: 0 0 0 13px;
+   border: none;
+   background-color: var(--color-secondary-text);
+   color: var(--color-primary-background);
+   border-radius: 10px;
+   font-size: 1rem;
+   font-family: Satoshi-Medium;
+   cursor: pointer;
+   transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1), background-color 200ms ease;
+   overflow: hidden;
+   white-space: nowrap;
+}
+
+.tour-button:hover {
+	width: 140px;
+	background-color: var(--color-primary-text);
+}
+
+.tour-button > span {
+	margin: 0 0 0 10px;
+	opacity: 0;
+	font-family: Satoshi-Bold;
+	font-size: 0.95rem;
+	transition: opacity 200ms ease;
+}
+
+.tour-button:hover > span {
+	opacity: 1;
+	transition-delay: 80ms;
+}
+
+.tour-button > i {
+	margin: 0;
+	line-height: 1.4rem;
+	height: 1.4rem;
+	font-size: 1.4rem;
+	flex-shrink: 0;
 }
 </style>

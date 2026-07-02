@@ -1,5 +1,5 @@
 <template>
-    <div class="buttons" :class="{revealed: isRevealed}">
+    <div id="Buttons" class="buttons" :class="{revealed: isRevealed}">
         <button @click.stop="toggleWallpaperGallery" class="button" title="Wallpaper gallery">
             <Svg :class_name="'material-icons-outlined'" :name="'image'"></Svg>
         </button>

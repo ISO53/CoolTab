@@ -3,6 +3,7 @@
         <Background />
         <Sidebar ref="sidebarRef" />
         <NewFeaturesPanel />
+        <Onboarding />
         <Buttons
             @toggle-sidebar="toggleSidebar"
             @toggle-share="toggleSharePopup"
@@ -53,6 +54,7 @@ import ShareStyle from "./components/ui/ShareStyle.vue";
 import TodoList from "./components/widgets/TodoList.vue";
 import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "./components/widgets/MonthlyCalendar.vue";
+import Onboarding from "./components/ui/Onboarding.vue";
 import { useSettingsStore } from "./settings";
 import { defineAsyncComponent } from "vue";
 
@@ -91,7 +93,8 @@ export default {
         TodoList,
         HourlyWeatherForecast,
         MonthlyCalendar,
-        Location,
+		Location,
+        Onboarding,
     },
     data() {
         return {

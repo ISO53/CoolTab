@@ -1,6 +1,6 @@
 {
   "name": "cool-tab",
-  "version": "1.17.6",
+  "version": "1.17.7",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,6 +11,7 @@
   "dependencies": {
     "@vercel/blob": "^2.3.3",
     "cobe": "^2.0.1",
+    "driver.js": "^1.6.0",
     "pinia": "^2.2.4",
     "vue": "^3.4.29"
   },

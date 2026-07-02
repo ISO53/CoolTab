@@ -31,7 +31,8 @@ export const useSettingsStore = defineStore("settings", {
         hourlyWeatherRotation: localStorage.getItem("hourly-weather-rotation") || "Enabled",
         largeStockRange: localStorage.getItem("large-stock-range") || "1D",
         rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
-        location: getLocation(),
+		location: getLocation(),
+        onboarding: localStorage.getItem("onboarding") || "Enabled",
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -359,7 +360,11 @@ export const useSettingsStore = defineStore("settings", {
 		    if (settings.widgets !== undefined) this.setWidgets(settings.widgets);
 		    if (settings.widgetAreaColumns !== undefined) this.setWidgetAreaColumns(settings.widgetAreaColumns);
 		    if (settings.analogClockStyle !== undefined) this.setAnalogClockStyle(settings.analogClockStyle);
-		}
+		},
+		setOnboarding(onboarding) {
+			this.onboarding = onboarding;
+			storeInLocalStorage("onboarding", onboarding);
+		},
     },
 });
 
