@@ -2,7 +2,7 @@
     <div v-if="isOpen && hoveredName" class="wallpaper-name">{{ hoveredName }}</div>
     <Transition name="slide">
         <div v-if="isOpen" class="gallery" v-click-outside="close">
-            <div class="page-indicator">Page {{ page + 1 }} / {{ totalPages }}</div>
+            <div class="page-indicator">{{ $t('gallery.page', { page: page + 1, total: totalPages }) }}</div>
             <button class="nav-btn" @click="prev" :disabled="page === 0">
                 <Svg :class_name="'material-icons-outlined'" :name="'chevron_left'"></Svg>
             </button>
@@ -17,7 +17,7 @@
                         @mouseleave="onLeave"
                     >
                         <img :src="wp.preview_url" />
-                        <button v-if="hoveredId === wp._id" class="apply-btn" @click.stop="apply(wp)">Apply</button>
+                        <button v-if="hoveredId === wp._id" class="apply-btn" @click.stop="apply(wp)">{{ $t('gallery.apply') }}</button>
                     </div>
                     <div v-else class="thumb loading-thumb">
                         <div class="loader"></div>

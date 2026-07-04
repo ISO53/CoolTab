@@ -38,7 +38,7 @@
 
                 <div v-else class="loading-container">
                     <h1 class="ticker">{{ currentTickerDisplay }}</h1>
-                    <p class="loading-text">Loading data...</p>
+                    <p class="loading-text">{{ $t('stocks.loading') }}</p>
                 </div>
 
                 <p class="last-updated">

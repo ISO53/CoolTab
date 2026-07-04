@@ -1,8 +1,8 @@
 <template>
     <div class="community-container">
         <div class="page-header">
-            <h2>Community Styles</h2>
-            <p class="subtitle">Discover styles shared by the CoolTab community</p>
+            <h2>{{ $t('community.title') }}</h2>
+            <p class="subtitle">{{ $t('community.subtitle') }}</p>
         </div>
 
         <!-- Loading skeletons -->
@@ -25,17 +25,17 @@
         <!-- Error -->
         <div v-else-if="error" class="empty-state">
             <i class="material-icons-outlined">wifi_off</i>
-            <p>Could not load community styles</p>
+            <p>{{ $t('community.loadError') }}</p>
             <button class="retry-btn" @click="fetchStyles">
                 <i class="material-icons-outlined">refresh</i>
-                Retry
+                {{ $t('community.retry') }}
             </button>
         </div>
 
         <!-- Empty -->
         <div v-else-if="styles.length === 0" class="empty-state">
             <i class="material-icons-outlined">explore_off</i>
-            <p>No community styles yet</p>
+            <p>{{ $t('community.empty') }}</p>
         </div>
 
         <!-- Grid -->
@@ -70,7 +70,7 @@
                             :class="getState(style._id, 'save')"
                             :disabled="loadingId === style._id"
                             @click.stop="saveStyle(style)"
-                            title="Save to My Styles"
+                            :title="$t('community.saveTooltip')"
                         >
                             <i class="material-icons-outlined">{{ getIcon(style._id, "save") }}</i>
                             <span>{{ getLabel(style._id, "save") }}</span>
@@ -80,7 +80,7 @@
                             :class="getState(style._id, 'apply')"
                             :disabled="loadingId === style._id"
                             @click.stop="applyStyle(style)"
-                            title="Apply style immediately"
+                            :title="$t('community.applyTooltip')"
                         >
                             <i class="material-icons-outlined">{{ getIcon(style._id, "apply") }}</i>
                             <span>{{ getLabel(style._id, "apply") }}</span>
@@ -208,8 +208,18 @@ export default {
         getLabel(id, action) {
             const s = this.getState(id, action);
             const labels = {
-                apply: {idle: "Apply & Save", loading: "Applying…", done: "Applied!", error: "Failed"},
-                save: {idle: "Save", loading: "Saving…", done: "Saved!", error: "Failed"},
+                apply: {
+                    idle: this.$t("community.apply_idle"),
+                    loading: this.$t("community.apply_loading"),
+                    done: this.$t("community.apply_done"),
+                    error: this.$t("community.apply_error")
+                },
+                save: {
+                    idle: this.$t("community.save_idle"),
+                    loading: this.$t("community.save_loading"),
+                    done: this.$t("community.save_done"),
+                    error: this.$t("community.save_error")
+                },
             };
             return labels[action][s] || labels[action].idle;
         },
@@ -227,7 +237,8 @@ export default {
 
         formatDate(dateString) {
             if (!dateString) return "";
-            return new Date(dateString).toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"});
+            const locale = this.settingsStore.language || "en";
+            return new Date(dateString).toLocaleDateString(locale, {month: "short", day: "numeric", year: "numeric"});
         },
     },
 };

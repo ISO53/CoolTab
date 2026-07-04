@@ -1,18 +1,18 @@
 <template>
     <Widget>
-        <div class="weekly-weather-forecast">
+        <div class="weekly-weather-forecast" ref="weeklyWeatherContainer">
             <div class="curr">
                 <div class="curr-info">
                     <Svg :class_name="weather.curr?.img || ''"></Svg>
                     <h1>{{ (weather.curr?.temperature ?? 0) + "°" }}</h1>
                     <div class="high-low">
-                        <h5>{{ "H " + (weather.curr?.high ?? 0) + "°" }}</h5>
-                        <h5>{{ "L " + (weather.curr?.low ?? 0) + "°" }}</h5>
+                        <h5>{{ $t('weather.high') + " " + (weather.curr?.high ?? 0) + "°" }}</h5>
+                        <h5>{{ $t('weather.low') + " " + (weather.curr?.low ?? 0) + "°" }}</h5>
                     </div>
                 </div>
                 <div class="city-and-weather">
-                    <h2>{{ weather.curr?.city || '' }}</h2>
-                    <h2>{{ weather.curr?.weather || '' }}</h2>
+                    <h2 class="marquee-container" :style="{ fontSize: $tData('geo', weather.curr?.city).length > 12 ? '20cqh' : '25cqh', lineHeight: $tData('geo', weather.curr?.city).length > 12 ? '20cqh' : '25cqh' }"><span class="marquee-text">{{ $tData('geo', weather.curr?.city) }}</span></h2>
+                    <h2 class="marquee-container" :style="{ fontSize: $tData('weather_cond', weather.curr?.weather).length > 12 ? '20cqh' : '25cqh', lineHeight: $tData('weather_cond', weather.curr?.weather).length > 12 ? '20cqh' : '25cqh' }"><span class="marquee-text">{{ $tData('weather_cond', weather.curr?.weather) }}</span></h2>
                 </div>
             </div>
             <div class="forecast">
@@ -44,11 +44,67 @@ export default {
         return {
             weather: this.settingsStore.weeklyWeatherInfo,
             rotation: 0,
-            days: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
         };
+    },
+    computed: {
+        days() {
+            const locale = this.settingsStore.language || "en";
+            if (locale === "ru") {
+                return ["ВС", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
+            }
+            return ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        }
     },
     mounted() {
         this.getWeeklyWeatherInfo();
+        this.resizeObserver = new ResizeObserver(() => {
+            this.checkAllOverflows();
+        });
+        this.$nextTick(() => {
+            const container = this.$refs.weeklyWeatherContainer;
+            if (container) {
+                const texts = container.querySelectorAll(".marquee-text") || [];
+                texts.forEach(el => this.resizeObserver.observe(el));
+            }
+        });
+    },
+    beforeUnmount() {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+    },
+    watch: {
+        'weather.curr.city'() {
+            this.$nextTick(() => {
+                if (this.resizeObserver) {
+                    this.resizeObserver.disconnect();
+                    const container = this.$refs.weeklyWeatherContainer;
+                    if (container) {
+                        const texts = container.querySelectorAll(".marquee-text") || [];
+                        texts.forEach(el => this.resizeObserver.observe(el));
+                    }
+                } else {
+                    this.checkAllOverflows();
+                }
+            });
+        },
+        'weather.curr.weather'() {
+            this.$nextTick(() => {
+                if (this.resizeObserver) {
+                    this.resizeObserver.disconnect();
+                    const container = this.$refs.weeklyWeatherContainer;
+                    if (container) {
+                        const texts = container.querySelectorAll(".marquee-text") || [];
+                        texts.forEach(el => this.resizeObserver.observe(el));
+                    }
+                } else {
+                    this.checkAllOverflows();
+                }
+            });
+        },
+        'settingsStore.language'() {
+            this.$nextTick(() => this.checkAllOverflows());
+        }
     },
     methods: {
         async getWeeklyWeatherInfo() {
@@ -73,6 +129,25 @@ export default {
                 console.error("Error fetching weekly weather:", e);
             }
         },
+        checkAllOverflows() {
+            const container = this.$refs.weeklyWeatherContainer;
+            if (!container) return;
+            const marqueeTexts = container.querySelectorAll(".marquee-text") || [];
+            marqueeTexts.forEach((textEl) => {
+                const el = textEl.parentElement;
+                if (!el) return;
+                
+                el.classList.remove("is-overflowing");
+                el.style.removeProperty("--scroll-distance");
+                
+                const scrollDist = textEl.offsetWidth - el.clientWidth;
+                console.log(`[WeeklyWeatherForecast] text: ${textEl.innerText.trim()}, textWidth: ${textEl.offsetWidth}, parentWidth: ${el.clientWidth}, scrollDist: ${scrollDist}`);
+                if (scrollDist > 0) {
+                    el.style.setProperty("--scroll-distance", `-${scrollDist + 4}px`);
+                    el.classList.add("is-overflowing");
+                }
+            });
+        }
     },
 };
 </script>
@@ -125,7 +200,16 @@ export default {
 
 .high-low {
     font-family: Satoshi-Light;
-    font-size: 30cqh;
+    font-size: 22cqh;
+    line-height: 24cqh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.high-low h5 {
+    margin: 0;
+    padding: 0;
 }
 
 .city-and-weather {
@@ -134,6 +218,8 @@ export default {
     align-items: flex-end;
     justify-content: center;
     height: 100%;
+    width: 50%;
+    overflow: hidden;
 }
 
 .city-and-weather > h2 {
@@ -141,6 +227,21 @@ export default {
     font-size: 25cqh;
     line-height: 25cqh;
     margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    text-align: right;
+}
+
+.city-and-weather > h2.is-overflowing {
+    text-align: left;
+}
+
+.marquee-text {
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
 }
 
 .day {

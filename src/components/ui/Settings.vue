@@ -1,14 +1,25 @@
 <template>
 	<div class="settings">
-		<h2 class="page-title">Settings</h2>
+		<h2 class="page-title">{{ $t('settings.title') }}</h2>
 
 		<div>
-			<h2>Background Image</h2>
+			<h2>{{ $t('settings.language') }}</h2>
+			<SelectButton
+				v-model="settingsStore.language"
+				:options="availableLanguages"
+				:onSelect="setLanguage"
+			/>
+		</div>
+
+		<span class="divider"></span>
+
+		<div>
+			<h2>{{ $t('settings.backgroundImage') }}</h2>
 			<FileChooser />
 		</div>
 
 		<div>
-			<h2>Image Size</h2>
+			<h2>{{ $t('settings.imageSize') }}</h2>
 			<SelectButton
 				v-model="settingsStore.backgroundSize"
 				:options="['Auto', 'Cover', 'Contain']"
@@ -19,7 +30,7 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Widget Background</h2>
+			<h2>{{ $t('settings.widgetBackground') }}</h2>
 			<SelectButton
 				v-model="settingsStore.widgetBackground"
 				:options="['Color', 'Transparent', 'Blur', 'Glass']"
@@ -30,7 +41,7 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Search Engine</h2>
+			<h2>{{ $t('settings.searchEngine') }}</h2>
 			<DropdownSelect
 				v-model="settingsStore.searchEngine"
 				:values="[
@@ -42,13 +53,26 @@
 					'Yandex',
 					'Startpage',
 					'Swisscows',
+					'Custom',
 				]"
 				:onSelect="setSearchEngine"
 			/>
 		</div>
 
+		<div v-if="settingsStore.searchEngine === 'Custom'" class="custom-search-container">
+			<h2>{{ $t('settings.customSearchUrl') }}</h2>
+			<input
+				class="form-input custom-search-input"
+				type="text"
+				:value="settingsStore.customSearchEngineUrl"
+				@input="setCustomSearchEngineUrl"
+				:placeholder="$t('settings.customSearchPlaceholder')"
+			/>
+			<p class="custom-search-hint">{{ $t('settings.customSearchHint') }}</p>
+		</div>
+
 		<div>
-			<h2>Open Result In</h2>
+			<h2>{{ $t('settings.openResultIn') }}</h2>
 			<SelectButton
 				v-model="settingsStore.openSearchResultIn"
 				:options="['Current Tab', 'New Tab']"
@@ -59,7 +83,18 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Analog Clock Style</h2>
+			<h2>{{ $t('settings.scrollMode') }}</h2>
+			<SelectButton
+				v-model="settingsStore.scrollMode"
+				:options="['Disabled', 'Hover', 'Always']"
+				:onSelect="setScrollMode"
+			/>
+		</div>
+
+		<span class="divider"></span>
+
+		<div>
+			<h2>{{ $t('settings.analogClockStyle') }}</h2>
 			<SelectButton
 				v-model="settingsStore.analogClockStyle"
 				:options="['Minimal', 'Classic']"
@@ -71,11 +106,11 @@
 
 		<div>
 			<div class="title-with-action">
-				<h2>Stocks</h2>
+				<h2>{{ $t('settings.stocks') }}</h2>
 				<button
 					class="help-btn"
 					@click="showStockGuide = true"
-					title="Show Search Guide"
+					:title="$t('stockGuide.title')"
 				>
 					<i class="material-icons-outlined">help_outline</i>
 				</button>
@@ -89,7 +124,7 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Quick Links</h2>
+			<h2>{{ $t('settings.quickLinks') }}</h2>
 			<DropdownList
 				v-model="this.settingsStore.quickLinks.links"
 				:text="'link'"
@@ -98,7 +133,7 @@
 		</div>
 
 		<div>
-			<h2>Quick Links Orientation</h2>
+			<h2>{{ $t('settings.quickLinksOrientation') }}</h2>
 			<SelectButton
 				v-model="settingsStore.quickLinks.orientation"
 				:options="['Vertical', 'Horizontal']"
@@ -107,7 +142,7 @@
 		</div>
 
 		<div>
-			<h2>Open Link In</h2>
+			<h2>{{ $t('settings.openLinkIn') }}</h2>
 			<SelectButton
 				v-model="settingsStore.quickLinks.open_link_in"
 				:options="['Current Tab', 'New Tab']"
@@ -118,7 +153,7 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Widget Area Columns</h2>
+			<h2>{{ $t('settings.widgetAreaColumns') }}</h2>
 			<NumberPicker
 				v-model="settingsStore.widgetAreaColumns"
 				:min="10"
@@ -131,7 +166,7 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Max Todo Tasks</h2>
+			<h2>{{ $t('settings.maxTodoTasks') }}</h2>
 			<NumberPicker
 				v-model="settingsStore.todoMaxTasks"
 				:min="5"
@@ -144,7 +179,7 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Hourly Weather Rotation</h2>
+			<h2>{{ $t('settings.hourlyWeatherRotation') }}</h2>
 			<SelectButton
 				v-model="settingsStore.hourlyWeatherRotation"
 				:options="['Enabled', 'Disabled']"
@@ -155,7 +190,7 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Remember Wallpaper Page</h2>
+			<h2>{{ $t('settings.rememberWallpaperPage') }}</h2>
 			<SelectButton
 				v-model="rememberWallpaperPageText"
 				:options="['Enabled', 'Disabled']"
@@ -176,6 +211,7 @@ import StockGuidePopup from "./StockGuidePopup.vue";
 import DropdownList from "./DropdownList.vue";
 import NumberPicker from "./NumberPicker.vue";
 import {useSettingsStore} from "@/settings";
+import {availableLanguages} from "@/i18n";
 
 export default {
 	name: "Settings",
@@ -198,8 +234,14 @@ export default {
         rememberWallpaperPageText() {
             return this.settingsStore.rememberWallpaperPage ? "Enabled" : "Disabled";
         },
+        availableLanguages() {
+            return availableLanguages;
+        }
     },
 	methods: {
+		setLanguage(option) {
+			this.settingsStore.setLanguage(option);
+		},
 		setBackgroundSize(option) {
             this.settingsStore.setBackgroundSize(option);
         },
@@ -208,6 +250,12 @@ export default {
         },
         setSearchEngine(engine) {
             this.settingsStore.setSearchEngine(engine);
+        },
+        setCustomSearchEngineUrl(event) {
+            this.settingsStore.setCustomSearchEngineUrl(event.target.value);
+        },
+        setScrollMode(mode) {
+            this.settingsStore.setScrollMode(mode);
         },
         setOpenSearchResultIn(choice) {
             this.settingsStore.setOpenSearchResultIn(choice);
@@ -321,5 +369,33 @@ export default {
 
 .help-btn i {
     font-size: 1.2rem;
+}
+
+.custom-search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.custom-search-input {
+    background-color: var(--color-secondary-background);
+    color: var(--color-primary-text);
+    border: 2px solid var(--color-border-line);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.custom-search-input:focus {
+    outline: none;
+    border-color: var(--color-tertiary-background);
+}
+
+.custom-search-hint {
+    font-size: 12px;
+    color: var(--color-tertiary-text);
+    line-height: 1.4;
 }
 </style>

@@ -9,21 +9,21 @@
 
                 <div class="header">
                     <i class="material-icons-outlined">help_outline</i>
-                    <h1>Stock Search Guide</h1>
+                    <h1>{{ $t('stockGuide.title') }}</h1>
                 </div>
 
                 <div class="content">
                     <p class="intro">
-                        CoolTab uses Yahoo Finance symbols to track real-time data. You can search for stocks, cryptocurrencies, currencies, and more.
+                        {{ $t('stockGuide.intro') }}
                     </p>
 
                     <div class="guide-grid">
                         <div class="guide-item">
                             <div class="item-header">
                                 <i class="material-icons-outlined">trending_up</i>
-                                <h3>Stocks</h3>
+                                <h3>{{ $t('stockGuide.stocksTitle') }}</h3>
                             </div>
-                            <p>Use standard ticker symbols for US markets. For international markets, append the exchange suffix.</p>
+                            <p>{{ $t('stockGuide.stocksDesc') }}</p>
                             <ul>
                                 <li><b>AAPL</b> - Apple Inc. (US)</li>
                                 <li><b>VOW3.DE</b> - Volkswagen (Germany)</li>
@@ -35,9 +35,9 @@
                         <div class="guide-item">
                             <div class="item-header">
                                 <i class="material-icons-outlined">currency_bitcoin</i>
-                                <h3>Crypto</h3>
+                                <h3>{{ $t('stockGuide.cryptoTitle') }}</h3>
                             </div>
-                            <p>Track cryptocurrencies by pairing them with a fiat currency (USD, EUR, GBP, etc.).</p>
+                            <p>{{ $t('stockGuide.cryptoDesc') }}</p>
                             <ul>
                                 <li><b>BTC-USD</b> - Bitcoin</li>
                                 <li><b>ETH-EUR</b> - Ethereum</li>
@@ -49,9 +49,9 @@
                         <div class="guide-item">
                             <div class="item-header">
                                 <i class="material-icons-outlined">payments</i>
-                                <h3>Currencies</h3>
+                                <h3>{{ $t('stockGuide.currencyTitle') }}</h3>
                             </div>
-                            <p>Monitor Forex exchange rates by adding the <b>=X</b> suffix to the currency pair.</p>
+                            <p>{{ $t('stockGuide.currencyDesc') }}</p>
                             <ul>
                                 <li><b>EURUSD=X</b> - Euro to US Dollar</li>
                                 <li><b>JPY=X</b> - Japanese Yen</li>
@@ -62,9 +62,9 @@
                         <div class="guide-item">
                             <div class="item-header">
                                 <i class="material-icons-outlined">inventory_2</i>
-                                <h3>Commodities</h3>
+                                <h3>{{ $t('stockGuide.commoditiesTitle') }}</h3>
                             </div>
-                            <p>Track commodity prices using their futures symbols with the <b>=F</b> suffix.</p>
+                            <p>{{ $t('stockGuide.commoditiesDesc') }}</p>
                             <ul>
                                 <li><b>GC=F</b> - Gold</li>
                                 <li><b>SI=F</b> - Silver</li>
@@ -76,9 +76,9 @@
                         <div class="guide-item">
                             <div class="item-header">
                                 <i class="material-icons-outlined">account_balance</i>
-                                <h3>Turkish Market (BIST)</h3>
+                                <h3>{{ $t('stockGuide.turkishTitle') }}</h3>
                             </div>
-                            <p>Follow Borsa Istanbul stocks by adding the <b>.IS</b> suffix.</p>
+                            <p>{{ $t('stockGuide.turkishDesc') }}</p>
                             <ul>
                                 <li><b>THYAO.IS</b> - Türk Hava Yolları</li>
                                 <li><b>ASELS.IS</b> - Aselsan</li>
@@ -89,9 +89,9 @@
                         <div class="guide-item">
                             <div class="item-header">
                                 <i class="material-icons-outlined">pie_chart</i>
-                                <h3>Market Indices</h3>
+                                <h3>{{ $t('stockGuide.indicesTitle') }}</h3>
                             </div>
-                            <p>Track major market indices using the <b>^</b> prefix.</p>
+                            <p>{{ $t('stockGuide.indicesDesc') }}</p>
                             <ul>
                                 <li><b>^GSPC</b> - S&P 500</li>
                                 <li><b>^DJI</b> - Dow Jones</li>

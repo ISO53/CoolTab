@@ -7,7 +7,7 @@
                 type="text"
                 v-model="searchQuery"
                 @keypress.enter="handleSearch"
-                placeholder="Search..."
+                :placeholder="$t('search.placeholder')"
                 class="search-input"
             />
 
@@ -53,7 +53,20 @@ export default {
                 ["Swisscows", "https://swisscows.com/web?query="],
             ]);
 
-            const request = searchEngines.get(this.settingsStore.searchEngine) + encodeURIComponent(this.searchQuery);
+            let baseUrl = "";
+            if (this.settingsStore.searchEngine === "Custom") {
+                baseUrl = this.settingsStore.customSearchEngineUrl || "https://www.google.com/search?q=";
+            } else {
+                baseUrl = searchEngines.get(this.settingsStore.searchEngine) || "https://www.google.com/search?q=";
+            }
+
+            let request = "";
+            const queryPlaceholder = /{query}/i;
+            if (queryPlaceholder.test(baseUrl)) {
+                request = baseUrl.replace(queryPlaceholder, encodeURIComponent(this.searchQuery));
+            } else {
+                request = baseUrl + encodeURIComponent(this.searchQuery);
+            }
 
             if (this.settingsStore.openSearchResultIn === "New Tab") {
                 window.open(request, "_blank");

@@ -3,46 +3,46 @@
         <div class="info-header">
             <img src="@/components/icons/cooltab_logo.svg" draggable="false" class="logo" />
             <h2 class="page-title">CoolTab</h2>
-            <p class="tagline">Just a new tab for your browser, but cooler...</p>
+            <p class="tagline">{{ $t('info.tagline') }}</p>
         </div>
 
         <div class="info-section">
             <div class="info-item">
-                <span class="label">Version</span>
+                <span class="label">{{ $t('info.version') }}</span>
                 <span class="value"><a href="https://iso53.github.io/CoolTab/#/releases" target="_blank" title="See what's new in this version">{{ appVersion }}</a></span>
             </div>
             <div class="info-item">
-                <span class="label">Created by</span>
+                <span class="label">{{ $t('info.createdBy') }}</span>
                 <span class="value"><a href="https://github.com/iso53" target="_blank" title="Visit creator's GitHub profile">iso53</a></span>
             </div>
             <div class="info-item">
-                <span class="label">Source Code</span>
+                <span class="label">{{ $t('info.sourceCode') }}</span>
                 <span class="value"><a href="https://github.com/iso53/cooltab" target="_blank" title="View the open-source code on GitHub">GitHub</a></span>
             </div>
         </div>
 
         <div class="thanks-section">
-            <h3 class="section-title">Special Thanks To</h3>
+            <h3 class="section-title">{{ $t('info.thanks') }}</h3>
             <ul class="thanks-list">
                 <li>
-                    <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a> for providing weather info.
+                    <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a> {{ $t('info.thanksWeather') }}
                 </li>
                 <li>
-                    <a href="https://open-meteo.com/" target="_blank">Open-Meteo.com</a> for providing weather info.
+                    <a href="https://open-meteo.com/" target="_blank">Open-Meteo.com</a> {{ $t('info.thanksWeather') }}
                 </li>
-                <li><a href="https://finance.yahoo.com/" target="_blank">Yahoo Finance</a> for providing stock market info.</li>
+                <li><a href="https://finance.yahoo.com/" target="_blank">Yahoo Finance</a> {{ $t('info.thanksStocks') }}</li>
                 <li>
-                    <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> for providing weather icons.
+                    <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> {{ $t('info.thanksWeatherIcons') }}
                 </li>
                 <li>
-                    <a href="https://peapix.com/" target="_blank">Peapix.com</a> for providing wallpapers.
+                    <a href="https://peapix.com/" target="_blank">Peapix.com</a> {{ $t('info.thanksWallpapers') }}
                 </li>
             </ul>
         </div>
 
         <button class="tour-button" @click="startTour">
         	<i class="material-icons-outlined">tour</i>
-        	<span>Take a tour</span>
+        	<span>{{ $t('info.takeTour') }}</span>
         </button>
     </div>
 </template>

@@ -6,35 +6,35 @@
 
         <Transition name="slide">
             <div v-show="isOpen" class="slide">
-                <Tabs :selected="'Customization'">
-                    <Tab :label="'Customization'" :icon="'palette'">
+                <Tabs :selected="$t('sidebar.customization')">
+                    <Tab :label="$t('sidebar.customization')" :icon="'palette'">
                         <Customization />
                     </Tab>
 
-                    <Tab :label="'Styles'" :icon="'style'">
+                    <Tab :label="$t('sidebar.styles')" :icon="'style'">
                         <Styles />
                     </Tab>
 
-                    <Tab :label="'Community'" :icon="'explore'">
+                    <Tab :label="$t('sidebar.community')" :icon="'explore'">
                         <CommunityStyles />
                     </Tab>
 
-                    <Tab :label="'Widgets'" :icon="'widgets'">
+                    <Tab :label="$t('sidebar.widgets')" :icon="'widgets'">
                         <Widgets />
                     </Tab>
 
-                    <Tab :label="'Settings'" :icon="'tune'">
+                    <Tab :label="$t('sidebar.settings')" :icon="'tune'">
                         <Settings />
                     </Tab>
 
-                    <Tab :label="'About'" :icon="'info'">
+                    <Tab :label="$t('sidebar.about')" :icon="'info'">
                         <Info />
                     </Tab>
                 </Tabs>
 
-                <button class="sidebar-close-btn" @click="toggleSidebar" title="Close settings">
+                <button class="sidebar-close-btn" @click="toggleSidebar" :title="$t('sidebar.close')">
                     <i class="material-icons-outlined">arrow_back</i>
-                    <span class="close-tooltip">Close</span>
+                    <span class="close-tooltip">{{ $t('sidebar.close') }}</span>
                 </button>
             </div>
         </Transition>

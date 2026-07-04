@@ -1,7 +1,7 @@
 <template>
     <Widget class="todo-widget">
         <div class="todo-list">
-            <h2 class="title" v-if="settingsStore.todoItems.length === 0">Tasks</h2>
+            <h2 class="title" v-if="settingsStore.todoItems.length === 0">{{ $t('todo.title') }}</h2>
             <div class="tasks-container" ref="tasksContainer">
                 <div v-for="item in settingsStore.todoItems" :key="item.id" class="task-item"
                     :class="{ done: item.done }">
@@ -18,7 +18,7 @@
 
             <div class="input-container">
                 <input type="text" v-model="newTask" @keypress.enter="addTask"
-                    :placeholder="isLimitReached && !hasFinishedTasks ? 'Limit reached (Remove some tasks)' : 'Add a task...'"
+                    :placeholder="placeholderText"
                     :disabled="isLimitReached && !hasFinishedTasks" class="todo-input" />
                 <div v-if="newTask" class="enter-hint">
                     <Svg :class_name="'material-icons-outlined'" :name="'keyboard_return'"></Svg>
@@ -46,6 +46,7 @@ export default {
     data() {
         return {
             newTask: "",
+            isNarrow: false,
         };
     },
     computed: {
@@ -54,6 +55,12 @@ export default {
         },
         hasFinishedTasks() {
             return this.settingsStore.todoItems.some(item => item.done);
+        },
+        placeholderText() {
+            if (this.isLimitReached && !this.hasFinishedTasks) {
+                return this.isNarrow ? this.$t('todo.limit_reached_short') : this.$t('todo.limit_reached');
+            }
+            return this.isNarrow ? this.$t('todo.add_task_short') : this.$t('todo.add_task');
         }
     },
     methods: {
@@ -107,6 +114,21 @@ export default {
             }
         }
     },
+    mounted() {
+        this.resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                this.isNarrow = entry.contentRect.width < 185;
+            }
+        });
+        if (this.$el) {
+            this.resizeObserver.observe(this.$el);
+        }
+    },
+    beforeUnmount() {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+    },
 };
 </script>
 
@@ -115,6 +137,7 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
+    container-type: inline-size;
 }
 
 .todo-list {
@@ -236,7 +259,7 @@ export default {
 
 .todo-input::placeholder {
     color: var(--color-secondary-text);
-    font-size: 0.85rem;
+    font-size: clamp(10px, 6.5cqw, 0.85rem);
 }
 
 .enter-hint {

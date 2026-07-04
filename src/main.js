@@ -28,4 +28,7 @@ app.component('Svg', Svg);
 
 app.directive("click-outside", clickOutside);
 app.use(pinia);
+import { i18nPlugin } from "./i18n";
+app.use(i18nPlugin);
 app.mount("#app");
+

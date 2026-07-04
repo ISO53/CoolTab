@@ -33,6 +33,9 @@ export const useSettingsStore = defineStore("settings", {
         rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
 		location: getLocation(),
         onboarding: localStorage.getItem("onboarding") || "Enabled",
+        language: localStorage.getItem("language") || "en",
+        customSearchEngineUrl: localStorage.getItem("custom-search-engine-url") || "",
+        scrollMode: localStorage.getItem("scroll-mode") || "Hover",
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -85,6 +88,14 @@ export const useSettingsStore = defineStore("settings", {
         setSearchEngine(engine) {
             this.searchEngine = engine;
             storeInLocalStorage("search-engine", engine);
+        },
+        setCustomSearchEngineUrl(url) {
+            this.customSearchEngineUrl = url;
+            storeInLocalStorage("custom-search-engine-url", url);
+        },
+        setScrollMode(mode) {
+            this.scrollMode = mode;
+            storeInLocalStorage("scroll-mode", mode);
         },
         setOpenSearchResultIn(choice) {
             this.openSearchResultIn = choice;
@@ -363,6 +374,10 @@ export const useSettingsStore = defineStore("settings", {
 		setOnboarding(onboarding) {
 			this.onboarding = onboarding;
 			storeInLocalStorage("onboarding", onboarding);
+		},
+		setLanguage(language) {
+			this.language = language;
+			storeInLocalStorage("language", language);
 		},
     },
 });

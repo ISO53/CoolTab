@@ -1,6 +1,7 @@
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useSettingsStore } from "../settings";
+import { translate } from "../i18n";
 
 export function onboarding() {
 	const settingsStore = useSettingsStore();
@@ -38,8 +39,8 @@ export function onboarding() {
 			{
 				element: "#Buttons",
 				popover: {
-					title: "CoolTab Features Tour",
-					description: "Hover your mouse in this bottom-left corner to reveal the action buttons. These buttons let's you choose wallpapers, share your style, edit the widgets and access to settings panel.",
+					title: translate("onboarding.step1Title"),
+					description: translate("onboarding.step1Desc"),
 					side: "right",
 					align: "end",
 				},
@@ -68,8 +69,8 @@ export function onboarding() {
 			{
 				element: "#Buttons button:nth-child(1)",
 				popover: {
-					title: "Open Gallery",
-					description: "Click here to open the wallpaper gallery.",
+					title: translate("onboarding.step2Title"),
+					description: translate("onboarding.step2Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -84,8 +85,8 @@ export function onboarding() {
 			{
 				element: ".gallery",
 				popover: {
-					title: "Explore Wallpapers",
-					description: "Here you can browse and select from a variety of beautiful backgrounds to personalize your tab.",
+					title: translate("onboarding.step3Title"),
+					description: translate("onboarding.step3Desc"),
 					side: "top",
 					align: "center",
 				},
@@ -100,8 +101,8 @@ export function onboarding() {
 			{
 				element: "#Buttons button:nth-child(2)",
 				popover: {
-					title: "Share Your Style",
-					description: "Once you design a beautiful layout and color scheme, you can share it with the community here.",
+					title: translate("onboarding.step4Title"),
+					description: translate("onboarding.step4Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -117,8 +118,8 @@ export function onboarding() {
 			{
 				element: "#Buttons button:nth-child(3)",
 				popover: {
-					title: "Edit Mode",
-					description: "Click here to activate the edit mode.",
+					title: translate("onboarding.step5Title"),
+					description: translate("onboarding.step5Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -126,8 +127,8 @@ export function onboarding() {
 			{
 				element: ".grid",
 				popover: {
-					title: "Edit Layout Mode",
-					description: "In edit mode, you can resize widgets and drag them to relocate them anywhere on the layout grid.",
+					title: translate("onboarding.step6Title"),
+					description: translate("onboarding.step6Desc"),
 					side: "bottom",
 					align: "center",
 				},
@@ -145,8 +146,8 @@ export function onboarding() {
 			{
 				element: "#Buttons button:nth-child(4)",
 				popover: {
-					title: "Sidebar",
-					description: "Click here to open the sidebar.",
+					title: translate("onboarding.step7Title"),
+					description: translate("onboarding.step7Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -159,8 +160,8 @@ export function onboarding() {
 			{
 				element: ".tabs-layout",
 				popover: {
-					title: "Customization Tab",
-					description: "On customization tab you can adjust colors of your new tab by selecting from predefined color palettes that supports both light and dark themes.",
+					title: translate("onboarding.step8Title"),
+					description: translate("onboarding.step8Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -175,8 +176,8 @@ export function onboarding() {
 			{
 				element: ".tabs-layout",
 				popover: {
-					title: "Personal Styles",
-					description: "A style is a saved snapshot of all your settings, including background image, layout columns, colors, and active widgets. You can save, manage, and swap your personal styles here.",
+					title: translate("onboarding.step9Title"),
+					description: translate("onboarding.step9Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -188,8 +189,8 @@ export function onboarding() {
 			{
 				element: ".tabs-layout",
 				popover: {
-					title: "Community Styles",
-					description: "Check out and apply stunning styles created and shared by other CoolTab users around the world.",
+					title: translate("onboarding.step10Title"),
+					description: translate("onboarding.step10Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -201,8 +202,8 @@ export function onboarding() {
 			{
 				element: ".tabs-layout",
 				popover: {
-					title: "Widget Switcher",
-					description: "Enable or disable individual widgets like weather forecasts, clocks, stock tickers, location visualizers, calendars, and todo lists.",
+					title: translate("onboarding.step11Title"),
+					description: translate("onboarding.step11Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -214,8 +215,8 @@ export function onboarding() {
 			{
 				element: ".tabs-layout",
 				popover: {
-					title: "General Settings",
-					description: "Customize global preferences for your tab. Here you can configure wallpaper, search engines, search behavior, weather/stock update intervals, layout columns, and background size settings.",
+					title: translate("onboarding.step12Title"),
+					description: translate("onboarding.step12Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -227,8 +228,8 @@ export function onboarding() {
 			{
 				element: ".tabs-layout",
 				popover: {
-					title: "About CoolTab",
-					description: "Check the application version, explore release notes, and read more about the features of this tab manager.",
+					title: translate("onboarding.step13Title"),
+					description: translate("onboarding.step13Desc"),
 					side: "right",
 					align: "center",
 				},
@@ -240,8 +241,8 @@ export function onboarding() {
 			{
 				element: ".tour-button",
 				popover: {
-					title: "Tour",
-					description: "You can run this tour anytime you want to learn about the features of CoolTab.",
+					title: translate("onboarding.step14Title"),
+					description: translate("onboarding.step14Desc"),
 					side: "right",
 					align: "center",
 				}

@@ -1,6 +1,6 @@
 <template>
     <Widget>
-        <div class="weather-forecast">
+        <div class="weather-forecast" ref="dailyWeatherContainer">
             <div class="inner">
                 <div class="sun-and-moon">
                     <div class="orbit">
@@ -21,8 +21,8 @@
                 <div class="info">
                     <h1>{{ weather.temperature }}</h1>
                     <div>
-                        <h4>{{ weather.country }}</h4>
-                        <h3>{{ weather.city }}</h3>
+                        <h4 class="marquee-container" :style="{ fontSize: $tData('geo', weather.country).length > 12 ? '7.5cqw' : '9cqw', lineHeight: $tData('geo', weather.country).length > 12 ? '8.5cqw' : '10cqw' }"><span class="marquee-text">{{ $tData('geo', weather.country) }}</span></h4>
+                        <h3 class="marquee-container" :style="{ fontSize: $tData('geo', weather.city).length > 12 ? '8cqw' : '10cqw', lineHeight: $tData('geo', weather.city).length > 12 ? '9cqw' : '11cqw' }"><span class="marquee-text">{{ $tData('geo', weather.city) }}</span></h3>
                     </div>
                 </div>
             </div>
@@ -53,10 +53,56 @@ export default {
         this.getCurrentWeatherInfo();
         this.calculateRotation();
         this.timer = setInterval(this.calculateRotation, 60_000);
+        this.resizeObserver = new ResizeObserver(() => {
+            this.checkAllOverflows();
+        });
+        this.$nextTick(() => {
+            const container = this.$refs.dailyWeatherContainer;
+            if (container) {
+                const texts = container.querySelectorAll(".marquee-text") || [];
+                texts.forEach(el => this.resizeObserver.observe(el));
+            }
+        });
     },
     beforeUnmount() {
         if (this.timer) {
             clearInterval(this.timer);
+        }
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+    },
+    watch: {
+        'weather.country'() {
+            this.$nextTick(() => {
+                if (this.resizeObserver) {
+                    this.resizeObserver.disconnect();
+                    const container = this.$refs.dailyWeatherContainer;
+                    if (container) {
+                        const texts = container.querySelectorAll(".marquee-text") || [];
+                        texts.forEach(el => this.resizeObserver.observe(el));
+                    }
+                } else {
+                    this.checkAllOverflows();
+                }
+            });
+        },
+        'weather.city'() {
+            this.$nextTick(() => {
+                if (this.resizeObserver) {
+                    this.resizeObserver.disconnect();
+                    const container = this.$refs.dailyWeatherContainer;
+                    if (container) {
+                        const texts = container.querySelectorAll(".marquee-text") || [];
+                        texts.forEach(el => this.resizeObserver.observe(el));
+                    }
+                } else {
+                    this.checkAllOverflows();
+                }
+            });
+        },
+        'settingsStore.language'() {
+            this.$nextTick(() => this.checkAllOverflows());
         }
     },
     methods: {
@@ -111,6 +157,25 @@ export default {
                 console.error("Error fetching weather data:", error);
             }
         },
+        checkAllOverflows() {
+            const container = this.$refs.dailyWeatherContainer;
+            if (!container) return;
+            const marqueeTexts = container.querySelectorAll(".marquee-text") || [];
+            marqueeTexts.forEach((textEl) => {
+                const el = textEl.parentElement;
+                if (!el) return;
+                
+                el.classList.remove("is-overflowing");
+                el.style.removeProperty("--scroll-distance");
+                
+                const scrollDist = textEl.offsetWidth - el.clientWidth;
+                console.log(`[DailyWeatherForecast] text: ${textEl.innerText.trim()}, textWidth: ${textEl.offsetWidth}, parentWidth: ${el.clientWidth}, scrollDist: ${scrollDist}`);
+                if (scrollDist > 0) {
+                    el.style.setProperty("--scroll-distance", `-${scrollDist + 4}px`);
+                    el.classList.add("is-overflowing");
+                }
+            });
+        }
     },
 };
 </script>
@@ -193,12 +258,14 @@ export default {
     line-height: 35cqw;
     margin: 0;
     padding: 0;
+    flex-shrink: 0;
 }
 
 .info > div {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    flex: 1;
+    min-width: 0;
 }
 
 .info h3 {
@@ -211,6 +278,10 @@ export default {
     overflow: hidden;
 }
 
+.info h3.is-overflowing {
+    text-align: left;
+}
+
 .info h4 {
     margin: 0;
     text-align: right;
@@ -219,5 +290,15 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.info h4.is-overflowing {
+    text-align: left;
+}
+
+.marquee-text {
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
 }
 </style>

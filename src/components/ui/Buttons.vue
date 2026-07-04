@@ -1,18 +1,18 @@
 <template>
     <div id="Buttons" class="buttons" :class="{revealed: isRevealed}">
-        <button @click.stop="toggleWallpaperGallery" class="button" title="Wallpaper gallery">
+        <button @click.stop="toggleWallpaperGallery" class="button" :title="$t('buttons.wallpaperGallery')">
             <Svg :class_name="'material-icons-outlined'" :name="'image'"></Svg>
         </button>
 
-        <button @click="toggleSharePopup" class="button" title="Share this style!">
+        <button @click="toggleSharePopup" class="button" :title="$t('buttons.shareStyle')">
             <Svg :class_name="'material-icons-outlined'" :name="'share'"></Svg>
         </button>
 
-        <button @click="toggleEditArea" class="button" title="Edit layout">
+        <button @click="toggleEditArea" class="button" :title="$t('buttons.editLayout')">
             <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
         </button>
 
-        <button @click="toggleSidebar" class="button" title="Open settings">
+        <button @click="toggleSidebar" class="button" :title="$t('buttons.openSettings')">
             <Svg :class_name="'material-icons-outlined'" :name="'settings'"></Svg>
         </button>
     </div>

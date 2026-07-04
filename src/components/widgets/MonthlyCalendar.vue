@@ -30,20 +30,31 @@
 
 <script>
 import Widget from './Widget.vue';
+import { useSettingsStore } from "@/settings";
 
 export default {
     name: "MonthlyCalendar",
     components: {
         Widget,
     },
+    setup() {
+        const settingsStore = useSettingsStore();
+        return { settingsStore };
+    },
     data() {
         return {
             currentDate: new Date(),
             viewDate: new Date(),
-            weekDays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
         };
     },
     computed: {
+        weekDays() {
+            const locale = this.settingsStore.language || "en";
+            if (locale === "ru") {
+                return ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            }
+            return ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+        },
         currentMonth() {
             return this.viewDate.getMonth();
         },
@@ -51,7 +62,12 @@ export default {
             return this.viewDate.getFullYear();
         },
         monthName() {
-            return this.viewDate.toLocaleString('default', { month: 'long' });
+            const locale = this.settingsStore.language || "en";
+            let name = this.viewDate.toLocaleString(locale, { month: 'long' });
+            if (name) {
+                name = name.charAt(0).toUpperCase() + name.slice(1);
+            }
+            return name;
         },
         daysInCurrentMonth() {
             const days = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
