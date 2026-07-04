@@ -1,5 +1,5 @@
 <template>
-	<h2 class="page-title">Widgets</h2>
+	<h2 class="page-title">{{ $t('widgets.title') }}</h2>
 	<div class="widget-grid">
 		<div
 			v-for="(widget, index) in settingsStore.widgets"
@@ -82,6 +82,11 @@ export default {
             this.settingsStore.setWidgets(this.settingsStore.widgets);
         },
         formatWidgetName(name) {
+            const key = `widgets.${name}`;
+            const translated = this.$t(key);
+            if (translated !== key) {
+                return translated;
+            }
             return name.replace(/([A-Z])/g, " $1").trim();
         },
 	},

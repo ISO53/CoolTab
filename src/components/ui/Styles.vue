@@ -1,10 +1,10 @@
 <template>
     <div class="styles-container">
         <div class="styles-top-bar">
-            <h2 class="page-title">My Styles</h2>
-            <button class="save-btn" @click="saveCurrentStyle" title="Save current style">
+            <h2 class="page-title">{{ $t('styles.myStyles') }}</h2>
+            <button class="save-btn" @click="saveCurrentStyle" :title="$t('styles.saveCurrentTooltip')">
                 <i class="material-icons-outlined">save</i>
-                Save Current Style
+                {{ $t('styles.saveCurrentButton') }}
             </button>
         </div>
 
@@ -22,8 +22,8 @@
             </div>
             <div v-if="!this.settingsStore.userStyles.length" class="no-styles">
                 <i class="material-icons-outlined">style</i>
-                <p>No styles saved yet.</p>
-                <p class="hint">Save your current look or browse Community Styles.</p>
+                <p>{{ $t('styles.noStylesSaved') }}</p>
+                <p class="hint">{{ $t('styles.saveLookOrBrowseHint') }}</p>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@ export default {
     },
     methods: {
         saveCurrentStyle() {
-            const name = prompt("Name for your style:");
+            const name = prompt(this.$t("styles.namePrompt"));
             if (!name) return;
             this.settingsStore.createStyle(name);
         },
@@ -53,7 +53,7 @@ export default {
             this.settingsStore.applyStyle(styleId);
         },
         deleteStyle(styleId) {
-            if (confirm("Are you sure you want to delete this style?")) {
+            if (confirm(this.$t("styles.deleteConfirm"))) {
                 this.settingsStore.deleteStyle(styleId);
             }
         },

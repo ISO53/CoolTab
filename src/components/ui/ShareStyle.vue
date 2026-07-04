@@ -3,18 +3,18 @@
         <Transition name="overlay">
             <div v-if="isOpen" class="overlay" @click="toggleShareStyle">
                 <div v-if="isOpen" class="share-style-div" @click.stop>
-                    <h1>Share Your Style</h1>
-                    <p class="subtitle">Share your custom style with the CoolTab community</p>
+                    <h1>{{ $t('share.title') }}</h1>
+                    <p class="subtitle">{{ $t('share.subtitle') }}</p>
                     <br />
 
                     <form @submit.prevent="handleSubmit" class="share-form">
                         <div class="form-group">
-                            <label for="styleName">Style Name</label>
+                            <label for="styleName">{{ $t('share.styleName') }}</label>
                             <input
                                 type="text"
                                 id="styleName"
                                 v-model="styleName"
-                                placeholder="Enter a unique style name"
+                                :placeholder="$t('share.styleNamePlaceholder')"
                                 required
                                 maxlength="50"
                                 :disabled="isMessageShown || isRateLimited"
@@ -22,11 +22,11 @@
                         </div>
 
                         <p v-if="isMessageShown" class="subtitle success-message">
-                            Success! Your style will be shared on
+                            {{ $t('share.successPrefix') }}
                             <a href="https://iso53.github.io/CoolTab/#/style" target="_blank" rel="noopener noreferrer"
-                                >CoolTab Community Styles</a
+                                >{{ $t('share.successLinkText') }}</a
                             >
-                            in a couple of days after review.
+                            {{ $t('share.successSuffix') }}
                         </p>
 
                         <p v-if="errorMessage" :class="{ 'rate-limit-message': isRateLimited }">
@@ -40,7 +40,7 @@
 								@click="toggleShareStyle"
 								:disabled="isMessageShown"
 							>
-								Cancel
+								{{ $t('share.cancel') }}
 							</button>
 							<button
 								type="submit"
@@ -49,7 +49,7 @@
 									isMessageShown || isRateLimited || isLoading
 								"
 							>
-								{{ isLoading ? "Sharing..." : "Share Style" }}
+								{{ isLoading ? $t('share.sharing') : $t('share.submit') }}
 							</button>
 						</div>
 					</form>
@@ -101,7 +101,7 @@ export default {
 
             if (this.isOpen && this.checkRateLimit()) {
                 this.isRateLimited = true;
-                this.errorMessage = "You can only share 1 style per day. Please try again tomorrow.";
+                this.errorMessage = this.$t("share.rateLimitError");
             }
         },
         async handleSubmit() {
@@ -109,7 +109,7 @@ export default {
 
             if (this.checkRateLimit()) {
                 this.isRateLimited = true;
-                this.errorMessage = "You can only share 1 style per day. Please try again tomorrow.";
+                this.errorMessage = this.$t("share.rateLimitError");
                 return;
             }
 
@@ -126,7 +126,7 @@ export default {
                     this.errorMessage = "";
                 } else if (result.isRateLimit) {
                     this.isRateLimited = true;
-                    this.errorMessage = "You can only share 1 style per day. Please try again tomorrow.";
+                    this.errorMessage = this.$t("share.rateLimitError");
                 } else {
                     this.isRateLimited = false;
                     this.errorMessage = result.error || "Unknown error";

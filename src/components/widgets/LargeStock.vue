@@ -18,7 +18,7 @@
 
                     <div v-else class="loading-container">
                         <h1 class="ticker">{{ currentTickerDisplay }}</h1>
-                        <p class="loading-text">Loading data...</p>
+                        <p class="loading-text">{{ $t('stocks.loading') }}</p>
                     </div>
                 </div>
 
@@ -355,32 +355,35 @@ export default {
             }));
         },
         formatPrice(price) {
-            return new Intl.NumberFormat("en-US", {
+            const locale = this.settingsStore.language === "ru" ? "ru-RU" : "en-US";
+            return new Intl.NumberFormat(locale, {
                 style: "currency",
                 currency: this.currentData?.meta?.currency || "USD",
             }).format(price);
         },
         formatAxisDate(timestamp) {
             const date = new Date(timestamp * 1000);
+            const locale = this.settingsStore.language || "en";
             if (this.selectedRange === "1D") {
-                return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+                return date.toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" });
             }
             if (this.selectedRange === "5D" || this.selectedRange === "1M") {
-                return date.toLocaleDateString([], { month: "short", day: "numeric" });
+                return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
             }
-            return date.toLocaleDateString([], { month: "short", year: "2-digit" });
+            return date.toLocaleDateString(locale, { month: "short", year: "2-digit" });
         },
         formatHoverDate(timestamp) {
             const date = new Date(timestamp * 1000);
+            const locale = this.settingsStore.language || "en";
             if (this.selectedRange === "1D") {
-                return date.toLocaleString([], {
+                return date.toLocaleString(locale, {
                     month: "short",
                     day: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
                 });
             }
-            return date.toLocaleDateString([], {
+            return date.toLocaleDateString(locale, {
                 month: "short",
                 day: "numeric",
                 year: "numeric",

@@ -3,9 +3,9 @@
         <div class="location-widget">
             <!-- Location Info -->
             <div class="location-info">
-                <p class="city-info">{{ city }}</p>
+                <p class="city-info">{{ $tData('geo', city) }}</p>
 		        <p>{{ lat }}° {{ lon }}°</p>
-           		<p>{{ Number(lat) >= 0 ? "Northern" : "Southern" }} Hemisphere</p>
+           		<p>{{ Number(lat) >= 0 ? $t('location.northern_hemisphere') : $t('location.southern_hemisphere') }}</p>
                 <p>IPv4: {{ ip }}</p>
             </div>
 
@@ -208,8 +208,18 @@ export default {
             const wrap = this.$refs.globeWrap;
             if (!wrap) return;
 
-            this.resizeObserver = new ResizeObserver(() => {
-                this.rebuildGlobe();
+            let lastWidth = wrap.offsetWidth;
+            let lastHeight = wrap.offsetHeight;
+
+            this.resizeObserver = new ResizeObserver((entries) => {
+                for (let entry of entries) {
+                    const { width, height } = entry.contentRect;
+                    if (Math.round(width) !== Math.round(lastWidth) || Math.round(height) !== Math.round(lastHeight)) {
+                        lastWidth = width;
+                        lastHeight = height;
+                        this.rebuildGlobe();
+                    }
+                }
             });
             this.resizeObserver.observe(wrap);
         },

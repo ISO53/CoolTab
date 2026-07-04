@@ -17,54 +17,43 @@
 
 <script>
 import Widget from './Widget.vue';
+import { useSettingsStore } from "@/settings";
 
 export default {
     name: "Calendar",
     components: {
         Widget,
     },
-    data() {
-        return {
-            date: {
-                day: "",
-                month: "",
-                year: "",
-                day_name: "",
-                month_name: "",
-            },
-        };
+    setup() {
+        const settingsStore = useSettingsStore();
+        return { settingsStore };
     },
-    mounted() {
-        this.date = this.getCurrentDate();
-    },
-    methods: {
-        getCurrentDate() {
+    computed: {
+        date() {
             const date = new Date();
+            const locale = this.settingsStore.language || "en";
 
-            const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            const monthsOfYear = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ];
+            const dayFormatter = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+            let dayName = dayFormatter.format(date);
+            if (dayName) {
+                dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+            }
+
+            const monthFormatter = new Intl.DateTimeFormat(locale, { month: 'long' });
+            let monthName = monthFormatter.format(date);
+            if (monthName) {
+                monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+            }
+
             return {
                 day: date.getDate(),
                 month: date.getMonth() + 1,
                 year: date.getFullYear(),
-                day_name: daysOfWeek[date.getDay()],
-                month_name: monthsOfYear[date.getMonth()],
+                day_name: dayName,
+                month_name: monthName,
             };
-        },
-    },
+        }
+    }
 };
 </script>
 

@@ -21,6 +21,20 @@ export default {
         },
     },
     inject: ["registerTab"],
+    watch: {
+        label(newVal, oldVal) {
+            const parent = this.$parent;
+            if (parent && parent.registeredTabs) {
+                const tab = parent.registeredTabs.find(t => t.label === oldVal);
+                if (tab) {
+                    tab.label = newVal;
+                }
+                if (parent.selectedTabLabel === oldVal) {
+                    parent.selectedTabLabel = newVal;
+                }
+            }
+        }
+    },
     mounted() {
         this.registerTab({ label: this.label, icon: this.icon });
     },

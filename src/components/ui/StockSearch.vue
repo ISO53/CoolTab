@@ -6,12 +6,12 @@
                 type="text"
                 v-model="inputValue"
                 @input="debouncedSearch"
-                :placeholder="isOpen ? 'Search ticker...' : modelValue.length + ' stocks selected.'"
+                :placeholder="isOpen ? $t('stocks.searchPlaceholder') : $t('stocks.selectedCount', { count: modelValue.length })"
                 @click.stop="openDropdown"
             />
             <ul v-if="isOpen" class="dropdown-options" @click.stop>
                 <template v-if="inputValue && isSearching">
-                    <li class="dropdown-option"><p class="loading">Searching...</p></li>
+                    <li class="dropdown-option"><p class="loading">{{ $t('stocks.searching') }}</p></li>
                 </template>
                 <template v-else-if="inputValue && searchResults.length">
                     <li
@@ -28,17 +28,17 @@
                     </li>
                 </template>
                 <template v-else-if="inputValue">
-                    <li class="dropdown-option"><p class="loading">No results found.</p></li>
+                    <li class="dropdown-option"><p class="loading">{{ $t('stocks.noResults') }}</p></li>
                 </template>
                 <template v-else>
                     <li v-for="(value, index) in modelValue" :key="'sel-' + index" class="dropdown-option">
                         <p>{{ value }}</p>
                         <button @click="removeValue(index)" class="delete-button">
-                            <i class="material-icons-outlined">close</i>
+                             <i class="material-icons-outlined">close</i>
                         </button>
                     </li>
                     <li v-if="!modelValue.length" class="dropdown-option">
-                        <p class="loading">No stocks selected.</p>
+                        <p class="loading">{{ $t('stocks.noneSelected') }}</p>
                     </li>
                 </template>
             </ul>

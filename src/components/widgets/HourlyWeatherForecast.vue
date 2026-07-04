@@ -3,9 +3,9 @@
         <div class="hourly-weather">
             <div class="top-section">
                 <div class="city-info">
-                    <h1>{{ weather.city || "Loading..." }}</h1>
-                    <h2>AQI: {{ weather.air_quality?.aqi || 0 }}</h2>
-                    <h3>{{ weather.air_quality?.label || '...' }}</h3>
+                    <h1 :style="{ fontSize: $tData('geo', weather.city).length > 10 ? '9cqh' : '12cqh', lineHeight: $tData('geo', weather.city).length > 10 ? '9cqh' : '12cqh' }">{{ $tData('geo', weather.city) || $t('weather.loading') }}</h1>
+                    <h2>{{ $t('weather.aqi') }}: {{ weather.air_quality?.aqi || 0 }}</h2>
+                    <h3>{{ translateAqiLabel(weather.air_quality?.label) }}</h3>
                 </div>
 
                 <div class="top-controls">
@@ -15,7 +15,7 @@
                         @mouseenter="activeMetric = 'temp'"
                     >
                         <i class="material-icons-outlined">thermostat</i>
-                        <span>Temp</span>
+                        <span>{{ $t('weather.temp') }}</span>
                     </button>
                     <button
                         class="ctrl-btn"
@@ -23,7 +23,7 @@
                         @mouseenter="activeMetric = 'rain'"
                     >
                         <i class="material-icons-outlined">water_drop</i>
-                        <span>Rain</span>
+                        <span>{{ $t('weather.rain') }}</span>
                     </button>
                     <button
                         class="ctrl-btn"
@@ -31,7 +31,7 @@
                         @mouseenter="activeMetric = 'wind'"
                     >
                         <i class="material-icons-outlined">air</i>
-                        <span>Wind</span>
+                        <span>{{ $t('weather.wind') }}</span>
                     </button>
                 </div>
             </div>
@@ -229,6 +229,12 @@ export default {
                 clearInterval(this.metricRotationInterval);
                 this.metricRotationInterval = null;
             }
+        },
+        translateAqiLabel(label) {
+            if (!label) return '...';
+            const key = `weather.aqi_${label.toLowerCase().replace(/\s+/g, '_')}`;
+            const translated = this.$t(key);
+            return translated !== key ? translated : label;
         },
     },
 };
