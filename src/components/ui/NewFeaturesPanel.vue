@@ -8,8 +8,8 @@
         >
             <div class="toast-content">
                 <span class="toast-text">
-                    CoolTab has been successfully updated!
-                    <a href="https://iso53.github.io/CoolTab/#/releases" target="_blank" class="changes-link" @click="dismiss">See changes</a>
+                    {{ $t('update.toastText') }}
+                    <a href="https://iso53.github.io/CoolTab/#/releases" target="_blank" class="changes-link" @click="dismiss">{{ $t('update.seeChanges') }}</a>
                 </span>
             </div>
         </div>

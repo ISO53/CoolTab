@@ -1,6 +1,6 @@
 <template>
     <div class="dropdown-select" @click="toggleDropdown" v-click-outside="closeDropdown">
-        <div>{{ modelValue || "Select an Option" }}</div>
+        <div>{{ $t('options.' + modelValue) !== 'options.' + modelValue ? $t('options.' + modelValue) : (modelValue || "Select an Option") }}</div>
 
         <ul v-if="isOpen" class="dropdown-options">
             <li
@@ -12,7 +12,7 @@
                 "
                 class="dropdown-option"
             >
-                {{ value }}
+                {{ $t('options.' + value) !== 'options.' + value ? $t('options.' + value) : value }}
             </li>
         </ul>
 

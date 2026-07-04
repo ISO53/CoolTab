@@ -1,9 +1,9 @@
 <template>
 	<div style="display: flex; flex-direction: column; gap: 10px">
-		<h2 class="page-title">Customization</h2>
+		<h2 class="page-title">{{ $t('customization.title') }}</h2>
 
 		<div class="setting">
-			<h2>Theme</h2>
+			<h2>{{ $t('customization.theme') }}</h2>
 			<SelectButton
 				v-model="theme"
 				:options="['Light', 'Dark']"

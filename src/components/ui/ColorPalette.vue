@@ -1,8 +1,8 @@
 <template>
 	<div class="palette-info">
 		<Svg :class_name="'material-icons-outlined'" :name="'info'"></Svg>
-		<h2 v-if="this.theme === 'Dark'">Dark themes are best suited for dark colored wallpapers.</h2>
-		<h2 v-else>Light themes are best suited for light colored wallpapers.</h2>
+		<h2 v-if="this.theme === 'Dark'">{{ $t('customization.darkThemeHint') }}</h2>
+		<h2 v-else>{{ $t('customization.lightThemeHint') }}</h2>
 	</div>
 
 	<div class="color-palette">
@@ -17,7 +17,7 @@
 					<span :style="{ backgroundColor: palette.color_tertiary_background }"></span>
 					<span :style="{ backgroundColor: palette.color_border_line }"></span>
 				</div>
-				<h2>{{ palette.name }}</h2>
+				<h2>{{ $t('options.' + palette.name) !== 'options.' + palette.name ? $t('options.' + palette.name) : palette.name }}</h2>
 			</div>
 		</div>
 	</div>
