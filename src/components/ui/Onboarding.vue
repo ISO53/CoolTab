@@ -2,15 +2,13 @@
 	<Teleport to="body">
 		<Transition name="onboarding">
 			<div v-if="this.settingsStore.onboarding === 'Enabled'" class="onboarding">
-				<h1>Welcome to CoolTab!</h1>
+				<h1>{{ $t('onboarding.welcomeTitle') }}</h1>
 				<p>
-					Click below to explore the core features and customization
-					options of CoolTab. You can also relaunch this guided tour
-					at any time from the sidebar.
+					{{ $t('onboarding.welcomeDesc') }}
 				</p>
 				<div class="buttons">
-					<button class="button secondary" @click="skipOnboarding">Skip</button>
-					<button class="button primary" @click="startOnboarding">Get Started</button>
+					<button class="button secondary" @click="skipOnboarding">{{ $t('onboarding.skip') }}</button>
+					<button class="button primary" @click="startOnboarding">{{ $t('onboarding.getStarted') }}</button>
 				</div>
 			</div>
 		</Transition>

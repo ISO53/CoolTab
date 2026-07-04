@@ -1,5 +1,5 @@
 <template>
-    <div class="app">
+    <div :class="['app', 'scroll-mode-' + (settingsStore.scrollMode || 'Always').toLowerCase()]">
         <Background />
         <Sidebar ref="sidebarRef" />
         <NewFeaturesPanel />

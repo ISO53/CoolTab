@@ -3,7 +3,7 @@
         <input id="file-input" type="file" accept="image/*" @change="handleFileChange" hidden />
 
         <label for="file-input">
-            <p class="file-text" v-if="!settingsStore.backgroundImageFileName">Choose Your Image</p>
+            <p class="file-text" v-if="!settingsStore.backgroundImageFileName">{{ $t('settings.chooseImage') }}</p>
             <p class="filename" v-if="settingsStore.backgroundImageFileName">
                 {{ settingsStore.backgroundImageFileName }}
             </p>

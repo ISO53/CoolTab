@@ -4,7 +4,7 @@
             class="form-input"
             type="text"
             v-model="inputValue"
-            :placeholder="isOpen ? 'Enter ' + text + ' here...' : modelValue.length + ' ' + text + 's selected.'"
+            :placeholder="placeholderText"
             @keyup.enter="addValue"
             @click.stop="openDropdown"
         />
@@ -43,6 +43,21 @@ export default {
             isOpen: false,
             inputValue: "",
         };
+    },
+    computed: {
+        placeholderText() {
+            const count = this.modelValue.length;
+            if (this.isOpen) {
+                const enterKey = `dropdownList.enter_${this.text}`;
+                return this.$t(enterKey) !== enterKey ? this.$t(enterKey) : `Enter ${this.text} here...`;
+            } else {
+                const selectedKey = `dropdownList.selected_${this.text}`;
+                if (this.$t(selectedKey) !== selectedKey) {
+                    return this.$t(selectedKey, { count });
+                }
+                return `${count} ${this.text}s selected.`;
+            }
+        }
     },
     methods: {
         toggleDropdown() {

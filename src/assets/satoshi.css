@@ -122,3 +122,53 @@
   font-style: italic;
 }
 
+/* Cyrillic subset fallbacks mapped to Satoshi family names */
+@font-face {
+  font-family: 'Satoshi-Light';
+  src: url('@/assets/fonts/Inter-Cyrillic-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0400-04FF, U+0500-052F;
+}
+@font-face {
+  font-family: 'Satoshi-Regular';
+  src: url('@/assets/fonts/Inter-Cyrillic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0400-04FF, U+0500-052F;
+}
+@font-face {
+  font-family: 'Satoshi-Medium';
+  src: url('@/assets/fonts/Inter-Cyrillic-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0400-04FF, U+0500-052F;
+}
+@font-face {
+  font-family: 'Satoshi-Bold';
+  src: url('@/assets/fonts/Inter-Cyrillic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0400-04FF, U+0500-052F;
+}
+@font-face {
+  font-family: 'Satoshi-Black';
+  src: url('@/assets/fonts/Inter-Cyrillic-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0400-04FF, U+0500-052F;
+}
+@font-face {
+  font-family: 'Satoshi-Variable';
+  src: url('@/assets/fonts/Inter-Cyrillic-Regular.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0400-04FF, U+0500-052F;
+}
+
