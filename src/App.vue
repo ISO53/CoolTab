@@ -69,6 +69,7 @@ export default {
         return {settingsStore};
     },
     beforeMount() {
+        this.settingsStore.runOneTimeMigration();
         this.updateCSSVariables();
         this.settingsStore.loadBackgroundImage();
     },

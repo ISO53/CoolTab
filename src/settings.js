@@ -33,7 +33,10 @@ export const useSettingsStore = defineStore("settings", {
         rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
 		location: getLocation(),
 		onboarding: localStorage.getItem("onboarding") || "Enabled",
-        timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
+		timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
+
+		// Remove this when all users have migrated to 1.17.11
+        isDeletedSomeFieldsForMigration: localStorage.getItem("is-deleted-some-fields-for-migration") === "true",
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -156,6 +159,15 @@ export const useSettingsStore = defineStore("settings", {
             this.setSavedVersion(this.currentVersion);
             this.showUpdatePopup = false;
         },
+		runOneTimeMigration() {
+			// If the fields already deleted, don't do anything
+	        if (localStorage.getItem("is-deleted-some-fields-for-migration") === "true") return;
+
+			localStorage.removeItem("weather-info");
+
+			// Mark that the migration has been run
+			localStorage.setItem("is-deleted-some-fields-for-migration", true);
+		},
         async checkVersionOnStart() {
             // Compare savedVersion and currentVersion; if current > saved, show popup
             try {
@@ -424,18 +436,25 @@ function compareVersions(a, b) {
 }
 
 /**
- * @returns {{sunrise: String, sunset: String, temperature: String, country: String, city: String, lastUpdated: Date}}
+ * @returns {{sunrise_epoch: Number|String, sunset_epoch: Number|String, temperature: String, country: String, city: String, lastUpdated: Date}}
  */
-function getCurrentWeatherInfo() {
-    const info = localStorage.getItem("weather-info");
-    const def = {
-        sunrise: "",
-        sunset: "",
+function getDefaultCurrentWeatherInfo() {
+    return {
+        sunrise_epoch: "",
+        sunset_epoch: "",
         temperature: "",
         country: "",
         city: "",
         lastUpdated: null,
     };
+}
+
+/**
+ * @returns {{sunrise_epoch: Number|String, sunset_epoch: Number|String, temperature: String, country: String, city: String, lastUpdated: Date}}
+ */
+function getCurrentWeatherInfo() {
+    const info = localStorage.getItem("weather-info");
+    const def = getDefaultCurrentWeatherInfo();
 
     let parsed = null;
     if (info) {
