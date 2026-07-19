@@ -99,7 +99,7 @@ export default {
                     const data = await response.json();
                     this.weather.sunrise = data.sunrise;
                     this.weather.sunset = data.sunset;
-                    this.weather.temperature = data.temp_c + "°";
+                    this.weather.temperature = `${data.temp_c}°`;
                     this.weather.country = data.country;
                     this.weather.city = data.city;
                     this.weather.lastUpdated = new Date().toISOString();
