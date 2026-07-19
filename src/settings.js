@@ -32,7 +32,8 @@ export const useSettingsStore = defineStore("settings", {
         largeStockRange: localStorage.getItem("large-stock-range") || "1D",
         rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
 		location: getLocation(),
-        onboarding: localStorage.getItem("onboarding") || "Enabled",
+		onboarding: localStorage.getItem("onboarding") || "Enabled",
+        timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -364,8 +365,25 @@ export const useSettingsStore = defineStore("settings", {
 			this.onboarding = onboarding;
 			storeInLocalStorage("onboarding", onboarding);
 		},
+		setTimeFormat(format) {
+			this.timeFormat = format;
+			storeInLocalStorage("time-format", format);
+		},
     },
 });
+
+/**
+ * Returns the default time format based on the user's locale
+ * @returns {String} "12h" or "24h"
+ */
+function getDefaultTimeFormat() {
+	const options = new Intl.DateTimeFormat(navigator.language, {
+		hour: "numeric",
+	}).resolvedOptions();
+
+	// hourCycle: 'h11' or 'h12' → 12-hour; 'h23' or 'h24' → 24-hour
+	return options.hourCycle === "h11" || options.hourCycle === "h12" ? "12h" : "24h";
+};
 
 /**
  * Removes the item if the value is null, sets it otherwise

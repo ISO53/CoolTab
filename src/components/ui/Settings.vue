@@ -162,6 +162,17 @@
 				:onSelect="setRememberWallpaperPage"
 			/>
 		</div>
+
+		<span class="divider"></span>
+
+		<div>
+			<h2>Time Format</h2>
+			<SelectButton
+				v-model="settingsStore.timeFormat"
+				:options="['12h', '24h']"
+				:onSelect="setTimeFormat"
+			/>
+		</div>
 	</div>
 
 	<StockGuidePopup :show="showStockGuide" @close="showStockGuide = false" />
@@ -257,6 +268,9 @@ export default {
         },
         setRememberWallpaperPage(choice) {
             this.settingsStore.setRememberWallpaperPage(choice);
+		},
+        setTimeFormat(format) {
+            this.settingsStore.setTimeFormat(format);
         },
 	},
 };
