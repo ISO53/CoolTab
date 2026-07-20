@@ -164,6 +164,7 @@ export const useSettingsStore = defineStore("settings", {
 	        if (localStorage.getItem("is-deleted-some-fields-for-migration") === "true") return;
 
 			localStorage.removeItem("weather-info");
+			localStorage.removeItem("hourly-weather-info");
 
 			// Mark that the migration has been run
 			localStorage.setItem("is-deleted-some-fields-for-migration", true);
@@ -737,7 +738,7 @@ function getWeeklyWeatherInfo() {
  *
  * @returns {{
  *   city: String,
- *   hours: Array<{time: String, temp: Number, rain: Number, wind: Number}>,
+ *   hours: Array<{time_epoch: Number, temp: Number, rain: Number, wind: Number}>,
  *   air_quality: {aqi: Number, label: String},
  *   lastUpdated: Date
  * }}
@@ -747,14 +748,14 @@ function getHourlyWeatherInfo() {
     const def = {
         city: "City",
         hours: [
-            { time: "00:00", temp: 20, rain: 0, wind: 10 },
-            { time: "01:00", temp: 20, rain: 0, wind: 10 },
-            { time: "02:00", temp: 20, rain: 0, wind: 10 },
-            { time: "03:00", temp: 20, rain: 0, wind: 10 },
-            { time: "04:00", temp: 20, rain: 0, wind: 10 },
-            { time: "05:00", temp: 20, rain: 0, wind: 10 },
-            { time: "06:00", temp: 20, rain: 0, wind: 10 },
-            { time: "07:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "00:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "01:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "02:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "03:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "04:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "05:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "06:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: "07:00", temp: 20, rain: 0, wind: 10 },
         ],
         air_quality: { aqi: 0, label: "Good" },
     };

@@ -32,7 +32,8 @@
 
 <script>
 import Widget from "./Widget.vue";
-import {useSettingsStore} from "@/settings";
+import { useSettingsStore } from "@/settings";
+import { formatEpochTime } from "@/utils/time";
 
 export default {
     name: "DailyWeatherForecast",
@@ -51,10 +52,10 @@ export default {
 	},
 	computed: {
 		sunriseDisplay() {
-	        return this.formatEpochTime(this.weather.sunrise_epoch, this.settingsStore.timeFormat === "12h");
+	        return formatEpochTime(this.weather.sunrise_epoch, this.settingsStore.timeFormat === "12h");
 	    },
 	    sunsetDisplay() {
-	        return this.formatEpochTime(this.weather.sunset_epoch, this.settingsStore.timeFormat === "12h");
+	        return formatEpochTime(this.weather.sunset_epoch, this.settingsStore.timeFormat === "12h");
 	    },
 	},
     mounted() {
@@ -80,15 +81,6 @@ export default {
         epochToMinutesSinceMidnight(epochMs) {
             const date = new Date(epochMs);
             return date.getHours() * 60 + date.getMinutes();
-		},
-		formatEpochTime(epochMs, is12h) {
-		    if (!epochMs) return "";
-
-		    return new Intl.DateTimeFormat(undefined, {
-		        hour: "numeric",
-		        minute: "2-digit",
-		        hour12: is12h,
-		    }).format(new Date(epochMs));
 		},
         async getCurrentWeatherInfo() {
             if (this.settingsStore.currentWeatherInfo?.lastUpdated) {

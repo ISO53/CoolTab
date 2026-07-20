@@ -84,6 +84,7 @@
 <script>
 import {useSettingsStore} from "@/settings";
 import Widget from "./Widget.vue";
+import {formatEpochTime} from "@/utils/time";
 
 export default {
     name: "HourlyWeatherForecast",
@@ -140,7 +141,7 @@ export default {
 
                 return {
                     x, tempY, windY, rainY,
-                    time: h.time,
+                    time: formatEpochTime(h.time_epoch, this.settingsStore.timeFormat === "12h"),
                     temp: Math.round(h.temp),
                     wind: Math.round(h.wind),
                     rain: h.rain.toFixed(1)
