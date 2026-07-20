@@ -149,6 +149,7 @@
 import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
 import { YAHOO_QUERY1_BASE, fetchYahoo } from "@/utils/api";
+import {formatEpochDateTime, formatEpochTime} from "@/utils/time";
 
 const RANGE_OPTIONS = [
     { label: "1D", range: "1d", interval: "1m" },
@@ -363,7 +364,7 @@ export default {
         formatAxisDate(timestamp) {
             const date = new Date(timestamp * 1000);
             if (this.selectedRange === "1D") {
-                return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+                return formatEpochTime(timestamp * 1000, this.settingsStore.timeFormat === "12h");
             }
             if (this.selectedRange === "5D" || this.selectedRange === "1M") {
                 return date.toLocaleDateString([], { month: "short", day: "numeric" });
@@ -373,12 +374,7 @@ export default {
         formatHoverDate(timestamp) {
             const date = new Date(timestamp * 1000);
             if (this.selectedRange === "1D") {
-                return date.toLocaleString([], {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                });
+                return formatEpochDateTime(timestamp * 1000, this.settingsStore.timeFormat === "12h");
             }
             return date.toLocaleDateString([], {
                 month: "short",
@@ -408,7 +404,7 @@ export default {
         },
         async fetchAllStockInfo() {
             const tickers = this.settingsStore.stock.tickers;
-            if (!tickers || !tickers.length) return;
+            if (!tickers?.length) return;
 
             const { range, interval } = this.currentRangeConfig;
 
@@ -416,7 +412,7 @@ export default {
                 try {
                     const data = await fetchYahoo(`${YAHOO_QUERY1_BASE}/v8/finance/chart/${encodeURIComponent(ticker)}?range=${range}&interval=${interval}`);
 
-                    if (data.chart && data.chart.result && data.chart.result.length > 0) {
+                    if (data?.chart?.result && data.chart.result.length > 0) {
                         const result = data.chart.result[0];
                         const meta = result.meta;
                         let rawPrices = result.indicators?.quote[0]?.close || [];
