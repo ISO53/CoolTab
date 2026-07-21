@@ -6,8 +6,8 @@
                     <Svg :class_name="weather.curr?.img || ''"></Svg>
                     <h1>{{ (weather.curr?.temperature ?? 0) + "°" }}</h1>
                     <div class="high-low">
-                        <h5>{{ "H " + (weather.curr?.high ?? 0) + "°" }}</h5>
-                        <h5>{{ "L " + (weather.curr?.low ?? 0) + "°" }}</h5>
+                        <h5>{{ "H " + (isFahrenheit ? weather.curr?.high_f : weather.curr?.high_c) + "°" }}</h5>
+                        <h5>{{ "L " + (isFahrenheit ? weather.curr?.low_f : weather.curr?.low_c) + "°" }}</h5>
                     </div>
                 </div>
                 <div class="city-and-weather">
@@ -19,8 +19,8 @@
                 <div class="day" v-for="(item, index) in weather.week" :key="index">
                     <h1>{{ item.date ? days[new Date(item.date).getDay()] : '' }}</h1>
                     <Svg :class_name="item.img || ''"></Svg>
-                    <h2>{{ item.high + "°" }}</h2>
-                    <h2>{{ item.low + "°" }}</h2>
+                    <h2>{{ (isFahrenheit ? item.high_f : item.high_c) + "°" }}</h2>
+                    <h2>{{ (isFahrenheit ? item.low_f : item.low_c) + "°" }}</h2>
                 </div>
             </div>
         </div>
@@ -46,6 +46,11 @@ export default {
             rotation: 0,
             days: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
         };
+    },
+    computed: {
+        isFahrenheit() {
+            return this.settingsStore.temperatureUnit === "Fahrenheit";
+        },
     },
     mounted() {
         this.getWeeklyWeatherInfo();

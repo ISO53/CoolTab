@@ -280,6 +280,9 @@ export default {
 		},
         setTimeFormat(format) {
             this.settingsStore.setTimeFormat(format);
+		},
+        setTemperatureUnit(unit) {
+            this.settingsStore.setTemperatureUnit(unit);
         },
 	},
 };
