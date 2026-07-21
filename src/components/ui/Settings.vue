@@ -173,6 +173,15 @@
 				:onSelect="setTimeFormat"
 			/>
 		</div>
+
+		<div>
+			<h2>Temperature Unit</h2>
+			<SelectButton
+				v-model="settingsStore.temperatureUnit"
+				:options="['Celsius', 'Fahrenheit']"
+				:onSelect="setTemperatureUnit"
+			/>
+		</div>
 	</div>
 
 	<StockGuidePopup :show="showStockGuide" @close="showStockGuide = false" />

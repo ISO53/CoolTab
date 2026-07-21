@@ -34,6 +34,7 @@ export const useSettingsStore = defineStore("settings", {
 		location: getLocation(),
 		onboarding: localStorage.getItem("onboarding") || "Enabled",
 		timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
+		temperatureUnit: localStorage.getItem("temperature-unit") || "Celsius",
 
 		// Remove this when all users have migrated to 1.17.11
         isDeletedSomeFieldsForMigration: localStorage.getItem("is-deleted-some-fields-for-migration") === "true",
@@ -381,6 +382,10 @@ export const useSettingsStore = defineStore("settings", {
 		setTimeFormat(format) {
 			this.timeFormat = format;
 			storeInLocalStorage("time-format", format);
+		},
+		setTemperatureUnit(unit) {
+			this.temperatureUnit = unit;
+			storeInLocalStorage("temperature-unit", unit);
 		},
     },
 });
