@@ -19,7 +19,12 @@
                     <h2>{{ sunriseDisplay }}</h2>
                 </div>
                 <div class="info">
-                    <h1>{{ weather.temperature }}</h1>
+                    <h1>{{
+						this.settingsStore.temperatureUnit === "Fahrenheit" ?
+						weather.temperature_f :
+						weather.temperature_c
+					}}
+                    </h1>
                     <div>
                         <h4>{{ weather.country }}</h4>
                         <h3>{{ weather.city }}</h3>
@@ -98,7 +103,8 @@ export default {
                     const data = await response.json();
                     this.weather.sunrise_epoch = data.sunrise_epoch;
                     this.weather.sunset_epoch = data.sunset_epoch;
-                    this.weather.temperature = `${data.temp_c}°`;
+					this.weather.temperature_f = `${data.temp_f}°`;
+                    this.weather.temperature_c = `${data.temp_c}°`;
                     this.weather.country = data.country;
                     this.weather.city = data.city;
                     this.weather.lastUpdated = new Date().toISOString();

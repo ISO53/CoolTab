@@ -167,6 +167,7 @@ export const useSettingsStore = defineStore("settings", {
 			localStorage.removeItem("weather-info");
 			localStorage.removeItem("hourly-weather-info");
 			localStorage.removeItem("weekly-weather-info");
+			localStorage.removeItem("weather-info");
 
 			// Mark that the migration has been run
 			localStorage.setItem("is-deleted-some-fields-for-migration", true);
