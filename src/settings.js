@@ -753,14 +753,14 @@ function getHourlyWeatherInfo() {
     const def = {
         city: "City",
         hours: [
-            { time_epoch: "00:00", temp: 20, rain: 0, wind: 10 },
-            { time_epoch: "01:00", temp: 20, rain: 0, wind: 10 },
-            { time_epoch: "02:00", temp: 20, rain: 0, wind: 10 },
-            { time_epoch: "03:00", temp: 20, rain: 0, wind: 10 },
-            { time_epoch: "04:00", temp: 20, rain: 0, wind: 10 },
-            { time_epoch: "05:00", temp: 20, rain: 0, wind: 10 },
-            { time_epoch: "06:00", temp: 20, rain: 0, wind: 10 },
-            { time_epoch: "07:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784640256, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784636656, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784633056, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784629456, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784625856, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784622256, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784618656, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784615056, temp: 20, rain: 0, wind: 10 },
         ],
         air_quality: { aqi: 0, label: "Good" },
     };
