@@ -32,7 +32,14 @@ export const useSettingsStore = defineStore("settings", {
         largeStockRange: localStorage.getItem("large-stock-range") || "1D",
         rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
 		location: getLocation(),
-        onboarding: localStorage.getItem("onboarding") || "Enabled",
+		onboarding: localStorage.getItem("onboarding") || "Enabled",
+		timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
+		temperatureUnit: localStorage.getItem("temperature-unit") || "Celsius",
+		rainUnit: localStorage.getItem("rain-unit") || "mm",
+		windUnit: localStorage.getItem("wind-unit") || "kmh",
+
+		// Remove this when all users have migrated to 1.17.11
+        isDeletedSomeFieldsForMigration: localStorage.getItem("is-deleted-some-fields-for-migration") === "true",
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
@@ -364,8 +371,37 @@ export const useSettingsStore = defineStore("settings", {
 			this.onboarding = onboarding;
 			storeInLocalStorage("onboarding", onboarding);
 		},
+		setTimeFormat(format) {
+			this.timeFormat = format;
+			storeInLocalStorage("time-format", format);
+		},
+		setTemperatureUnit(unit) {
+			this.temperatureUnit = unit;
+			storeInLocalStorage("temperature-unit", unit);
+		},
+		setRainUnit(unit) {
+			this.rainUnit = unit;
+			storeInLocalStorage("rain-unit", unit);
+		},
+		setWindUnit(unit) {
+			this.windUnit = unit;
+			storeInLocalStorage("wind-unit", unit);
+		},
     },
 });
+
+/**
+ * Returns the default time format based on the user's locale
+ * @returns {String} "12h" or "24h"
+ */
+function getDefaultTimeFormat() {
+	const options = new Intl.DateTimeFormat(navigator.language, {
+		hour: "numeric",
+	}).resolvedOptions();
+
+	// hourCycle: 'h11' or 'h12' → 12-hour; 'h23' or 'h24' → 24-hour
+	return options.hourCycle === "h11" || options.hourCycle === "h12" ? "12h" : "24h";
+};
 
 /**
  * Removes the item if the value is null, sets it otherwise
@@ -406,18 +442,25 @@ function compareVersions(a, b) {
 }
 
 /**
- * @returns {{sunrise: String, sunset: String, temperature: String, country: String, city: String, lastUpdated: Date}}
+ * @returns {{sunrise_epoch: Number|String, sunset_epoch: Number|String, temperature: String, country: String, city: String, lastUpdated: Date}}
  */
-function getCurrentWeatherInfo() {
-    const info = localStorage.getItem("weather-info");
-    const def = {
-        sunrise: "",
-        sunset: "",
+function getDefaultCurrentWeatherInfo() {
+    return {
+        sunrise_epoch: "",
+        sunset_epoch: "",
         temperature: "",
         country: "",
         city: "",
         lastUpdated: null,
     };
+}
+
+/**
+ * @returns {{sunrise_epoch: Number|String, sunset_epoch: Number|String, temperature: String, country: String, city: String, lastUpdated: Date}}
+ */
+function getCurrentWeatherInfo() {
+    const info = localStorage.getItem("weather-info");
+    const def = getDefaultCurrentWeatherInfo();
 
     let parsed = null;
     if (info) {
@@ -655,7 +698,7 @@ function getWidgets() {
  *
  * @returns {{
  *   curr: {img: String, temperature: Number, high: Number, low: Number, city: String, weather: String},
- *   week: Array<{date: String, img: String, high: Number, low: Number}>,
+ *   week: Array<{date: String, img: String, high_c: Number, low_c: Number, high_f: Number, low_f: Number}>,
  *   lastUpdated: Date
  * }} An object containing current weather information and a weekly forecast.
  **/
@@ -671,13 +714,13 @@ function getWeeklyWeatherInfo() {
             weather: "Weather",
         },
         week: [
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
-            {date: "", img: "", high: 25, low: 15},
+            {date: "", img: "", high_c: 25, low_c: 15, high_f: 77, low_f: 59},
+            {date: "", img: "", high_c: 25, low_c: 15, high_f: 77, low_f: 59},
+            {date: "", img: "", high_c: 25, low_c: 15, high_f: 77, low_f: 59},
+            {date: "", img: "", high_c: 25, low_c: 15, high_f: 77, low_f: 59},
+            {date: "", img: "", high_c: 25, low_c: 15, high_f: 77, low_f: 59},
+            {date: "", img: "", high_c: 25, low_c: 15, high_f: 77, low_f: 59},
+            {date: "", img: "", high_c: 25, low_c: 15, high_f: 77, low_f: 59},
         ],
     };
 
@@ -700,7 +743,7 @@ function getWeeklyWeatherInfo() {
  *
  * @returns {{
  *   city: String,
- *   hours: Array<{time: String, temp: Number, rain: Number, wind: Number}>,
+ *   hours: Array<{time_epoch: Number, temp_c: Number, temp_f: Number, rain_mm: Number, rain_inch: Number, wind_kmh: Number, wind_mph: Number}>,
  *   air_quality: {aqi: Number, label: String},
  *   lastUpdated: Date
  * }}
@@ -710,14 +753,14 @@ function getHourlyWeatherInfo() {
     const def = {
         city: "City",
         hours: [
-            { time: "00:00", temp: 20, rain: 0, wind: 10 },
-            { time: "01:00", temp: 20, rain: 0, wind: 10 },
-            { time: "02:00", temp: 20, rain: 0, wind: 10 },
-            { time: "03:00", temp: 20, rain: 0, wind: 10 },
-            { time: "04:00", temp: 20, rain: 0, wind: 10 },
-            { time: "05:00", temp: 20, rain: 0, wind: 10 },
-            { time: "06:00", temp: 20, rain: 0, wind: 10 },
-            { time: "07:00", temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784640256000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784636656000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784633056000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784629456000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784625856000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784622256000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784618656000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784615056000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
         ],
         air_quality: { aqi: 0, label: "Good" },
     };

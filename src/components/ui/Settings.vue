@@ -162,6 +162,44 @@
 				:onSelect="setRememberWallpaperPage"
 			/>
 		</div>
+
+		<span class="divider"></span>
+
+		<div>
+			<h2>Time Format</h2>
+			<SelectButton
+				v-model="settingsStore.timeFormat"
+				:options="['24h', '12h']"
+				:onSelect="setTimeFormat"
+			/>
+		</div>
+
+		<div>
+			<h2>Temperature Unit</h2>
+			<SelectButton
+				v-model="settingsStore.temperatureUnit"
+				:options="['Celsius', 'Fahrenheit']"
+				:onSelect="setTemperatureUnit"
+			/>
+		</div>
+
+		<div>
+			<h2>Rain Unit</h2>
+			<SelectButton
+				v-model="settingsStore.rainUnit"
+				:options="['mm', 'inch']"
+				:onSelect="setRainUnit"
+			/>
+		</div>
+
+		<div>
+			<h2>Wind Unit</h2>
+			<SelectButton
+				v-model="settingsStore.windUnit"
+				:options="['kmh', 'mph']"
+				:onSelect="setWindUnit"
+			/>
+		</div>
 	</div>
 
 	<StockGuidePopup :show="showStockGuide" @close="showStockGuide = false" />
@@ -257,6 +295,18 @@ export default {
         },
         setRememberWallpaperPage(choice) {
             this.settingsStore.setRememberWallpaperPage(choice);
+		},
+        setTimeFormat(format) {
+            this.settingsStore.setTimeFormat(format);
+		},
+        setTemperatureUnit(unit) {
+            this.settingsStore.setTemperatureUnit(unit);
+        },
+        setRainUnit(unit) {
+            this.settingsStore.setRainUnit(unit);
+        },
+        setWindUnit(unit) {
+            this.settingsStore.setWindUnit(unit);
         },
 	},
 };

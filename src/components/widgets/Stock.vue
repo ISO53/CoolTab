@@ -124,7 +124,12 @@ export default {
         },
         lastUpdatedDisplay() {
             if (!this.lastUpdated) return "";
-            return this.lastUpdated.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            return this.lastUpdated.toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: this.settingsStore.timeFormat === "12h",
+            });
         }
     },
     mounted() {

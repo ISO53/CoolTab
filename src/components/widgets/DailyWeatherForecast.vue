@@ -11,15 +11,20 @@
                     </div>
                 </div>
                 <div v-if="rotation < 180" class="times">
-                    <h2>{{ weather.sunrise }}</h2>
-                    <h2>{{ weather.sunset }}</h2>
+                    <h2>{{ sunriseDisplay }}</h2>
+                    <h2>{{ sunsetDisplay }}</h2>
                 </div>
                 <div v-else class="times">
-                    <h2>{{ weather.sunset }}</h2>
-                    <h2>{{ weather.sunrise }}</h2>
+                    <h2>{{ sunsetDisplay }}</h2>
+                    <h2>{{ sunriseDisplay }}</h2>
                 </div>
                 <div class="info">
-                    <h1>{{ weather.temperature }}</h1>
+                    <h1>{{
+						this.settingsStore.temperatureUnit === "Fahrenheit" ?
+						weather.temperature_f :
+						weather.temperature_c
+					}}
+                    </h1>
                     <div>
                         <h4>{{ weather.country }}</h4>
                         <h3>{{ weather.city }}</h3>
@@ -32,7 +37,8 @@
 
 <script>
 import Widget from "./Widget.vue";
-import {useSettingsStore} from "@/settings";
+import { useSettingsStore } from "@/settings";
+import { formatEpochTime } from "@/utils/time";
 
 export default {
     name: "DailyWeatherForecast",
@@ -48,7 +54,15 @@ export default {
             weather: this.settingsStore.currentWeatherInfo,
             rotation: 0,
         };
-    },
+	},
+	computed: {
+		sunriseDisplay() {
+	        return formatEpochTime(this.weather.sunrise_epoch, this.settingsStore.timeFormat === "12h");
+	    },
+	    sunsetDisplay() {
+	        return formatEpochTime(this.weather.sunset_epoch, this.settingsStore.timeFormat === "12h");
+	    },
+	},
     mounted() {
         this.getCurrentWeatherInfo();
         this.calculateRotation();
@@ -60,29 +74,19 @@ export default {
         }
     },
     methods: {
-        convertTimeToMinutes(time) {
-            if (!time?.includes(":")) return 0;
-            const [hour, minute] = time.split(":");
-            const hour24 = parseInt(hour);
-            const minuteVal = parseInt(minute);
-
-            return (Number.isNaN(hour24) ? 0 : hour24) * 60 + (Number.isNaN(minuteVal) ? 0 : minuteVal);
-        },
         calculateRotation() {
-            if (!this.weather.sunrise || !this.weather.sunset) return;
+        	if (!this.weather.sunrise_epoch || !this.weather.sunset_epoch) return;
 
-            const sunriseMinutes = this.convertTimeToMinutes(this.weather.sunrise);
-            const sunsetMinutes = this.convertTimeToMinutes(this.weather.sunset);
-            const totalDayMinutes = sunsetMinutes - sunriseMinutes;
+            const totalDayMs = this.weather.sunset_epoch - this.weather.sunrise_epoch;
+            if (totalDayMs <= 0) return;
 
-            if (totalDayMinutes <= 0) return;
-
-            const now = new Date();
-            const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-            let sunPosition = (currentMinutes - sunriseMinutes) / totalDayMinutes;
+            const sunPosition = (Date.now() - this.weather.sunrise_epoch) / totalDayMs;
             this.rotation = sunPosition * 180;
         },
+        epochToMinutesSinceMidnight(epochMs) {
+            const date = new Date(epochMs);
+            return date.getHours() * 60 + date.getMinutes();
+		},
         async getCurrentWeatherInfo() {
             if (this.settingsStore.currentWeatherInfo?.lastUpdated) {
                 // compare this.settingsStore.currentWeatherInfo.lastUpdated with current time and check if 1 hour passed
@@ -97,9 +101,10 @@ export default {
                 const response = await fetch("https://cool-tab-api.vercel.app/api/current-weather");
                 if (response.ok) {
                     const data = await response.json();
-                    this.weather.sunrise = data.sunrise;
-                    this.weather.sunset = data.sunset;
-                    this.weather.temperature = data.temp_c + "°";
+                    this.weather.sunrise_epoch = data.sunrise_epoch;
+                    this.weather.sunset_epoch = data.sunset_epoch;
+					this.weather.temperature_f = `${data.temp_f}°`;
+                    this.weather.temperature_c = `${data.temp_c}°`;
                     this.weather.country = data.country;
                     this.weather.city = data.city;
                     this.weather.lastUpdated = new Date().toISOString();
