@@ -162,18 +162,6 @@ export const useSettingsStore = defineStore("settings", {
             this.setSavedVersion(this.currentVersion);
             this.showUpdatePopup = false;
         },
-		runOneTimeMigration() {
-			// If the fields already deleted, don't do anything
-	        if (localStorage.getItem("is-deleted-some-fields-for-migration") === "true") return;
-
-			localStorage.removeItem("weather-info");
-			localStorage.removeItem("hourly-weather-info");
-			localStorage.removeItem("weekly-weather-info");
-			localStorage.removeItem("weather-info");
-
-			// Mark that the migration has been run
-			localStorage.setItem("is-deleted-some-fields-for-migration", true);
-		},
         async checkVersionOnStart() {
             // Compare savedVersion and currentVersion; if current > saved, show popup
             try {
