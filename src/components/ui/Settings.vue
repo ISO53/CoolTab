@@ -182,6 +182,24 @@
 				:onSelect="setTemperatureUnit"
 			/>
 		</div>
+
+		<div>
+			<h2>Rain Unit</h2>
+			<SelectButton
+				v-model="settingsStore.rainUnit"
+				:options="['mm', 'inch']"
+				:onSelect="setRainUnit"
+			/>
+		</div>
+
+		<div>
+			<h2>Wind Unit</h2>
+			<SelectButton
+				v-model="settingsStore.windUnit"
+				:options="['kmh', 'mph']"
+				:onSelect="setWindUnit"
+			/>
+		</div>
 	</div>
 
 	<StockGuidePopup :show="showStockGuide" @close="showStockGuide = false" />
@@ -283,6 +301,12 @@ export default {
 		},
         setTemperatureUnit(unit) {
             this.settingsStore.setTemperatureUnit(unit);
+        },
+        setRainUnit(unit) {
+            this.settingsStore.setRainUnit(unit);
+        },
+        setWindUnit(unit) {
+            this.settingsStore.setWindUnit(unit);
         },
 	},
 };

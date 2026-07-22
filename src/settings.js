@@ -35,6 +35,8 @@ export const useSettingsStore = defineStore("settings", {
 		onboarding: localStorage.getItem("onboarding") || "Enabled",
 		timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
 		temperatureUnit: localStorage.getItem("temperature-unit") || "Celsius",
+		rainUnit: localStorage.getItem("rain-unit") || "mm",
+		windUnit: localStorage.getItem("wind-unit") || "kmh",
 
 		// Remove this when all users have migrated to 1.17.11
         isDeletedSomeFieldsForMigration: localStorage.getItem("is-deleted-some-fields-for-migration") === "true",
@@ -388,6 +390,14 @@ export const useSettingsStore = defineStore("settings", {
 		setTemperatureUnit(unit) {
 			this.temperatureUnit = unit;
 			storeInLocalStorage("temperature-unit", unit);
+		},
+		setRainUnit(unit) {
+			this.rainUnit = unit;
+			storeInLocalStorage("rain-unit", unit);
+		},
+		setWindUnit(unit) {
+			this.windUnit = unit;
+			storeInLocalStorage("wind-unit", unit);
 		},
     },
 });
@@ -745,7 +755,7 @@ function getWeeklyWeatherInfo() {
  *
  * @returns {{
  *   city: String,
- *   hours: Array<{time_epoch: Number, temp: Number, rain: Number, wind: Number}>,
+ *   hours: Array<{time_epoch: Number, temp_c: Number, temp_f: Number, rain_mm: Number, rain_inch: Number, wind_kmh: Number, wind_mph: Number}>,
  *   air_quality: {aqi: Number, label: String},
  *   lastUpdated: Date
  * }}
@@ -755,14 +765,14 @@ function getHourlyWeatherInfo() {
     const def = {
         city: "City",
         hours: [
-            { time_epoch: 1784640256, temp: 20, rain: 0, wind: 10 },
-            { time_epoch: 1784636656, temp: 20, rain: 0, wind: 10 },
-            { time_epoch: 1784633056, temp: 20, rain: 0, wind: 10 },
-            { time_epoch: 1784629456, temp: 20, rain: 0, wind: 10 },
-            { time_epoch: 1784625856, temp: 20, rain: 0, wind: 10 },
-            { time_epoch: 1784622256, temp: 20, rain: 0, wind: 10 },
-            { time_epoch: 1784618656, temp: 20, rain: 0, wind: 10 },
-            { time_epoch: 1784615056, temp: 20, rain: 0, wind: 10 },
+            { time_epoch: 1784640256000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784636656000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784633056000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784629456000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784625856000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784622256000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784618656000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
+            { time_epoch: 1784615056000, temp_c: 20, temp_f: 68, rain_mm: 0, rain_inch: 0, wind_kph: 10, wind_mph: 6 },
         ],
         air_quality: { aqi: 0, label: "Good" },
     };

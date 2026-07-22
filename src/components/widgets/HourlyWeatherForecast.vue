@@ -104,23 +104,39 @@ export default {
     },
     computed: {
         activeYKey() {
-            return this.activeMetric + 'Y';
+            return `${this.activeMetric}Y`;
         },
         activeValKey() {
             return this.activeMetric;
         },
         activeUnit() {
             if (this.activeMetric === 'temp') return '°';
-            if (this.activeMetric === 'rain') return 'mm';
-            return 'km/h';
+            if (this.activeMetric === 'rain') {
+                return this.settingsStore.rainUnit === 'inch' ? 'in' : 'mm';
+            }
+            return this.settingsStore.windUnit === 'mph' ? 'mi/h' : 'km/h';
         },
         points() {
             const hours = this.weather?.hours || [];
             if (!hours.length) return [];
 
-            const temps = hours.map(h => h.temp);
-            const winds = hours.map(h => h.wind);
-            const rains = hours.map(h => parseFloat(h.rain.toFixed(1)));
+            const isFahrenheit = this.settingsStore.temperatureUnit === 'Fahrenheit';
+            const isInch = this.settingsStore.rainUnit === 'inch';
+            const isMph = this.settingsStore.windUnit === 'mph';
+
+            const temps = hours.map(h => {
+                const val = isFahrenheit ? h.temp_f : h.temp_c;
+                return val ?? h.temp ?? 0;
+            });
+            const winds = hours.map(h => {
+                const val = isMph ? h.wind_mph : (h.wind_kmh ?? h.wind_kph);
+                return val ?? h.wind ?? 0;
+            });
+            const rains = hours.map(h => {
+                const val = isInch ? h.rain_inch : h.rain_mm;
+                const rawRain = val ?? h.rain ?? 0;
+                return parseFloat(rawRain.toFixed(1));
+            });
 
             const minT = Math.min(...temps);
             const maxT = Math.max(...temps);
@@ -135,16 +151,20 @@ export default {
             return hours.map((h, i) => {
                 // 8% margin on each side for labels/dots
                 const x = 8 + (i / (hours.length - 1)) * 84;
-                const tempY = 70 - ((h.temp - minT) / rangeT) * 45;
-                const windY = 70 - ((h.wind - minW) / rangeW) * 45;
-                const roundedRain = parseFloat(h.rain.toFixed(1));
+                const tempVal = (isFahrenheit ? h.temp_f : h.temp_c) ?? h.temp ?? 0;
+                const windVal = (isMph ? h.wind_mph : (h.wind_kmh ?? h.wind_kph)) ?? h.wind ?? 0;
+                const rainVal = (isInch ? h.rain_inch : h.rain_mm) ?? h.rain ?? 0;
+
+                const tempY = 70 - ((tempVal - minT) / rangeT) * 45;
+                const windY = 70 - ((windVal - minW) / rangeW) * 45;
+                const roundedRain = parseFloat(rainVal.toFixed(1));
                 const rainY = 70 - (roundedRain / maxR) * 45;
 
                 return {
                     x, tempY, windY, rainY,
                     time: formatEpochTime(h.time_epoch, this.settingsStore.timeFormat === "12h"),
-                    temp: Math.round(h.temp),
-                    wind: Math.round(h.wind),
+                    temp: Math.round(tempVal),
+                    wind: Math.round(windVal),
                     rain: roundedRain.toFixed(1)
                 };
             });
