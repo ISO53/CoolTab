@@ -120,7 +120,7 @@ export default {
 
             const temps = hours.map(h => h.temp);
             const winds = hours.map(h => h.wind);
-            const rains = hours.map(h => h.rain);
+            const rains = hours.map(h => parseFloat(h.rain.toFixed(1)));
 
             const minT = Math.min(...temps);
             const maxT = Math.max(...temps);
@@ -137,14 +137,15 @@ export default {
                 const x = 8 + (i / (hours.length - 1)) * 84;
                 const tempY = 70 - ((h.temp - minT) / rangeT) * 45;
                 const windY = 70 - ((h.wind - minW) / rangeW) * 45;
-                const rainY = 70 - (h.rain / maxR) * 45;
+                const roundedRain = parseFloat(h.rain.toFixed(1));
+                const rainY = 70 - (roundedRain / maxR) * 45;
 
                 return {
                     x, tempY, windY, rainY,
                     time: formatEpochTime(h.time_epoch, this.settingsStore.timeFormat === "12h"),
                     temp: Math.round(h.temp),
                     wind: Math.round(h.wind),
-                    rain: h.rain.toFixed(1)
+                    rain: roundedRain.toFixed(1)
                 };
             });
         },
