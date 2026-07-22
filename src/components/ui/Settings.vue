@@ -169,7 +169,7 @@
 			<h2>Time Format</h2>
 			<SelectButton
 				v-model="settingsStore.timeFormat"
-				:options="['12h', '24h']"
+				:options="['24h', '12h']"
 				:onSelect="setTimeFormat"
 			/>
 		</div>
