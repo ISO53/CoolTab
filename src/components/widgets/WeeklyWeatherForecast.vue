@@ -4,7 +4,7 @@
             <div class="curr">
                 <div class="curr-info">
                     <Svg :class_name="weather.curr?.img || ''"></Svg>
-                    <h1>{{ (weather.curr?.temperature ?? 0) + "°" }}</h1>
+                    <h1>{{ (isFahrenheit ? weather.curr?.temperature_f : weather.curr?.temperature_c) + "°" }}</h1>
                     <div class="high-low">
                         <h5>{{ "H " + (isFahrenheit ? weather.curr?.high_f : weather.curr?.high_c) + "°" }}</h5>
                         <h5>{{ "L " + (isFahrenheit ? weather.curr?.low_f : weather.curr?.low_c) + "°" }}</h5>
