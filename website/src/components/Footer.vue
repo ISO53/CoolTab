@@ -1,8 +1,7 @@
 <template>
     <footer class="footer">
-        <!-- Faded massive outline background text with soft glow shadow (almost full width) -->
         <div class="footer-bg-text">CoolTab</div>
-        
+
         <div class="container footer-content">
             <div class="footer-left">
                 <h3>CoolTab</h3>
@@ -11,23 +10,23 @@
                     <p>Designed for pure speed and beautiful customization.</p>
                 </div>
             </div>
-            
+
             <div class="footer-links-grid">
                 <div class="footer-column">
-                    <h4>Navigation</h4>
+                    <h4 class="fig-label">Navigation</h4>
                     <a href="#/">Home</a>
                     <a href="#/style">Styles</a>
                     <a href="#/benchmarks">Benchmarks</a>
                 </div>
-                
+
                 <div class="footer-column">
-                    <h4>Community</h4>
+                    <h4 class="fig-label">Community</h4>
                     <a href="https://github.com/ISO53/CoolTab" target="_blank" rel="noopener noreferrer">GitHub</a>
                     <a href="https://github.com/ISO53" target="_blank" rel="noopener noreferrer">Developer</a>
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
             <div class="copyright">&copy; {{ new Date().getFullYear() }} CoolTab.</div>
         </div>
@@ -37,30 +36,26 @@
 <style scoped>
 .footer {
     position: relative;
-    margin-top: 180px;
-    padding: 160px 0 80px; /* Extremely tall to accommodate the massive background text */
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(5, 5, 5, 0) 100%);
-    border-top: 1px solid var(--glass-border);
+    margin-top: 120px;
+    padding: 100px 0 48px;
+    border-top: 1px solid var(--border);
     overflow: hidden;
 }
 
-/* Faded massive outline background text with soft glow shadow (almost full width) */
 .footer-bg-text {
     position: absolute;
-    bottom: -50px;
+    bottom: -40px;
     left: 0;
-    font-size: clamp(8rem, 20vw, 26rem); /* Scaled up to 20vw to span almost full width */
-    font-weight: 950;
+    font-size: clamp(8rem, 20vw, 22rem);
+    font-weight: 500;
     letter-spacing: -0.06em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.015); /* Increased from 0.003 to 1.5% opacity */
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.04); /* Increased from 0.012 to 4% opacity */
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.03)); /* Slightly enhanced glow shadow */
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.04);
     user-select: none;
     pointer-events: none;
     z-index: 0;
     white-space: nowrap;
-    text-align: left;
 }
 
 .footer-content {
@@ -68,8 +63,8 @@
     z-index: 1;
     display: flex;
     justify-content: space-between;
-    gap: 80px;
-    margin-bottom: 65px;
+    gap: 64px;
+    margin-bottom: 48px;
 }
 
 .footer-left {
@@ -78,24 +73,21 @@
 }
 
 .footer-left h3 {
-    font-size: 2.25rem;
-    font-weight: 800;
+    font-size: 1.75rem;
+    font-weight: 500;
     letter-spacing: -0.02em;
-    margin-bottom: 12px;
-    background: linear-gradient(90deg, #ffffff, #888888);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin-bottom: 10px;
+    color: var(--text-main);
 }
 
 .footer-desc {
     color: var(--text-muted);
-    font-size: 1.15rem;
-    margin-bottom: 16px;
+    font-size: 1.05rem;
+    margin-bottom: 12px;
 }
 
 .footer-meta {
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.25);
     font-size: 0.85rem;
     line-height: 1.6;
 }
@@ -103,77 +95,69 @@
 .footer-links-grid {
     flex: 1.8;
     display: flex;
-    gap: 80px;
+    gap: 64px;
     justify-content: flex-end;
 }
 
 .footer-column {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
 .footer-column h4 {
-    color: #ffffff;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .footer-column a {
     color: var(--text-muted);
     font-size: 0.95rem;
-    transition: all 0.2s ease;
+    transition: color var(--transition);
     width: max-content;
 }
 
 .footer-column a:hover {
-    color: #ffffff;
-    transform: translateX(4px);
+    color: var(--text-main);
 }
 
 .footer-bottom {
     position: relative;
     z-index: 1;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 30px;
-    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
 }
 
 .copyright {
     text-align: center;
-    color: rgba(255, 255, 255, 0.25);
-    font-size: 0.85rem;
-    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
 }
 
 @media (max-width: 768px) {
     .footer {
-        padding: 100px 0 50px;
-        margin-top: 100px;
+        padding: 72px 0 40px;
+        margin-top: 80px;
     }
-    
+
     .footer-content {
         flex-direction: column;
-        gap: 50px;
-        margin-bottom: 40px;
+        gap: 40px;
+        margin-bottom: 32px;
     }
-    
+
     .footer-left {
         max-width: 100%;
     }
-    
+
     .footer-links-grid {
         justify-content: flex-start;
-        gap: 60px;
+        gap: 48px;
     }
-    
+
     .footer-bg-text {
-        bottom: -25px;
-        left: 0;
-        transform: none;
+        bottom: -20px;
         font-size: clamp(5rem, 20vw, 10rem);
     }
 }

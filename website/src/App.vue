@@ -31,13 +31,13 @@ const components = {
 
 <style>
 main {
-  padding-top: 100px; /* Space for fixed navbar */
+  padding-top: 96px;
   min-height: 80vh;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 180ms ease;
 }
 
 .fade-enter-from,

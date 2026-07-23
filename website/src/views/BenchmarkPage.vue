@@ -30,8 +30,14 @@
                         <span class="arrow-down">&#8595;</span>
                     </button>
                 </div>
-                <div class="chart-container glass-panel">
-                    <Bar :data="loadTimeData" :options="chartOptions('ms')" />
+                <div class="chart-container">
+                    <div class="chart-meta">
+                        <span class="fig-label">FIG_A · LOAD</span>
+                        <span class="fig-label">LOWER IS BETTER</span>
+                    </div>
+                    <div class="chart-plot">
+                        <Bar :data="loadTimeData" :options="chartOptions('ms')" />
+                    </div>
                 </div>
             </div>
         </section>
@@ -56,8 +62,14 @@
                         <span class="arrow-down">&#8595;</span>
                     </button>
                 </div>
-                <div class="chart-container glass-panel">
-                    <Bar :data="memoryData" :options="chartOptions('KB')" />
+                <div class="chart-container">
+                    <div class="chart-meta">
+                        <span class="fig-label">FIG_B · MEMORY</span>
+                        <span class="fig-label">LOWER IS BETTER</span>
+                    </div>
+                    <div class="chart-plot">
+                        <Bar :data="memoryData" :options="chartOptions('KB')" />
+                    </div>
                 </div>
             </div>
         </section>
@@ -83,8 +95,14 @@
                         <span class="arrow-down">&#8595;</span>
                     </button>
                 </div>
-                <div class="chart-container glass-panel">
-                    <Bar :data="lcpData" :options="chartOptions('ms')" />
+                <div class="chart-container">
+                    <div class="chart-meta">
+                        <span class="fig-label">FIG_C · LCP</span>
+                        <span class="fig-label">LOWER IS BETTER</span>
+                    </div>
+                    <div class="chart-plot">
+                        <Bar :data="lcpData" :options="chartOptions('ms')" />
+                    </div>
                 </div>
             </div>
         </section>
@@ -190,15 +208,15 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels)
 
 // CoolTab always first (leftmost), then sorted ascending by value
-const coolTabColor = 'rgba(255, 255, 255, 0.85)'
+const coolTabColor = 'rgba(242, 242, 240, 0.92)'
 const coolTabColorHover = 'rgba(255, 255, 255, 1)'
-const competitorColor = 'rgba(255, 255, 255, 0.12)'
-const competitorColorHover = 'rgba(255, 255, 255, 0.22)'
+const competitorColor = 'rgba(255, 255, 255, 0.06)'
+const competitorColorHover = 'rgba(255, 255, 255, 0.12)'
 
 function makeDataset(label, sortedBrowsers, sortedValues) {
     const bgColors = sortedBrowsers.map(b => b === 'CoolTab' ? coolTabColor : competitorColor)
     const hoverColors = sortedBrowsers.map(b => b === 'CoolTab' ? coolTabColorHover : competitorColorHover)
-    const borderColors = sortedBrowsers.map(b => b === 'CoolTab' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)')
+    const borderColors = sortedBrowsers.map(b => b === 'CoolTab' ? 'rgba(242,242,240,0.95)' : 'rgba(255,255,255,0.18)')
 
     return {
         labels: sortedBrowsers,
@@ -209,9 +227,10 @@ function makeDataset(label, sortedBrowsers, sortedValues) {
             hoverBackgroundColor: hoverColors,
             borderColor: borderColors,
             borderWidth: 1,
-            borderRadius: 6,
-            barPercentage: 0.6,
-            categoryPercentage: 0.7
+            borderRadius: 0,
+            borderSkipped: false,
+            barPercentage: 0.55,
+            categoryPercentage: 0.72
         }]
     }
 }
@@ -240,9 +259,13 @@ const memoryData = makeDataset('Memory Usage', memSorted.browsers, memSorted.val
 const lcpData = makeDataset('Largest Contentful Paint', lcpSorted.browsers, lcpSorted.values)
 
 function chartOptions(unit) {
+    const mono = "'IBM Plex Mono', ui-monospace, monospace"
     return {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+            padding: { top: 28, right: 8, left: 4, bottom: 4 }
+        },
         interaction: {
             mode: 'index',
             intersect: false
@@ -250,13 +273,16 @@ function chartOptions(unit) {
         plugins: {
             legend: { display: false },
             tooltip: {
-                backgroundColor: 'rgba(0,0,0,0.85)',
-                titleColor: '#fff',
-                bodyColor: '#ccc',
-                borderColor: 'rgba(255,255,255,0.1)',
+                backgroundColor: '#151517',
+                titleColor: '#F2F2F0',
+                bodyColor: '#8A8A90',
+                borderColor: 'rgba(255,255,255,0.12)',
                 borderWidth: 1,
-                cornerRadius: 8,
+                cornerRadius: 6,
                 padding: 12,
+                titleFont: { family: mono, size: 11, weight: '500' },
+                bodyFont: { family: mono, size: 11 },
+                displayColors: false,
                 callbacks: {
                     label: (ctx) => `${ctx.parsed.y.toLocaleString()} ${unit}`
                 }
@@ -264,51 +290,59 @@ function chartOptions(unit) {
             datalabels: {
                 color: (ctx) => {
                     const label = ctx.chart.data.labels[ctx.dataIndex]
-                    return label === 'CoolTab' ? '#fff' : 'rgba(255,255,255,0.5)'
+                    return label === 'CoolTab' ? '#F2F2F0' : 'rgba(255,255,255,0.45)'
                 },
                 anchor: 'end',
                 align: 'end',
-                offset: 4,
+                offset: 6,
                 font: {
-                    size: 13,
-                    weight: (ctx) => {
-                        const label = ctx.chart.data.labels[ctx.dataIndex]
-                        return label === 'CoolTab' ? '700' : '500'
-                    },
-                    family: 'Satoshi-Regular, Inter, sans-serif'
+                    size: 11,
+                    weight: '500',
+                    family: mono
                 },
                 formatter: (value) => `${value.toLocaleString()} ${unit}`
             }
         },
         scales: {
             x: {
-                grid: { display: false },
-                ticks: {
-                    color: 'rgba(255,255,255,0.6)',
-                    font: {
-                        size: 13,
-                        family: 'Satoshi-Regular, Inter, sans-serif'
-                    }
+                grid: {
+                    display: true,
+                    color: 'rgba(255,255,255,0.04)',
+                    drawTicks: false,
+                    lineWidth: 1
                 },
-                border: { color: 'rgba(255,255,255,0.08)' }
+                ticks: {
+                    color: 'rgba(255,255,255,0.45)',
+                    font: {
+                        size: 11,
+                        family: mono
+                    },
+                    padding: 10
+                },
+                border: { color: 'rgba(255,255,255,0.12)', width: 1 }
             },
             y: {
                 beginAtZero: true,
-                grid: { color: 'rgba(255,255,255,0.04)' },
+                grid: {
+                    color: 'rgba(255,255,255,0.06)',
+                    drawTicks: false,
+                    lineWidth: 1
+                },
                 ticks: {
-                    color: 'rgba(255,255,255,0.4)',
+                    color: 'rgba(255,255,255,0.35)',
                     font: {
-                        size: 12,
-                        family: 'Satoshi-Regular, Inter, sans-serif'
+                        size: 10,
+                        family: mono
                     },
+                    padding: 8,
                     callback: (value) => `${value.toLocaleString()} ${unit}`
                 },
-                border: { display: false }
+                border: { color: 'rgba(255,255,255,0.12)', width: 1, dash: [3, 3] }
             }
         },
         animation: {
-            duration: 900,
-            easing: 'easeOutQuart'
+            duration: 700,
+            easing: 'easeOutCubic'
         }
     }
 }
@@ -328,8 +362,8 @@ function scrollToMethodology() {
 
 .benchmark-hero h1 {
     font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-weight: 500;
+    letter-spacing: -0.03em;
     margin-bottom: 20px;
 }
 
@@ -361,7 +395,7 @@ function scrollToMethodology() {
 
 .chart-explanation h2 {
     font-size: 2.25rem;
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: -0.02em;
     margin-bottom: 20px;
 }
@@ -388,15 +422,15 @@ function scrollToMethodology() {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: border-color var(--transition), color var(--transition), background-color var(--transition);
     font-family: inherit;
 }
 
@@ -417,9 +451,35 @@ function scrollToMethodology() {
 
 .chart-container {
     flex: 1.2;
-    min-height: 380px;
-    padding: 30px 24px 20px;
+    min-height: 400px;
+    padding: 0;
     position: relative;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: #111113;
+}
+
+.chart-plot {
+    flex: 1;
+    min-height: 340px;
+    padding: 16px 16px 12px;
+    position: relative;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 24px 24px;
 }
 
 /* ── Methodology section ── */
@@ -434,8 +494,8 @@ function scrollToMethodology() {
 
 .methodology-header h2 {
     font-size: 2.75rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-weight: 500;
+    letter-spacing: -0.03em;
     margin-bottom: 20px;
 }
 
@@ -472,11 +532,12 @@ function scrollToMethodology() {
 }
 
 .results-table thead th {
-    color: rgba(255, 255, 255, 0.5);
-    font-weight: 600;
-    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.12em;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -502,8 +563,14 @@ function scrollToMethodology() {
 }
 
 .cooltab-col {
-    color: #ffffff !important;
-    font-weight: 700 !important;
+    color: #F2F2F0 !important;
+    font-family: var(--font-mono);
+    font-weight: 500 !important;
+}
+
+.results-table tbody td:not(.command-cell) {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
 }
 
 /* ── Command explanations ── */
@@ -544,7 +611,11 @@ function scrollToMethodology() {
 
     .chart-container {
         width: 100%;
-        min-height: 320px;
+        min-height: 360px;
+    }
+
+    .chart-plot {
+        min-height: 300px;
     }
 
     .command-explanations {

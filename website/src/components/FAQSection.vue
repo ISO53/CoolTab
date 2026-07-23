@@ -2,40 +2,40 @@
     <section id="faq" class="faq-section container">
         <div class="faq-grid">
             <div class="section-header">
+                <p class="fig-label">FAQ</p>
                 <h2 class="title">Frequently Asked Questions</h2>
                 <p class="subtitle">Have questions? We have answers. If you can't find what you're looking for, we've compiled the most common inquiries here.</p>
             </div>
 
             <div class="faq-list">
-                <div 
-                    v-for="(item, index) in faqs" 
-                    :key="index" 
+                <div
+                    v-for="(item, index) in faqs"
+                    :key="index"
                     class="faq-item"
                     :class="{ active: activeIndex === index }"
                 >
-                    <button 
-                        class="faq-question" 
+                    <button
+                        class="faq-question"
                         @click="toggle(index)"
                         :aria-expanded="activeIndex === index"
                     >
                         <span class="question-text">{{ item.question }}</span>
                         <span class="icon-wrapper">
-                            <svg 
-                                viewBox="0 0 24 24" 
-                                width="20" 
-                                height="20" 
-                                stroke="currentColor" 
-                                stroke-width="2" 
-                                fill="none" 
-                                class="plus-icon"
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                fill="none"
                             >
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
                         </span>
                     </button>
-                    
-                    <div 
+
+                    <div
                         class="faq-answer-wrapper"
                         ref="answerWrappers"
                         :style="getContentStyle(index)"
@@ -104,13 +104,13 @@ const getContentStyle = (index) => {
 
 <style scoped>
 .faq-section {
-    padding: 120px 20px;
+    padding: 120px 24px;
 }
 
 .faq-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 80px;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 64px;
     align-items: start;
 }
 
@@ -121,27 +121,28 @@ const getContentStyle = (index) => {
 }
 
 .title {
-    font-size: 3.5rem;
-    font-weight: 800;
+    font-size: clamp(2.25rem, 4vw, 3rem);
+    font-weight: 500;
     line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 24px;
+    letter-spacing: -0.03em;
+    margin: 16px 0 20px;
 }
 
 .subtitle {
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 400px;
+    line-height: 1.65;
+    max-width: 360px;
 }
 
 .faq-list {
     display: flex;
     flex-direction: column;
+    border-top: 1px solid var(--border);
 }
 
 .faq-item {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border);
 }
 
 .faq-question {
@@ -149,72 +150,73 @@ const getContentStyle = (index) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 32px 0;
+    padding: 24px 0;
     background: none;
     border: none;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
+    color: var(--text-main);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
     text-align: left;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: color var(--transition);
 }
 
 .question-text {
     flex: 1;
-    padding-right: 40px;
+    padding-right: 32px;
 }
 
 .icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 180ms ease, color var(--transition);
     color: var(--text-muted);
+    flex-shrink: 0;
 }
 
 .faq-item.active .icon-wrapper {
-    transform: rotate(135deg);
-    color: white;
+    transform: rotate(45deg);
+    color: var(--text-main);
 }
 
 .faq-answer-wrapper {
     overflow: hidden;
-    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    transition: height 180ms ease, opacity 180ms ease;
 }
 
 .faq-answer {
-    padding: 0 0 32px 0;
+    padding: 0 0 24px 0;
     color: var(--text-muted);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    max-width: 90%;
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 92%;
 }
 
 @media (max-width: 1024px) {
     .faq-grid {
         grid-template-columns: 1fr;
-        gap: 60px;
+        gap: 40px;
     }
-    
+
     .section-header {
         position: static;
-        text-align: left;
     }
-    
+
     .subtitle {
         max-width: 100%;
     }
 }
 
 @media (max-width: 768px) {
-    .title {
-        font-size: 2.5rem;
+    .faq-section {
+        padding: 80px 24px;
     }
-    
+
     .faq-question {
-        font-size: 1.1rem;
-        padding: 24px 0;
+        font-size: 1.05rem;
+        padding: 20px 0;
     }
 }
 </style>

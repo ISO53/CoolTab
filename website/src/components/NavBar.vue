@@ -1,8 +1,8 @@
 <template>
-    <nav class="navbar glass-panel">
+    <nav class="navbar">
         <div class="container nav-content">
             <a href="#/" class="logo-group">
-                <img class="logo-img" src="/src/public/cooltab_logo.svg" alt="logo" /> 
+                <img class="logo-img" src="/src/public/cooltab_logo.svg" alt="logo" />
                 <span class="logo-text">CoolTab</span>
             </a>
 
@@ -14,7 +14,7 @@
             </div>
 
             <div class="nav-actions">
-                <a href="#install" class="btn-primary btn-sm desktop-only-cta"> Add to Browser </a>
+                <a href="#install" class="btn-primary btn-sm desktop-only-cta">Add to Browser</a>
             </div>
         </div>
     </nav>
@@ -24,31 +24,24 @@
 import { useNavigation } from '../navigation'
 
 const { currentPath } = useNavigation()
-
-const handleScroll = (e) => {
-    if (window.location.hash.startsWith('#/style')) {
-        window.location.hash = '#/'
-        setTimeout(() => {
-            const el = document.querySelector('#features')
-            if (el) el.scrollIntoView({ behavior: 'smooth' })
-        }, 100)
-    }
-}
 </script>
 
 <style scoped>
 .navbar {
     position: fixed;
-    top: 20px;
+    top: 16px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
+    width: calc(100% - 48px);
     max-width: 1200px;
     height: var(--nav-height);
     z-index: 1000;
-    border-radius: 50px;
-    padding: 0 20px;
-    transition: all 0.3s ease;
+    border-radius: var(--radius);
+    padding: 0 8px;
+    background: rgba(10, 10, 11, 0.85);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .nav-content {
@@ -56,31 +49,34 @@ const handleScroll = (e) => {
     justify-content: space-between;
     align-items: center;
     height: var(--nav-height);
+    max-width: none;
+    padding: 0 12px;
 }
 
 .logo-group {
-    font-weight: 700;
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.05rem;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
 .logo-img {
-    height: 32px;
-    width: 32px;
+    height: 28px;
+    width: 28px;
 }
 
 .nav-links {
     display: flex;
-    gap: 30px;
+    gap: 28px;
 }
 
 .nav-links a {
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text-muted);
-    transition: color 0.3s;
-    font-size: 0.95rem;
+    transition: color var(--transition);
+    font-size: 0.9rem;
 }
 
 .nav-links a:hover,
@@ -94,30 +90,30 @@ const handleScroll = (e) => {
 }
 
 .btn-sm {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
 }
 
 @media (max-width: 768px) {
     .navbar {
-        top: 15px;
-        height: 48px;
-        width: 90%;
-        padding: 0 15px;
-        border-radius: 50px;
+        top: 12px;
+        height: 52px;
+        width: calc(100% - 24px);
+        padding: 0 4px;
     }
 
     .nav-content {
         position: relative;
-        justify-content: center; /* Centers the links */
+        justify-content: center;
         height: 100%;
         width: 100%;
+        padding: 0 8px;
     }
 
     .logo-group {
         position: absolute;
-        left: 0;
+        left: 8px;
         top: 50%;
         transform: translateY(-50%);
         height: 100%;
@@ -125,7 +121,7 @@ const handleScroll = (e) => {
         align-items: center;
     }
 
-    .logo-text, 
+    .logo-text,
     .nav-actions {
         display: none;
     }
@@ -137,17 +133,14 @@ const handleScroll = (e) => {
     }
 
     .nav-links {
-        gap: 15px;
+        gap: 14px;
         height: 100%;
         align-items: center;
         display: flex;
     }
 
     .nav-links a {
-        font-size: 0.85rem;
-        padding: 0;
-        margin: 0;
-        line-height: 1;
+        font-size: 0.8rem;
     }
 }
 </style>

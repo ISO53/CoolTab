@@ -1,11 +1,12 @@
 <template>
     <section class="benchmark-teaser container" ref="sectionRef">
         <div class="teaser-content">
+            <p class="fig-label">Benchmarks</p>
             <h2>Lightning Fast Performance</h2>
 
             <div class="stat-row">
-                <div class="stat-card glass-panel" v-for="stat in stats" :key="stat.label">
-                    <span class="stat-multiplier">{{ stat.display }}x</span>
+                <div class="stat-card" v-for="stat in stats" :key="stat.label">
+                    <span class="stat-multiplier mono-stat">{{ stat.display }}x</span>
                     <span class="stat-label">{{ stat.label }}</span>
                 </div>
             </div>
@@ -35,30 +36,23 @@ const stats = reactive([
 ])
 
 function animateNumbers() {
-    const duration = 1200
-    const fps = 60
-    const totalFrames = Math.round(duration / (1000 / fps))
-    let frame = 0
+    const duration = 1000
+    const start = performance.now()
 
-    function tick() {
-        frame++
-        const progress = frame / totalFrames
-        // easeOutQuart curve
-        const eased = 1 - Math.pow(1 - progress, 4)
+    function tick(now) {
+        const progress = Math.min(1, (now - start) / duration)
+        const eased = 1 - Math.pow(1 - progress, 3)
 
         stats.forEach((stat) => {
             const current = eased * stat.value
-            // Show one decimal place, but snap to clean value at end
-            if (frame >= totalFrames) {
+            if (progress >= 1) {
                 stat.display = stat.value % 1 === 0 ? stat.value.toFixed(0) : stat.value.toFixed(1)
             } else {
                 stat.display = current.toFixed(1)
             }
         })
 
-        if (frame < totalFrames) {
-            requestAnimationFrame(tick)
-        }
+        if (progress < 1) requestAnimationFrame(tick)
     }
 
     requestAnimationFrame(tick)
@@ -74,12 +68,10 @@ onMounted(() => {
                 }
             })
         },
-        { threshold: 0.1 }
+        { threshold: 0.15 }
     )
 
-    if (sectionRef.value) {
-        observer.observe(sectionRef.value)
-    }
+    if (sectionRef.value) observer.observe(sectionRef.value)
 })
 
 onUnmounted(() => {
@@ -93,12 +85,12 @@ function scrollTop() {
 
 <style scoped>
 .benchmark-teaser {
-    padding: 120px 20px;
+    padding: 120px 24px;
     text-align: center;
 }
 
 .teaser-content {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -106,95 +98,71 @@ function scrollTop() {
 }
 
 h2 {
-    font-size: 3.5rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 50px;
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin: 16px 0 48px;
 }
 
 .stat-row {
-    display: flex;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     margin-bottom: 40px;
     width: 100%;
-    justify-content: center;
 }
 
 .stat-card {
-    flex: 1;
-    max-width: 260px;
-    padding: 36px 24px;
+    padding: 36px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    cursor: default;
-    transition: none !important;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
 }
 
-.stat-card:hover {
-    transform: none !important;
-    box-shadow: none !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.stat-multiplier {
-    font-size: 3rem;
-    font-weight: 800;
+.mono-stat {
+    font-family: var(--font-mono);
+    font-size: clamp(2.25rem, 4vw, 3rem);
+    font-weight: 500;
     letter-spacing: -0.03em;
-    color: #ffffff;
+    color: var(--text-main);
     line-height: 1;
     font-variant-numeric: tabular-nums;
 }
 
 .stat-label {
     color: var(--text-muted);
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.4;
 }
 
 .teaser-description {
-    max-width: 600px;
+    max-width: 560px;
     color: var(--text-muted);
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 36px;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    margin-bottom: 32px;
 }
 
 @media (max-width: 768px) {
     .benchmark-teaser {
-        padding: 80px 20px;
+        padding: 80px 24px;
         text-align: left;
     }
 
     .teaser-content {
         align-items: flex-start;
-        margin: 0;
-    }
-
-    h2 {
-        font-size: 2.25rem;
-        margin-bottom: 36px;
     }
 
     .stat-row {
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
+        grid-template-columns: 1fr;
     }
 
     .stat-card {
-        max-width: 100%;
-        width: 100%;
         align-items: flex-start;
-    }
-
-    .stat-multiplier {
-        font-size: 2.5rem;
-    }
-
-    .teaser-description {
-        max-width: 100%;
     }
 }
 </style>

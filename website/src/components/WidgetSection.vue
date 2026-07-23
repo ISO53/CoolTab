@@ -14,11 +14,10 @@ import widgetsVideo from '../assets/videos/Widgets-Video.webm';
                 class="widgets-video"
             ></video>
         </div>
-
         <div class="widgets-overlay"></div>
-
         <div class="container widgets-content">
             <div class="text-wrapper">
+                <p class="fig-label">Live Widgets</p>
                 <h2 class="widgets-title">A Widget for Everything</h2>
                 <p class="widgets-subtitle">
                     Experience your actual dashboard widgets in action.
@@ -32,42 +31,38 @@ import widgetsVideo from '../assets/videos/Widgets-Video.webm';
 <style scoped>
 .widgets-section {
     position: relative;
-    height: 700px;
+    height: 640px;
     width: 100%;
     overflow: hidden;
     display: flex;
     align-items: center;
-    background: #000;
+    background: var(--bg-base);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 
 .widgets-background {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotate(-8deg) scale(1.2);
+    inset: 0;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    opacity: 0.5;
-    filter: blur(1px);
+    opacity: 0.55;
 }
 
 .widgets-video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
 }
 
 .widgets-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(10, 10, 11, 0.92) 0%, rgba(10, 10, 11, 0.55) 42%, rgba(10, 10, 11, 0.35) 100%);
     pointer-events: none;
     z-index: 1;
 }
@@ -75,54 +70,47 @@ import widgetsVideo from '../assets/videos/Widgets-Video.webm';
 .widgets-content {
     position: relative;
     z-index: 2;
-    pointer-events: none;
 }
 
 .text-wrapper {
-    max-width: 600px;
+    max-width: 480px;
+}
+
+.fig-label {
+    margin-bottom: 16px;
 }
 
 .widgets-title {
-    font-size: 4.5rem;
-    font-weight: 800;
-    margin-bottom: 24px;
-    line-height: 1;
-    letter-spacing: -2px;
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
 }
 
 .widgets-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 500px;
+    line-height: 1.65;
+    max-width: 440px;
 }
 
 @media (max-width: 768px) {
     .widgets-section {
         height: auto;
-        padding: 80px 0;
-        text-align: left;
+        min-height: 420px;
+        padding: 72px 0;
     }
 
-    .widgets-content {
-        display: flex;
-        justify-content: flex-start;
-    }
-
-    .text-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        max-width: 100%;
+    .widgets-overlay {
+        background: linear-gradient(180deg, rgba(10, 10, 11, 0.75) 0%, rgba(10, 10, 11, 0.92) 100%);
     }
 
     .widgets-title {
         font-size: 2.25rem;
-        margin-bottom: 16px;
     }
 
     .widgets-subtitle {
-        font-size: 1.1rem;
         max-width: 100%;
     }
 }

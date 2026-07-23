@@ -1,49 +1,54 @@
 <template>
-    <section class="capabilities-section" :class="{ 'is-visible': isVisible }">
-        <div class="container main-grid">
-            <!-- Left Side: Navigation (Desktop Only) -->
-            <div class="navigation-side">
-                <div class="vertical-nav-container">
-                    <div class="nav-track"></div>
-                    <div class="vertical-nav">
-                        <div
-                            v-for="(_, dotIndex) in features"
-                            :key="'nav-'+dotIndex"
-                            class="nav-item"
-                            :class="{ active: activeIndex === dotIndex }"
-                            @click="selectIndex(dotIndex)"
-                        >
-                            <div class="nav-circle">
-                                <span v-if="activeIndex === dotIndex" class="nav-number">{{ dotIndex + 1 }}</span>
+    <section class="capabilities-section" ref="sectionRef" :class="{ 'is-visible': isVisible }">
+        <div class="capabilities-sticky">
+            <div class="container main-grid">
+                <div class="navigation-side">
+                    <div class="vertical-nav-container">
+                        <div class="nav-track"></div>
+                        <div class="vertical-nav">
+                            <div
+                                v-for="(_, dotIndex) in features"
+                                :key="'nav-' + dotIndex"
+                                class="nav-item"
+                                :class="{ active: activeIndex === dotIndex }"
+                                @click="selectIndex(dotIndex)"
+                            >
+                                <div class="nav-circle">
+                                    <span v-if="activeIndex === dotIndex" class="nav-number mono">{{ String(dotIndex + 1).padStart(2, '0') }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Content Area -->
-            <div class="content-area">
-                <div
-                    v-for="(feature, index) in features"
-                    :key="index"
-                    class="feature-overlay"
-                    :class="{ active: activeIndex === index }"
-                >
-                    <div class="content-grid">
-                        <div class="explanation-side">
-                            <h2 class="feature-title">{{ feature.title }}</h2>
-                            <p class="feature-description">{{ feature.description }}</p>
-                        </div>
-                        <div class="video-side">
-                            <div class="video-wrapper">
-                                <video
-                                    :src="feature.video"
-                                    autoplay
-                                    loop
-                                    muted
-                                    playsinline
-                                    class="feature-video"
-                                ></video>
+                <div class="content-area">
+                    <div
+                        v-for="(feature, index) in features"
+                        :key="index"
+                        class="feature-overlay"
+                        :class="{ active: activeIndex === index }"
+                    >
+                        <div class="content-grid">
+                            <div class="explanation-side">
+                                <p class="fig-label">Capability {{ String(index + 1).padStart(2, '0') }} / {{ String(features.length).padStart(2, '0') }}</p>
+                                <h2 class="feature-title">{{ feature.title }}</h2>
+                                <p class="feature-description">{{ feature.description }}</p>
+                            </div>
+                            <div class="video-side">
+                                <div class="video-wrapper">
+                                    <div class="video-chrome">
+                                        <span class="fig-label">Preview</span>
+                                        <span class="fig-label">{{ feature.slug }}</span>
+                                    </div>
+                                    <video
+                                        :src="feature.video"
+                                        autoplay
+                                        loop
+                                        muted
+                                        playsinline
+                                        class="feature-video"
+                                    ></video>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -56,7 +61,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
-// Import videos
 import browseStyles from '../assets/videos/Browse-Styles.mp4';
 import browseWallpapers from '../assets/videos/Browse-Wallpapers.mp4';
 import changeColors from '../assets/videos/Change-Colors.mp4';
@@ -68,118 +72,118 @@ const features = [
     {
         title: "Endless Style Possibilities",
         description: "Explore a curated collection of beautiful styles. From ultra-minimal to vibrant gradients, find the look that defines your browsing experience.",
-        video: browseStyles
+        video: browseStyles,
+        slug: "styles"
     },
     {
         title: "Stunning Wallpapers",
         description: "Transform your new tab with high-resolution wallpapers. Browse our library or set your own background for a truly personal touch.",
-        video: browseWallpapers
+        video: browseWallpapers,
+        slug: "wallpapers"
     },
     {
         title: "Dynamic Color Control",
         description: "Take command of your workspace aesthetics. Effortlessly adjust accent colors and gradients to match your mood or wallpaper perfectly.",
-        video: changeColors
+        video: changeColors,
+        slug: "colors"
     },
     {
         title: "Your Widgets, Your Way",
         description: "Choose exactly what you need. Our expanding library of widgets ensures you have the right tools at your fingertips, every time you open a tab.",
-        video: chooseWidgets
+        video: chooseWidgets,
+        slug: "widgets"
     },
     {
         title: "Effortless Organization",
         description: "Re-position widgets with simple drag-and-drop. Design a layout that works for you, placing your most-used tools exactly where you need them.",
-        video: rePosition
+        video: rePosition,
+        slug: "layout"
     },
     {
         title: "Perfectly Proportioned",
         description: "Resize any widget to fit your layout. Whether you want a focus-sized calendar or a compact clock, CoolTab adapts to your spatial needs.",
-        video: resizeWidgets
+        video: resizeWidgets,
+        slug: "resize"
     }
 ];
 
 const activeIndex = ref(0);
 const isVisible = ref(false);
-
-let interval = null;
-
-const startAutoPlay = () => {
-    // Only run auto-play on desktop (checked via window width if needed, or just let CSS handle it)
-    if (window.innerWidth > 1024) {
-        interval = setInterval(() => {
-            activeIndex.value = (activeIndex.value + 1) % features.length;
-        }, 5000);
-    }
-};
-
-const stopAutoPlay = () => {
-    if (interval) clearInterval(interval);
-};
+const sectionRef = ref(null);
 
 const selectIndex = (index) => {
     activeIndex.value = index;
-    stopAutoPlay();
-    startAutoPlay();
+    if (!sectionRef.value || window.innerWidth <= 1024) return;
+    const rect = sectionRef.value.getBoundingClientRect();
+    const start = window.scrollY + rect.top;
+    const scrollable = sectionRef.value.offsetHeight - window.innerHeight;
+    const target = start + (index / (features.length - 1)) * scrollable;
+    window.scrollTo({ top: target, behavior: 'smooth' });
 };
 
-onMounted(() => {
-    const observer = new IntersectionObserver(
-        (entries) => {
-            if (entries[0].isIntersecting) {
-                isVisible.value = true;
-                stopAutoPlay();
-                startAutoPlay();
-            } else {
-                stopAutoPlay();
-            }
-        },
-        { threshold: 0.1 }
-    );
+function onScroll() {
+    if (!sectionRef.value || window.innerWidth <= 1024) return;
+    const rect = sectionRef.value.getBoundingClientRect();
+    const scrollable = sectionRef.value.offsetHeight - window.innerHeight;
+    if (scrollable <= 0) return;
 
-    const section = document.querySelector('.capabilities-section');
-    if (section) {
-        observer.observe(section);
+    // How far we've scrolled through the sticky section
+    const scrolled = Math.min(Math.max(-rect.top, 0), scrollable);
+    const progress = scrolled / scrollable;
+    const index = Math.min(
+        features.length - 1,
+        Math.floor(progress * features.length)
+    );
+    if (index !== activeIndex.value) {
+        activeIndex.value = index;
     }
+
+    isVisible.value = rect.bottom > 0 && rect.top < window.innerHeight;
+}
+
+onMounted(() => {
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
 });
 
 onUnmounted(() => {
-    stopAutoPlay();
+    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('resize', onScroll);
 });
 </script>
 
 <style scoped>
 .capabilities-section {
     position: relative;
-    padding: 0;
-    background: transparent;
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-    height: 90vh;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
+    height: 500vh;
 }
 
-.capabilities-section.is-visible {
-    opacity: 1;
-    transform: translateY(0);
+.capabilities-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 96px 0 40px;
 }
 
 .main-grid {
     display: flex;
     align-items: center;
-    gap: 80px;
-    position: relative;
+    gap: 48px;
     width: 100%;
     height: 100%;
+    max-height: 720px;
 }
 
 .navigation-side {
-    width: 60px;
+    width: 48px;
     flex-shrink: 0;
     display: flex;
+    align-items: center;
     justify-content: center;
-    z-index: 20;
+    align-self: stretch;
 }
 
 .vertical-nav-container {
@@ -187,6 +191,8 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    height: min(420px, 55vh);
 }
 
 .nav-track {
@@ -194,7 +200,7 @@ onUnmounted(() => {
     top: 0;
     bottom: 0;
     width: 1px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--border);
     left: 50%;
     transform: translateX(-50%);
 }
@@ -202,7 +208,8 @@ onUnmounted(() => {
 .vertical-nav {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    justify-content: space-between;
+    height: 100%;
     position: relative;
     z-index: 1;
 }
@@ -212,35 +219,32 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.4s ease;
 }
 
 .nav-circle {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid transparent;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: width var(--transition), height var(--transition), background-color var(--transition), border-color var(--transition);
 }
 
 .nav-number {
-    font-size: 0.7rem;
-    font-weight: 700;
-    font-family: 'Outfit', sans-serif;
-    color: black;
+    font-size: 0.55rem;
+    color: var(--bg-base);
+    letter-spacing: 0;
     opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
 .nav-item.active .nav-circle {
-    width: 24px;
-    height: 24px;
-    background: white;
-    transform: scale(1.2);
+    width: 28px;
+    height: 28px;
+    background: var(--text-main);
+    border-color: var(--text-main);
 }
 
 .nav-item.active .nav-number {
@@ -248,66 +252,61 @@ onUnmounted(() => {
 }
 
 .nav-item:hover .nav-circle {
-    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
 .content-area {
     position: relative;
     flex: 1;
     height: 100%;
+    min-height: 420px;
 }
 
 .feature-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     display: none;
-    pointer-events: none;
+    opacity: 0;
 }
 
 .feature-overlay.active {
     display: block;
-    pointer-events: auto;
+    opacity: 1;
+    animation: capFade 180ms ease;
+}
+
+@keyframes capFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .content-grid {
     display: flex;
     align-items: center;
     height: 100%;
-    width: 100%;
+    gap: 40px;
 }
 
 .explanation-side {
-    width: 450px;
+    width: 380px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    z-index: 15;
-    animation: fadeIn 0.4s ease forwards;
-    position: relative;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
+    gap: 20px;
 }
 
 .feature-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.04em;
-    color: white;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
 }
 
 .feature-description {
-    font-size: 1.3rem;
+    font-size: 1.05rem;
     color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 400px;
+    line-height: 1.65;
+    max-width: 360px;
 }
 
 .video-side {
@@ -315,49 +314,47 @@ onUnmounted(() => {
     height: 100%;
     display: flex;
     align-items: center;
-    position: relative;
+    min-width: 0;
 }
 
 .video-wrapper {
-    width: 200%;
-    height: 75vh;
-    margin-right: -80%;
-    border-radius: 10px;
+    width: 100%;
+    border-radius: var(--radius);
     overflow: hidden;
-    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9);
-    line-height: 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: perspective(2000px) rotateY(-12deg);
+    border: 1px solid var(--border);
     background: #000;
+    aspect-ratio: 16 / 10;
+}
+
+.video-chrome {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: #111113;
 }
 
 .feature-video {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 37px);
     object-fit: cover;
     display: block;
-}
-
-@media (max-width: 1200px) {
-    .explanation-side {
-        width: 380px;
-    }
-
-    .video-wrapper {
-        width: 180%;
-        margin-right: -60%;
-    }
 }
 
 @media (max-width: 1024px) {
     .capabilities-section {
         height: auto;
-        padding: 80px 0;
-        overflow: visible;
+    }
+
+    .capabilities-sticky {
+        position: relative;
+        height: auto;
+        padding: 72px 0;
     }
 
     .main-grid {
         display: block;
+        max-height: none;
         height: auto;
     }
 
@@ -367,65 +364,38 @@ onUnmounted(() => {
 
     .content-area {
         height: auto;
+        min-height: 0;
         display: flex;
         flex-direction: column;
-        gap: 80px;
+        gap: 64px;
     }
 
     .feature-overlay {
         position: relative;
         display: block !important;
+        opacity: 1 !important;
         height: auto;
-        width: 100%;
-        pointer-events: auto;
+        animation: none;
     }
 
     .content-grid {
         display: block;
         height: auto;
-        text-align: left;
     }
 
     .explanation-side {
         width: 100%;
-        align-items: flex-start;
-        padding: 0 20px;
-        animation: none;
-        gap: 16px;
-    }
-
-    .feature-title {
-        font-size: 2.5rem;
-        margin-bottom: 8px;
-    }
-
-    .feature-description {
-        font-size: 1.2rem;
-        max-width: 600px;
-        width: 100%;
-        margin: 0;
+        margin-bottom: 20px;
     }
 
     .video-side {
-        display: none; /* Removed videos on mobile as requested */
+        display: block;
     }
 }
 
 @media (max-width: 768px) {
-    .capabilities-section {
-        padding: 60px 0;
-    }
-
-    .content-area {
-        gap: 60px;
-    }
-
     .feature-title {
         font-size: 2rem;
-    }
-
-    .feature-description {
-        font-size: 1.1rem;
     }
 }
 </style>

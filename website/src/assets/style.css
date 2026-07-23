@@ -1,36 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import './satoshi.css';
 
 :root {
-    font-family:
-        Satoshi-Regular,
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        Oxygen,
-        Ubuntu,
-        Cantarell,
-        'Fira Sans',
-        'Droid Sans',
-        'Helvetica Neue',
-        sans-serif;
+    --font-main: 'Satoshi-Regular', 'Satoshi-Variable', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-display: 'Satoshi-Medium', 'Satoshi-Variable', 'Satoshi-Regular', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-    --bg-dark: #000000;
-    --bg-gradient: radial-gradient(circle at 50% 0%, #111111 0%, #000000 100%);
-    --primary-color: #ffffff;
-    --primary-glow: rgba(255, 255, 255, 0.2);
+    --bg-base: #0A0A0B;
+    --bg-surface: #151517;
+    --bg-dark: #0A0A0B;
 
-    --text-main: #ffffff;
-    --text-muted: #888888;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.16);
 
-    --glass-bg: rgba(20, 20, 20, 0.6);
+    --text-main: #F2F2F0;
+    --text-muted: #8A8A90;
+
+    --radius: 8px;
+    --radius-sm: 6px;
+    --transition: 180ms ease;
+
+    --primary-color: #F2F2F0;
+    --glass-bg: #151517;
     --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-blur: 30px;
-
-    --accent-gradient: linear-gradient(135deg, #ffffff, #888888);
-
-    --nav-height: 70px;
+    --glass-blur: 0px;
+    --nav-height: 64px;
 }
 
 * {
@@ -41,18 +35,18 @@
 
 body {
     font-family: var(--font-main);
-    background-color: #050505;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 100%);
-    background-size: 50px 50px, 50px 50px, 100% 100%;
-    background-repeat: repeat, repeat, no-repeat;
-    background-attachment: scroll, scroll, fixed;
+    background-color: var(--bg-base);
     color: var(--text-main);
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
 }
 
 a {
@@ -60,16 +54,22 @@ a {
     text-decoration: none;
 }
 
+.mono,
+.fig-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
 .glass-panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     position: relative;
-    transition: all 0.3s ease;
+    transition: border-color var(--transition);
 }
 
 .interactive-panel {
@@ -77,55 +77,73 @@ a {
 }
 
 .interactive-panel:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-    transform: translateY(-5px);
+    border-color: var(--border-hover);
 }
 
 .btn-primary {
-    background: white;
-    color: black;
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: none;
-    font-weight: 600;
-    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--text-main);
+    color: var(--bg-base);
+    padding: 12px 22px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
+    transition: background-color var(--transition), border-color var(--transition), color var(--transition);
 }
 
 .btn-primary:hover {
-    background: #f0f0f0;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
+    background: #ffffff;
 }
 
-/* Scrollbar */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-main);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color var(--transition), background-color var(--transition);
+}
+
+.btn-secondary:hover {
+    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.03);
+}
+
 ::-webkit-scrollbar {
     width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-dark);
+    background: var(--bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #333;
+    background: #2a2a2c;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #444;
+    background: #3a3a3c;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 @media (max-width: 768px) {

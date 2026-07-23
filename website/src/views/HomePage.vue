@@ -1,6 +1,7 @@
 <template>
     <div class="home-page">
         <HeroSection />
+        <ProductPreview />
         <WidgetSection />
         <CapabilityCarousel />
         <FeatureScroll />
@@ -8,19 +9,12 @@
         <BenchmarkSection />
         <FAQSection />
         <InstallationSection />
-
-        <!-- CTA Section -->
-        <section class="bottom-cta container">
-            <div class="glass-panel cta-box">
-                <h2>Ready to upgrade your browser?</h2>
-                <a href="#install" class="btn-primary"> Get CoolTab Now </a>
-            </div>
-        </section>
     </div>
 </template>
 
 <script setup>
 import HeroSection from "../components/HeroSection.vue";
+import ProductPreview from "../components/ProductPreview.vue";
 import WidgetSection from "../components/WidgetSection.vue";
 import CapabilityCarousel from "../components/CapabilityCarousel.vue";
 import FeatureScroll from "../components/FeatureScroll.vue";
@@ -29,51 +23,3 @@ import InstallationSection from "../components/InstallationSection.vue";
 import BenchmarkSection from "../components/BenchmarkSection.vue";
 import FAQSection from "../components/FAQSection.vue";
 </script>
-
-<style scoped>
-.bottom-cta {
-    margin-top: 100px;
-    text-align: center;
-}
-
-.cta-box {
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    position: relative;
-}
-
-.cta-box::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px;
-    height: 120px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
-    filter: blur(80px);
-    z-index: -1;
-    pointer-events: none;
-}
-
-h2 {
-    font-size: 2.5rem;
-}
-@media (max-width: 768px) {
-    .bottom-cta {
-        margin-top: 60px;
-    }
-    
-    .cta-box {
-        padding: 40px 20px;
-    }
-    
-    h2 {
-        font-size: 1.75rem;
-    }
-}
-</style>
