@@ -1,5 +1,7 @@
 import "./assets/base.css";
 import "./assets/satoshi.css";
+import 'material-icons/iconfont/material-icons.css';
+import 'qweather-icons/font/qweather-icons.css';
 
 import {createApp} from "vue";
 import {createPinia} from "pinia";
