@@ -37,9 +37,6 @@ export const useSettingsStore = defineStore("settings", {
 		temperatureUnit: localStorage.getItem("temperature-unit") || "Celsius",
 		rainUnit: localStorage.getItem("rain-unit") || "mm",
 		windUnit: localStorage.getItem("wind-unit") || "kmh",
-
-		// Remove this when all users have migrated to 1.17.11
-        isDeletedSomeFieldsForMigration: localStorage.getItem("is-deleted-some-fields-for-migration") === "true",
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {

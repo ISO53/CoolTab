@@ -62,24 +62,9 @@ import { defineAsyncComponent } from "vue";
 // should not be loaded to RAM if the user doesn't use the widget.
 const Location = defineAsyncComponent(() => import("./components/widgets/Location.vue"));
 
-function runOneTimeMigration() {
-	// If the fields already deleted, don't do anything
-	if (localStorage.getItem("is-deleted-some-fields-for-migration") === "true") return;
-
-	// Clean up legacy data
-	localStorage.removeItem("weather-info");
-	localStorage.removeItem("hourly-weather-info");
-	localStorage.removeItem("weekly-weather-info");
-
-	// Mark that the migration has been run
-	localStorage.setItem("is-deleted-some-fields-for-migration", true);
-};
-
 export default {
     name: "App",
 	setup() {
-		runOneTimeMigration();
-
         const settingsStore = useSettingsStore();
         return {settingsStore};
     },
