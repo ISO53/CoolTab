@@ -904,6 +904,11 @@ function getLocation() {
  */
 function processImage(file) {
     return new Promise((resolve) => {
+        // Never re-encode GIFs: the canvas resize flattens animation to a static frame
+        if (file.type === "image/gif") {
+            resolve(file);
+            return;
+        }
         const img = new Image();
         img.onload = () => {
             const screenWidth = window.screen.width * window.devicePixelRatio;
