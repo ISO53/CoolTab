@@ -25,72 +25,75 @@
 							<h2 class="section-title font-outfit">
 								Why did you uninstall CoolTab?
 							</h2>
-							<p class="section-desc">Select all that apply</p>
+							<p class="section-desc">
+								Select all that apply — a short explanation
+								is required for each
+							</p>
 
 							<div class="options-grid">
-								<label
+								<div
 									v-for="(option, index) in surveyOptions"
 									:key="index"
-									class="option-card"
-									:class="{
-										selected: selectedOptions.includes(
-											option.value,
-										),
-									}"
+									class="option-item"
 								>
-									<input
-										type="checkbox"
-										:value="option.value"
-										v-model="selectedOptions"
-										class="hidden-checkbox"
-									/>
-									<div class="option-content">
-										<span
-											class="option-icon"
-											v-html="option.icon"
-										></span>
-										<div class="option-text">
-											<span class="option-label">{{
-												option.label
-											}}</span>
-											<span class="option-sublabel">{{
-												option.sublabel
-											}}</span>
+									<label
+										class="option-card"
+										:class="{
+											selected: selectedOptions.includes(
+												option.value,
+											),
+										}"
+									>
+										<input
+											type="checkbox"
+											:value="option.value"
+											v-model="selectedOptions"
+											class="hidden-checkbox"
+										/>
+										<div class="option-content">
+											<span
+												class="option-icon"
+												v-html="option.icon"
+											></span>
+											<div class="option-text">
+												<span class="option-label">{{
+													option.label
+												}}</span>
+												<span class="option-sublabel">{{
+													option.sublabel
+												}}</span>
+											</div>
 										</div>
-									</div>
-									<div class="checkbox-indicator">
-										<svg
-											class="check-svg"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="3"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										>
-											<polyline
-												points="20 6 9 17 4 12"
-											></polyline>
-										</svg>
-									</div>
-								</label>
+										<div class="checkbox-indicator">
+											<svg
+												class="check-svg"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="3"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											>
+												<polyline
+													points="20 6 9 17 4 12"
+												></polyline>
+											</svg>
+										</div>
+									</label>
+									<textarea
+										v-if="
+											selectedOptions.includes(
+												option.value,
+											)
+										"
+										v-model="optionDetails[option.value]"
+										:placeholder="option.detailPlaceholder"
+										:aria-label="option.detailPlaceholder"
+										class="option-detail-textarea"
+										rows="3"
+									></textarea>
+								</div>
 							</div>
-						</div>
-
-						<div class="feedback-section">
-							<h2 class="section-title font-outfit">
-								Tell us more (optional)
-							</h2>
-							<p class="section-desc">
-								Please share any specific bugs, missing
-								features, or suggestions you have.
-							</p>
-							<textarea
-								v-model="customFeedback"
-								placeholder="Type your feedback here..."
-								class="feedback-textarea"
-								rows="4"
-							></textarea>
 						</div>
 
 						<div v-if="errorMsg" class="error-banner">
@@ -170,7 +173,7 @@ import { ref } from "vue";
 const submitted = ref(false);
 const submitting = ref(false);
 const selectedOptions = ref([]);
-const customFeedback = ref("");
+const optionDetails = ref({});
 const errorMsg = ref("");
 
 const surveyOptions = [
@@ -178,43 +181,59 @@ const surveyOptions = [
 		value: "missing-features",
 		label: "Missing Features",
 		sublabel: "I needed features that are not available yet",
+		detailPlaceholder: "What features were missing?",
 		icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>`,
 	},
 	{
 		value: "usability",
 		label: "Difficult to Use",
 		sublabel: "It was hard to configure or navigate",
+		detailPlaceholder: "What was difficult to use?",
 		icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
 	},
 	{
 		value: "design",
 		label: "UI & Layout Design",
 		sublabel: "I did not like the visual design or layout",
+		detailPlaceholder: "What didn't you like about the design?",
 		icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>`,
 	},
 	{
 		value: "distracting",
 		label: "Too Distracting",
 		sublabel: "It interfered with my focus or workflow",
+		detailPlaceholder: "What did you find distracting?",
 		icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8v7a4 4 0 0 0-2 3h16a3.89 3.89 0 0 0-1.26-2.26"/><path d="M2 2l20 20"/></svg>`,
 	},
 	{
 		value: "alternative",
 		label: "Found Alternative",
 		sublabel: "I switched to another startpage extension",
+		detailPlaceholder: "Which extension did you switch to?",
 		icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>`,
 	},
 	{
 		value: "other",
 		label: "Other Reason",
-		sublabel: "I prefer to specify below in the comments",
+		sublabel: "Describe your own reason below",
+		detailPlaceholder: "Please describe your reason",
 		icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
 	},
 ];
 
 const submitFeedback = async () => {
-	if (selectedOptions.value.length === 0 && !customFeedback.value.trim()) {
-		errorMsg.value = "Please select at least one option or write a comment.";
+	if (selectedOptions.value.length === 0) {
+		errorMsg.value = "Please select at least one option.";
+		return;
+	}
+
+	// Every selected reason requires its own explanation
+	if (
+		selectedOptions.value.some(
+			val => !(optionDetails.value[val] || "").trim(),
+		)
+	) {
+		errorMsg.value = "Please explain each selected reason.";
 		return;
 	}
 
@@ -227,10 +246,14 @@ const submitFeedback = async () => {
 		return opt ? opt.label : val;
 	});
 
-	// Fallback to "Other Reason" if custom text is provided without checkboxes checked
-	if (mappedOptions.length === 0 && customFeedback.value.trim()) {
-		mappedOptions.push("Other Reason");
-	}
+	// Attach each mandatory explanation to its reason label
+	const optionDetailsPayload = selectedOptions.value.map(val => {
+		const opt = surveyOptions.find(o => o.value === val);
+		return {
+			option: opt ? opt.label : val,
+			text: optionDetails.value[val].trim()
+		};
+	});
 
 	try {
 		const response = await fetch("https://cool-tab-api.vercel.app/api/uninstall-feedback", {
@@ -240,7 +263,7 @@ const submitFeedback = async () => {
 			},
 			body: JSON.stringify({
 				options: mappedOptions,
-				tellUsMore: customFeedback.value.trim() || undefined
+				optionDetails: optionDetailsPayload
 			})
 		});
 
@@ -306,8 +329,7 @@ const submitFeedback = async () => {
 	max-width: 480px;
 }
 
-.survey-section,
-.feedback-section {
+.survey-section {
 	margin-bottom: 36px;
 }
 
@@ -448,8 +470,9 @@ const submitFeedback = async () => {
 	transform: scale(1);
 }
 
-.feedback-textarea {
+.option-detail-textarea {
 	width: 100%;
+	margin-top: 10px;
 	padding: 14px;
 	border-radius: 10px;
 	background: rgba(0, 0, 0, 0.3);
@@ -460,16 +483,28 @@ const submitFeedback = async () => {
 	line-height: 1.5;
 	resize: vertical;
 	transition: all 0.25s ease;
+	animation: detail-reveal 0.25s ease;
 }
 
-.feedback-textarea:focus {
+.option-detail-textarea:focus {
 	outline: none;
 	border-color: rgba(255, 255, 255, 0.3);
 	box-shadow: 0 0 20px rgba(255, 255, 255, 0.04);
 }
 
-.feedback-textarea::placeholder {
+.option-detail-textarea::placeholder {
 	color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes detail-reveal {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .error-banner {
