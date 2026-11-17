@@ -6,9 +6,9 @@
 
         <Transition name="slide">
             <div v-show="isOpen" class="slide">
-                <Tabs :selected="'Customization'">
-                    <Tab :label="'Customization'" :icon="'palette'">
-                        <Customization />
+                <Tabs :selected="'Theme'">
+                    <Tab :label="'Theme'" :icon="'palette'">
+                        <Theme />
                     </Tab>
 
                     <Tab :label="'Styles'" :icon="'style'">
@@ -47,7 +47,7 @@ import Tab from "./Tab.vue";
 import Styles from "./Styles.vue";
 import CommunityStyles from "./CommunityStyles.vue";
 import Info from "./Info.vue";
-import Customization from "./Customization.vue";
+import Theme from "./Theme.vue";
 import Settings from "./Settings.vue";
 import Widgets from "./Widgets.vue";
 import {useSettingsStore} from "@/settings";
@@ -64,7 +64,7 @@ export default {
         Styles,
         CommunityStyles,
         Info,
-        Customization,
+        Theme,
         Settings,
         Widgets,
     },

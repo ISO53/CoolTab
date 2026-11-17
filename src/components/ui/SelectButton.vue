@@ -3,10 +3,11 @@
         <button
             v-for="(option, index) in options"
             :key="index"
-            :class="['select-button-option', {selected: modelValue === option}]"
+            :class="['select-button-option', {selected: modelValue === optionLabel(option)}]"
             @click="selectOption(option)"
         >
-            {{ option }}
+            <i v-if="optionIcon(option)" class="material-icons-outlined">{{ optionIcon(option) }}</i>
+            {{ optionLabel(option) }}
         </button>
     </div>
 </template>
@@ -28,9 +29,15 @@ export default {
         },
     },
     methods: {
+        optionLabel(option) {
+            return typeof option === "object" ? option.label : option;
+        },
+        optionIcon(option) {
+            return typeof option === "object" ? option.icon : null;
+        },
         selectOption(option) {
-            this.$emit("update:modelValue", option);
-            this.onSelect(option);
+            this.$emit("update:modelValue", this.optionLabel(option));
+            this.onSelect(this.optionLabel(option));
         },
     },
 };
@@ -66,6 +73,15 @@ export default {
     height: 30px;
     padding: 0 10px 0 10px;
     font-family: Satoshi-Regular;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.select-button-option .material-icons-outlined {
+    font-size: 1.1rem;
+    user-select: none;
 }
 
 .select-button-option:hover {
