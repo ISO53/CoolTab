@@ -67,6 +67,51 @@ export default {
 </script>
 
 <style scoped>
+/* Register the theme variables as typed colors so the card can
+   transition them on palette hover (Chrome 85+, Firefox 128+).
+   Without registration, custom property changes apply instantly. */
+@property --color-primary-text {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: rgb(250, 250, 250);
+}
+
+@property --color-secondary-text {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: rgb(200, 200, 200);
+}
+
+@property --color-tertiary-text {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: rgb(100, 100, 100);
+}
+
+@property --color-primary-background {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: rgb(0, 0, 0);
+}
+
+@property --color-secondary-background {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: rgb(20, 20, 20);
+}
+
+@property --color-tertiary-background {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: rgb(75, 75, 75);
+}
+
+@property --color-border-line {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: rgb(50, 50, 50);
+}
+
 .preview-card {
 	position: relative;
 	width: 100%;
@@ -75,6 +120,14 @@ export default {
 	border: 1px solid var(--color-border-line);
 	background-color: var(--color-primary-background);
 	overflow: hidden;
+	transition:
+		--color-primary-text 200ms ease,
+		--color-secondary-text 200ms ease,
+		--color-tertiary-text 200ms ease,
+		--color-primary-background 200ms ease,
+		--color-secondary-background 200ms ease,
+		--color-tertiary-background 200ms ease,
+		--color-border-line 200ms ease;
 }
 
 /* ── Ambient palette glow ── */
