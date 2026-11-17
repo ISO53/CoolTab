@@ -14,6 +14,8 @@
 			/>
 		</div>
 
+		<ThemePreview />
+
 		<div class="color-palette">
 			<ColorPalette :theme="theme" @select="setColors" />
 		</div>
@@ -23,6 +25,7 @@
 <script>
 import ColorPalette from "./ColorPalette.vue";
 import SelectButton from "./SelectButton.vue";
+import ThemePreview from "./ThemePreview.vue";
 import { useSettingsStore } from "@/settings";
 
 export default {
@@ -30,6 +33,7 @@ export default {
 	components: {
 		ColorPalette,
 		SelectButton,
+		ThemePreview,
 	},
 	data() {
 		return {
