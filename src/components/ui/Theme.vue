@@ -14,10 +14,21 @@
 			/>
 		</div>
 
-		<ThemePreview />
+		<div class="palette-info">
+			<Svg :class_name="'material-icons-outlined'" :name="'info'"></Svg>
+			<h2 v-if="this.theme === 'Dark'">Dark themes are best suited for dark colored wallpapers.</h2>
+			<h2 v-else>Light themes are best suited for light colored wallpapers.</h2>
+		</div>
+
+		<ThemePreview :preview-palette="previewPalette" />
 
 		<div class="color-palette">
-			<ColorPalette :theme="theme" @select="setColors" />
+			<ColorPalette
+				:theme="theme"
+				@select="setColors"
+				@hover="previewColors"
+				@leave="restoreColors"
+			/>
 		</div>
 	</div>
 </template>
@@ -26,6 +37,7 @@
 import ColorPalette from "./ColorPalette.vue";
 import SelectButton from "./SelectButton.vue";
 import ThemePreview from "./ThemePreview.vue";
+import Svg from "./Svg.vue";
 import { useSettingsStore } from "@/settings";
 
 export default {
@@ -34,6 +46,7 @@ export default {
 		ColorPalette,
 		SelectButton,
 		ThemePreview,
+		Svg,
 	},
 	data() {
 		return {
@@ -41,6 +54,7 @@ export default {
 			hue: 0,
 			saturation: 50,
 			theme: "Dark",
+			previewPalette: null,
 		};
 	},
 	methods: {
@@ -50,6 +64,12 @@ export default {
 		setColors(colors) {
 			this.settingsStore.setColorPalette({ color: "default", theme: this.theme });
 			this.settingsStore.setColors(colors);
+		},
+		previewColors(palette) {
+			this.previewPalette = palette;
+		},
+		restoreColors() {
+			this.previewPalette = null;
 		},
 	},
 };
@@ -69,5 +89,25 @@ export default {
 	font-size: 1rem;
 	font-weight: bold;
 	margin: 0;
+}
+
+.palette-info {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 5px;
+}
+
+.palette-info > i.svg {
+	font-size: 1.2rem;
+	color: var(--color-tertiary-text);
+}
+
+.palette-info > h2 {
+	font-family: Satoshi-Light;
+	color: var(--color-tertiary-text);
+	font-size: 1rem;
+	margin: 0;
+	font-weight: normal;
 }
 </style>

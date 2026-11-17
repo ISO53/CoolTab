@@ -1,5 +1,5 @@
 <template>
-	<div class="preview-card">
+	<div class="preview-card" :style="previewStyle">
 		<!-- Ambient background: current palette colors, blurred and mixed -->
 		<div class="ambient">
 			<span class="blob b1"></span>
@@ -42,6 +42,27 @@
 <script>
 export default {
 	name: "ThemePreview",
+	props: {
+		previewPalette: {
+			type: Object,
+			default: null,
+		},
+	},
+	computed: {
+		previewStyle() {
+			const palette = this.previewPalette;
+			if (!palette) return {};
+
+			// Override the theme CSS variables locally, scoped to this card
+			const style = {};
+			for (const key in palette) {
+				if (Object.hasOwn(palette, key) && key.startsWith("color_")) {
+					style[`--${key.replaceAll("_", "-")}`] = palette[key];
+				}
+			}
+			return style;
+		},
+	},
 };
 </script>
 
