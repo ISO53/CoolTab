@@ -48,32 +48,7 @@
                             <stop offset="0%" stop-color="var(--color-tertiary-text)" stop-opacity="1" />
                             <stop offset="100%" stop-color="var(--color-tertiary-text)" stop-opacity="0" />
                         </linearGradient>
-                        <linearGradient id="grid-line-gradient" x1="0" y1="4" x2="0" y2="86" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stop-color="var(--color-secondary-text)" stop-opacity="0" />
-                            <stop offset="100%" stop-color="var(--color-secondary-text)" stop-opacity="0.5" />
-                        </linearGradient>
                     </defs>
-
-                    <template v-for="(label, index) in xAxisLabels" :key="'grid-x-' + index">
-                        <line
-                            v-if="index !== 0 && index !== xAxisLabels.length - 1"
-                            :x1="label.xPercent"
-                            :y1="chartLayout.margins.top"
-                            :x2="label.xPercent"
-                            :y2="chartLayout.plotBottom"
-                            stroke="url(#grid-line-gradient)"
-                            stroke-width="0.5"
-                            vector-effect="non-scaling-stroke"
-                        />
-                    </template>
-
-                    <line
-                        :x1="chartLayout.margins.left"
-                        :y1="chartLayout.plotBottom"
-                        :x2="100 - chartLayout.margins.right"
-                        :y2="chartLayout.plotBottom"
-                        class="axis-line"
-                    />
 
                     <path
                         v-if="fillPathData && settingsStore.widgetBackground !== 'Transparent'"
@@ -161,13 +136,18 @@ const RANGE_OPTIONS = [
 ];
 
 const CHART_MARGIN = {
-    left: 2,
-    right: 2,
+    left: 0,
+    right: 0,
     bottom: 14,
     top: 4,
 };
 
-const TARGET_POINTS = 100;
+// Inset for the x-axis labels, matching the weather widget's label margins
+const AXIS_LABEL_MARGIN = 8;
+
+// One less than the point count must divide evenly by the 7 label intervals,
+// otherwise the x-axis label slots alternate between slightly uneven gaps
+const TARGET_POINTS = 99;
 
 export default {
     name: "LargeStock",
@@ -274,7 +254,7 @@ export default {
             if (!this.chartSeries.length) return [];
 
             const lastIndex = this.chartSeries.length - 1;
-            const indices = [0, 1/6, 2/6, 3/6, 4/6, 5/6, 1].map((ratio) => Math.round(ratio * lastIndex));
+            const indices = Array.from({ length: 8 }, (_, i) => Math.round((i / 7) * lastIndex));
             const points = [...new Set(indices)].map((index) => this.chartSeries[index]);
 
             const seen = new Set();
@@ -289,7 +269,8 @@ export default {
                 .map((point) => ({
                     x: point.x,
                     text: this.formatAxisDate(point.timestamp),
-                    xPercent: point.x,
+                    // Labels are inset within their own band, independent of the edge-to-edge line
+                    xPercent: AXIS_LABEL_MARGIN + (point.x / 100) * (100 - 2 * AXIS_LABEL_MARGIN),
                     yPercent: this.chartLayout.plotBottom + 6,
                 }));
         },
@@ -505,13 +486,6 @@ export default {
     cursor: crosshair;
 }
 
-.axis-line {
-    stroke: var(--color-secondary-text);
-    stroke-width: 0.35;
-    vector-effect: non-scaling-stroke;
-    opacity: 0.5;
-}
-
 .axis-labels {
     position: absolute;
     inset: 0;
@@ -521,21 +495,14 @@ export default {
 .axis-label {
     position: absolute;
     color: var(--color-secondary-text);
-    font-size: 4cqh;
-    line-height: 4cqh;
+    font-size: 4.5cqh;
+    line-height: 4.5cqh;
+    font-family: Satoshi-Light;
     white-space: nowrap;
 }
 
 .axis-label-x {
     transform: translate(-50%, -50%);
-}
-
-.axis-label-x:first-child {
-    transform: translate(0, -50%);
-}
-
-.axis-label-x:last-child {
-    transform: translate(-100%, -50%);
 }
 
 .live-line {
