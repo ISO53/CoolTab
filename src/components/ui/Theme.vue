@@ -6,7 +6,10 @@
 			<h2>Theme</h2>
 			<SelectButton
 				v-model="theme"
-				:options="['Light', 'Dark']"
+				:options="[
+					{ label: 'Light', icon: 'light_mode' },
+					{ label: 'Dark', icon: 'dark_mode' },
+				]"
 				:onSelect="setTheme"
 			/>
 		</div>
