@@ -159,13 +159,13 @@ export function onboarding() {
 			{
 				element: ".tabs-layout",
 				popover: {
-					title: "Customization Tab",
-					description: "On customization tab you can adjust colors of your new tab by selecting from predefined color palettes that supports both light and dark themes.",
+					title: "Theme Tab",
+					description: "On the theme tab you can adjust colors of your new tab by selecting from predefined color palettes that supports both light and dark themes.",
 					side: "right",
 					align: "center",
 				},
 				onHighlighted: () => {
-					// Ensure we start from the top tab (Customization)
+					// Ensure we start from the top tab (Theme)
 					setTimeout(() => {
 						const tab = document.querySelector(".rail-btn:nth-child(1)");
 						if (tab) tab.click();

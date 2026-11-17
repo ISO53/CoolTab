@@ -1,6 +1,6 @@
 <template>
 	<div style="display: flex; flex-direction: column; gap: 10px">
-		<h2 class="page-title">Customization</h2>
+		<h2 class="page-title">Theme</h2>
 
 		<div class="setting">
 			<h2>Theme</h2>
@@ -23,7 +23,7 @@ import SelectButton from "./SelectButton.vue";
 import { useSettingsStore } from "@/settings";
 
 export default {
-	name: "Customization",
+	name: "Theme",
 	components: {
 		ColorPalette,
 		SelectButton,
