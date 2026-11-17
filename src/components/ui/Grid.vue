@@ -16,7 +16,7 @@ export default {
     props: {
         cols: {type: Number, default: 20},
         editing: {type: Boolean, default: false},
-        dotColor: {type: String, default: "#c8c8c8"},
+        dotColor: {type: String, default: "#ffffff"},
     },
     data() {
         return {
@@ -106,6 +106,7 @@ export default {
 .grid-canvas {
     position: absolute;
     pointer-events: none;
+    mix-blend-mode: difference; /* Invert each dot color against the wallpaper behind it*/
 }
 
 .grid-items {

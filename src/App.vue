@@ -13,7 +13,7 @@
         <WallpaperGallery ref="wallpaperRef" />
         <ShareStyle ref="shareStyleRef" />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
-            <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing" :dotColor="this.settingsStore.colors.color_secondary_text">
+            <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing">
                 <GridItem
                     v-for="(widget, index) in settingsStore.widgets"
                     :key="index"
