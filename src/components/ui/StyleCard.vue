@@ -200,6 +200,7 @@ export default {
     height: 100%;
     width: 100%;
     gap: 0;
+    filter: blur(22px);
 }
 
 .palette-swatch {
