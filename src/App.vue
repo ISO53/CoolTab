@@ -6,7 +6,6 @@
         <Onboarding />
         <Buttons
             @toggle-sidebar="toggleSidebar"
-            @toggle-share="toggleSharePopup"
             @toggle-edit="toggleEditArea"
             @toggle-wallpaper="toggleWallpaper"
         />
@@ -107,9 +106,6 @@ export default {
         },
         toggleSidebar() {
             this.$refs.sidebarRef.toggleSidebar();
-        },
-        toggleSharePopup() {
-            this.$refs.shareStyleRef.toggleShareStyle();
         },
         toggleWallpaper() {
             if (this.$refs.wallpaperRef.toggle) {

@@ -1,10 +1,5 @@
 <template>
     <div class="community-container">
-        <div class="page-header">
-            <h2>Community Styles</h2>
-            <p class="subtitle">Discover styles shared by the CoolTab community</p>
-        </div>
-
         <!-- Loading skeletons -->
         <div v-if="loading" class="styles-grid">
             <div v-for="i in 6" :key="i" class="style-card skeleton-card">
@@ -238,19 +233,6 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 16px;
-}
-
-.page-header h2 {
-    font-family: Satoshi-Bold;
-    font-size: 1.2rem;
-    color: var(--color-primary-text);
-    margin: 0 0 4px 0;
-}
-
-.subtitle {
-    font-size: 0.78rem;
-    color: var(--color-tertiary-text);
-    margin: 0;
 }
 
 /* ── Grid ── */

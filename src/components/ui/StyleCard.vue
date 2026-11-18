@@ -1,56 +1,37 @@
 <template>
     <div class="style-card">
-        <div class="style-preview">
-            <div class="color-squares">
+        <div class="card-preview" :class="{placeholder: !previewUrl}">
+            <img v-if="previewUrl" :src="previewUrl" class="preview-image" alt="" draggable="false" />
+            <!-- Fallback for styles without a captured preview (legacy saves, imports) -->
+            <div v-else class="palette-preview">
                 <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_primary_background, borderColor: colors.color_border_line}"
-                    title="Primary Background"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_secondary_background, borderColor: colors.color_border_line}"
-                    title="Secondary Background"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_tertiary_background, borderColor: colors.color_border_line}"
-                    title="Tertiary Background"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_primary_text, borderColor: colors.color_border_line}"
-                    title="Primary Text"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_secondary_text, borderColor: colors.color_border_line}"
-                    title="Secondary Text"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_tertiary_text, borderColor: colors.color_border_line}"
-                    title="Tertiary Text"
+                    v-for="(color, key) in previewColors"
+                    :key="key"
+                    class="palette-swatch"
+                    :style="{backgroundColor: color}"
                 ></div>
             </div>
         </div>
-        <div class="style-info">
-            <h3>{{ style.name }}</h3>
-            <p class="style-date" v-if="style.createdAt">{{ formatDate(style.createdAt) }}</p>
-        </div>
-        <div class="style-actions">
-            <button class="action-btn" @click="handleApply" title="Apply style">
-                <Svg :class_name="'material-icons-outlined'" class="apply" :name="'check_circle'"></Svg>
-            </button>
-            <button class="action-btn" @click="handleDelete" title="Delete style">
-                <Svg :class_name="'material-icons-outlined'" class="delete" :name="'delete'"></Svg>
-            </button>
+        <div class="card-body">
+            <div class="card-text">
+                <h3>{{ style.name }}</h3>
+                <p class="style-date" v-if="style.createdAt">{{ formatDate(style.createdAt) }}</p>
+            </div>
+            <div class="card-actions">
+                <button class="action-btn" @click="handleApply" title="Apply style">
+                    <Svg :class_name="'material-icons-outlined apply'" :name="'check_circle'"></Svg>
+                </button>
+                <button class="action-btn" @click="handleDelete" title="Delete style">
+                    <Svg :class_name="'material-icons-outlined delete'" :name="'delete'"></Svg>
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import Svg from "./Svg.vue";
+import {getItem} from "@/utils/db";
 
 export default {
     name: "StyleCard",
@@ -63,7 +44,40 @@ export default {
             required: true,
         },
     },
+    data() {
+        return {
+            previewUrl: null,
+        };
+    },
+    watch: {
+        // The hasPreview flag flips reactively when the preview backfill finishes
+        "style.hasPreview": {
+            immediate: true,
+            handler: "loadPreview",
+        },
+    },
+    beforeUnmount() {
+        this.revokePreview();
+    },
     methods: {
+        async loadPreview() {
+            this.revokePreview();
+            if (!this.style.hasPreview) return;
+            try {
+                const blob = await getItem(`style-preview-${this.style.id}`);
+                if (blob && this.style.hasPreview) {
+                    this.previewUrl = URL.createObjectURL(blob);
+                }
+            } catch (e) {
+                console.error("Failed to load style preview:", e);
+            }
+        },
+        revokePreview() {
+            if (this.previewUrl) {
+                URL.revokeObjectURL(this.previewUrl);
+                this.previewUrl = null;
+            }
+        },
         handleApply() {
             this.$emit("apply", this.style.id);
         },
@@ -81,18 +95,25 @@ export default {
         },
     },
     computed: {
-        colors() {
-            if (this.style?.settings?.colors) {
-                return this.style.settings.colors;
+        previewColors() {
+            const colors = this.style?.settings?.colors;
+            if (!colors) {
+                return {
+                    a: "#000000",
+                    b: "#141414",
+                    c: "#4b4b4b",
+                    d: "#fafafa",
+                    e: "#c8c8c8",
+                    f: "#323232",
+                };
             }
             return {
-                color_primary_background: "#000",
-                color_secondary_background: "#141414",
-                color_tertiary_background: "#4b4b4b",
-                color_primary_text: "#fafafa",
-                color_secondary_text: "#c8c8c8",
-                color_tertiary_text: "#646464",
-                color_border_line: "#323232",
+                a: colors.color_primary_background,
+                b: colors.color_secondary_background,
+                c: colors.color_tertiary_background,
+                d: colors.color_primary_text,
+                e: colors.color_secondary_text,
+                f: colors.color_border_line,
             };
         },
     },
@@ -101,11 +122,7 @@ export default {
 
 <style scoped>
 .style-card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     width: 100%;
-    min-height: 64px;
     overflow: hidden;
     background-color: var(--color-secondary-background);
     color: var(--color-secondary-text);
@@ -115,40 +132,56 @@ export default {
     user-select: none;
 }
 
-.style-preview {
-    width: 160px;
-    height: 64px;
+.card-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 0.45;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    padding: 6px;
 }
 
-.color-squares {
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card-preview.placeholder {
+    background-color: var(--color-primary-background);
+}
+
+/* Fallback palette, matching the Community Styles cards */
+.palette-preview {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 4px;
+    height: 100%;
+    width: 100%;
+    gap: 0;
+}
+
+.palette-swatch {
     width: 100%;
     height: 100%;
 }
 
-.color-square {
-    border: 2px solid var(--color-border-line);
-    border-radius: 5px;
+.card-body {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-.style-info {
-    padding: 8px 12px;
+.card-text {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.style-info h3 {
+.card-text h3 {
     margin: 0;
     font-family: Satoshi-Bold;
     font-size: 0.95rem;
@@ -163,12 +196,10 @@ export default {
     color: var(--color-tertiary-text);
 }
 
-.style-actions {
+.card-actions {
     display: flex;
-    gap: 8px;
-    padding: 8px 12px;
-    border-left: 1px solid var(--color-border-line);
     align-items: center;
+    gap: 8px;
 }
 
 .action-btn {

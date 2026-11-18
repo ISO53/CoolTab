@@ -172,13 +172,22 @@ export const useSettingsStore = defineStore("settings", {
                 // ignore errors; don't block startup
             }
         },
-        createStyle(name) {
+        async createStyle(name) {
+            // Capture a preview screenshot of the current design using snapdom
+            const {captureCurrentDesign} = await import("@/utils/stylePreview");
+            const previewBlob = await captureCurrentDesign();
+
             const style = {
                 id: Date.now().toString(),
                 name: name,
                 createdAt: new Date().toISOString(),
                 settings: this.getStyleSnapshot(),
             };
+
+            if (previewBlob) {
+                style.hasPreview = true;
+                await setItem(`style-preview-${style.id}`, previewBlob);
+            }
 
             // If there's a custom background image, save a copy for this style
             const currentImage = this.backgroundImage;
@@ -196,6 +205,17 @@ export const useSettingsStore = defineStore("settings", {
             storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
             return style;
         },
+        setStylePreview(styleId, blob = null) {
+            const style = this.userStyles?.find((t) => t.id === styleId);
+            if (!style) return;
+            if (blob) {
+                setItem(`style-preview-${styleId}`, blob);
+            }
+            if (!style.hasPreview) {
+                style.hasPreview = true;
+                storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
+            }
+        },
         deleteStyle(styleId) {
             // Only allow deleting user styles
             const index = this.userStyles ? this.userStyles.findIndex((t) => t.id === styleId) : -1;
@@ -204,6 +224,7 @@ export const useSettingsStore = defineStore("settings", {
                 this.userStyles.splice(index, 1);
                 storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
                 removeItem(`style-image-${styleIdToDelete}`);
+                removeItem(`style-preview-${styleIdToDelete}`);
             }
         },
         async applyStyle(styleId) {
