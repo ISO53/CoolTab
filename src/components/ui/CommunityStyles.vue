@@ -34,24 +34,58 @@
         </div>
 
         <!-- Grid -->
-        <div v-else class="styles-grid">
-            <StyleCard
-                v-for="style in styles"
-                :key="style._id"
-                :style="style"
-                variant="community"
-                :saved="isSaved(style._id)"
-                :disabled="loadingId === style._id"
-                @save="saveStyle(style)"
-                @apply="applyStyle(style)"
-            />
-        </div>
+        <template v-else>
+            <div class="styles-grid">
+                <StyleCard
+                    v-for="style in styles"
+                    :key="style._id"
+                    :style="style"
+                    variant="community"
+                    :saved="isSaved(style._id)"
+                    :disabled="loadingId === style._id"
+                    @save="saveStyle(style)"
+                    @apply="applyStyle(style)"
+                />
+            </div>
+
+            <!-- Loading more skeletons -->
+            <div v-if="loadingMore" class="styles-grid">
+                <div v-for="i in 3" :key="i" class="skeleton-card">
+                    <div class="skeleton-preview"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-text">
+                            <div class="skeleton-line wide"></div>
+                            <div class="skeleton-line short"></div>
+                        </div>
+                        <div class="skeleton-actions">
+                            <div class="skeleton-btn"></div>
+                            <div class="skeleton-btn"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load more failed -->
+            <div v-else-if="loadMoreError" class="empty-state">
+                <p>Couldn't load more styles</p>
+                <button class="retry-btn" @click="loadMore">
+                    <i class="material-icons-outlined">refresh</i>
+                    Retry
+                </button>
+            </div>
+
+            <!-- Infinite scroll sentinel -->
+            <div v-else-if="hasMore" ref="sentinel" class="sentinel"></div>
+        </template>
     </div>
 </template>
 
 <script>
 import {useSettingsStore} from "@/settings";
 import StyleCard from "./StyleCard.vue";
+
+const API_URL = "https://cool-tab-api.vercel.app/api/get-styles";
+const PAGE_SIZE = 8;
 
 export default {
     name: "CommunityStyles",
@@ -68,10 +102,19 @@ export default {
             loading: true,
             error: false,
             loadingId: null,
+            page: 1,
+            hasMore: false,
+            loadingMore: false,
+            loadMoreError: false,
+            observer: null,
         };
     },
     mounted() {
         this.fetchStyles();
+    },
+    beforeUnmount() {
+        this.observer?.disconnect();
+        this.observer = null;
     },
     methods: {
         isSaved(communityStyleId) {
@@ -80,10 +123,16 @@ export default {
         async fetchStyles() {
             this.loading = true;
             this.error = false;
+            this.page = 1;
+            this.hasMore = false;
+            this.loadMoreError = false;
             try {
-                const res = await fetch("https://cool-tab-api.vercel.app/api/get-styles?type=basic");
+                const res = await fetch(`${API_URL}?type=basic&page=1&limit=${PAGE_SIZE}`);
                 if (res.ok) {
-                    this.styles = await res.json();
+                    const data = await res.json();
+                    // Fall back to the bare-array shape of an API without pagination support
+                    this.styles = data.styles ?? data;
+                    this.hasMore = data.hasMore ?? false;
                 } else {
                     this.error = true;
                 }
@@ -92,6 +141,53 @@ export default {
             } finally {
                 this.loading = false;
             }
+            this.$nextTick(() => this.observeSentinel());
+        },
+
+        async loadMore() {
+            if (this.loadingMore || !this.hasMore) return;
+            this.loadingMore = true;
+            this.loadMoreError = false;
+            // Pause observation while fetching; re-observing afterwards also
+            // re-fires a fetch if the sentinel is still on screen
+            this.observer?.disconnect();
+            try {
+                const nextPage = this.page + 1;
+                const res = await fetch(`${API_URL}?type=basic&page=${nextPage}&limit=${PAGE_SIZE}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const incoming = data.styles ?? data;
+                    // Styles created between page fetches shift the offset; drop anything already shown
+                    const seen = new Set(this.styles.map((s) => s._id));
+                    this.styles.push(...incoming.filter((s) => !seen.has(s._id)));
+                    this.page = nextPage;
+                    this.hasMore = data.hasMore ?? incoming.length === PAGE_SIZE;
+                } else {
+                    this.loadMoreError = true;
+                }
+            } catch {
+                this.loadMoreError = true;
+            } finally {
+                this.loadingMore = false;
+                this.$nextTick(() => this.observeSentinel());
+            }
+        },
+
+        observeSentinel() {
+            if (!this.hasMore || this.loadMoreError) return;
+            const el = this.$refs.sentinel;
+            if (!el) return;
+            if (!this.observer) {
+                this.observer = new IntersectionObserver(
+                    (entries) => {
+                        if (entries.some((entry) => entry.isIntersecting)) {
+                            this.loadMore();
+                        }
+                    },
+                    {rootMargin: "400px"}
+                );
+            }
+            this.observer.observe(el);
         },
 
         async applyStyle(style) {
@@ -212,6 +308,12 @@ export default {
     50% {
         opacity: 0.5;
     }
+}
+
+/* ── Infinite scroll ── */
+.sentinel {
+    width: 100%;
+    height: 1px;
 }
 
 /* ── Empty / Error ── */
