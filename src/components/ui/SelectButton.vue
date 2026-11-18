@@ -37,7 +37,7 @@ export default {
         },
         selectOption(option) {
             this.$emit("update:modelValue", this.optionLabel(option));
-            this.onSelect(this.optionLabel(option));
+            if (this.onSelect) this.onSelect(this.optionLabel(option));
         },
     },
 };

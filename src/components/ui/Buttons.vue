@@ -4,10 +4,6 @@
             <Svg :class_name="'material-icons-outlined'" :name="'image'"></Svg>
         </button>
 
-        <button @click="toggleSharePopup" class="button" title="Share this style!">
-            <Svg :class_name="'material-icons-outlined'" :name="'share'"></Svg>
-        </button>
-
         <button @click="toggleEditArea" class="button" title="Edit layout">
             <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
         </button>
@@ -61,9 +57,6 @@ export default {
         },
         toggleSidebar() {
             this.$emit("toggle-sidebar");
-        },
-        toggleSharePopup() {
-            this.$emit("toggle-share");
         },
         toggleWallpaperGallery() {
             this.$emit("toggle-wallpaper");

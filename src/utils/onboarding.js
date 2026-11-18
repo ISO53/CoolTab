@@ -39,7 +39,7 @@ export function onboarding() {
 				element: "#Buttons",
 				popover: {
 					title: "CoolTab Features Tour",
-					description: "Hover your mouse in this bottom-left corner to reveal the action buttons. These buttons let's you choose wallpapers, share your style, edit the widgets and access to settings panel.",
+					description: "Hover your mouse in this bottom-left corner to reveal the action buttons. These buttons let's you choose wallpapers, edit the widgets and access to settings panel.",
 					side: "right",
 					align: "end",
 				},
@@ -100,23 +100,6 @@ export function onboarding() {
 			{
 				element: "#Buttons button:nth-child(2)",
 				popover: {
-					title: "Share Your Style",
-					description: "Once you design a beautiful layout and color scheme, you can share it with the community here.",
-					side: "right",
-					align: "center",
-				},
-				onHighlightStarted: () => {
-					// Close wallpaper gallery
-					const gallery = document.querySelector(".gallery");
-					if (gallery) {
-						const btn = document.querySelector("#Buttons button:nth-child(1)");
-						if (btn) btn.click();
-					}
-				},
-			},
-			{
-				element: "#Buttons button:nth-child(3)",
-				popover: {
 					title: "Edit Mode",
 					description: "Click here to activate the edit mode.",
 					side: "right",
@@ -132,28 +115,23 @@ export function onboarding() {
 					align: "center",
 				},
 				onHighlightStarted: () => {
-					const btn = document.querySelector("#Buttons button:nth-child(3)");
+					const btn = document.querySelector("#Buttons button:nth-child(2)");
 					// Open the edit mode
 					if (btn) btn.click();
 				},
 				onDeselected: () => {
-					const btn = document.querySelector("#Buttons button:nth-child(3)");
+					const btn = document.querySelector("#Buttons button:nth-child(2)");
 					// Close the edit mode on the next step
 					if (btn) btn.click();
 				},
 			},
 			{
-				element: "#Buttons button:nth-child(4)",
+				element: "#Buttons button:nth-child(3)",
 				popover: {
 					title: "Sidebar",
 					description: "Click here to open the sidebar.",
 					side: "right",
 					align: "center",
-				},
-				onHighlightStarted: () => {
-					// Open the sidebar for the next step
-					const btn = document.querySelector("#Buttons button:nth-child(4)");
-					if (btn) btn.click();
 				},
 			},
 			{
@@ -163,6 +141,17 @@ export function onboarding() {
 					description: "On the theme tab you can adjust colors of your new tab by selecting from predefined color palettes that supports both light and dark themes.",
 					side: "right",
 					align: "center",
+				},
+				onHighlightStarted: () => {
+					const slide = document.querySelector(".slide");
+					if (slide && slide.style.display === "none") {
+						slide.style.transition = "none";
+						const btn = document.querySelector("#Buttons button:nth-child(3)");
+						if (btn) btn.click();
+						setTimeout(() => {
+							slide.style.transition = "";
+						}, 250);
+					}
 				},
 				onHighlighted: () => {
 					// Ensure we start from the top tab (Theme)
@@ -176,7 +165,7 @@ export function onboarding() {
 				element: ".tabs-layout",
 				popover: {
 					title: "Personal Styles",
-					description: "A style is a saved snapshot of all your settings, including background image, layout columns, colors, and active widgets. You can save, manage, and swap your personal styles here.",
+					description: "A style is a saved snapshot of all your settings, including background image, layout columns, colors, and widgets. You can manage your personal styles here.",
 					side: "right",
 					align: "center",
 				},
@@ -186,15 +175,28 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".tabs-layout",
+				element: ".floating-actions",
 				popover: {
-					title: "Community Styles",
-					description: "Check out and apply stunning styles created and shared by other CoolTab users around the world.",
-					side: "right",
+					title: "Save Your Style",
+					description: "Save your current design as a personal style. You can apply, share or delete any of your styles from the menu on their card.",
+					side: "left",
 					align: "center",
 				},
 				onHighlighted: () => {
-					const tab = document.querySelector(".rail-btn:nth-child(3)");
+					const tab = document.querySelector(".rail-btn:nth-child(2)");
+					if (tab) tab.click();
+				},
+			},
+			{
+				element: ".select-button",
+				popover: {
+					title: "Community Styles",
+					description: "Use this filter to switch between your own styles and CoolTab community styles. Any community style can be saved to your collection or applied instantly.",
+					side: "top",
+					align: "center",
+				},
+				onHighlighted: () => {
+					const tab = document.querySelector(".rail-btn:nth-child(2)");
 					if (tab) tab.click();
 				},
 			},
@@ -207,7 +209,7 @@ export function onboarding() {
 					align: "center",
 				},
 				onHighlighted: () => {
-					const tab = document.querySelector(".rail-btn:nth-child(4)");
+					const tab = document.querySelector(".rail-btn:nth-child(3)");
 					if (tab) tab.click();
 				},
 			},
@@ -220,7 +222,7 @@ export function onboarding() {
 					align: "center",
 				},
 				onHighlighted: () => {
-					const tab = document.querySelector(".rail-btn:nth-child(5)");
+					const tab = document.querySelector(".rail-btn:nth-child(4)");
 					if (tab) tab.click();
 				},
 			},
@@ -233,12 +235,12 @@ export function onboarding() {
 					align: "center",
 				},
 				onHighlighted: () => {
-					const tab = document.querySelector(".rail-btn:nth-child(6)");
+					const tab = document.querySelector(".rail-btn:nth-child(5)");
 					if (tab) tab.click();
 				},
 			},
 			{
-				element: ".tour-button",
+				element: ".floating-button",
 				popover: {
 					title: "Tour",
 					description: "You can run this tour anytime you want to learn about the features of CoolTab.",

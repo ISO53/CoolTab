@@ -1,74 +1,143 @@
 <template>
     <div class="style-card">
-        <div class="style-preview">
-            <div class="color-squares">
+        <div class="card-preview" :class="{placeholder: !previewSrc}">
+            <img v-if="previewSrc" :src="previewSrc" class="preview-image" alt="" draggable="false" />
+            <!-- Flagged cards show a quiet placeholder while their blob loads;
+                 the loud palette wash is only for styles with no preview at all -->
+            <div v-else-if="loadingPreview" class="preview-loading"></div>
+            <div v-else class="palette-preview">
                 <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_primary_background, borderColor: colors.color_border_line}"
-                    title="Primary Background"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_secondary_background, borderColor: colors.color_border_line}"
-                    title="Secondary Background"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_tertiary_background, borderColor: colors.color_border_line}"
-                    title="Tertiary Background"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_primary_text, borderColor: colors.color_border_line}"
-                    title="Primary Text"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_secondary_text, borderColor: colors.color_border_line}"
-                    title="Secondary Text"
-                ></div>
-                <div
-                    class="color-square"
-                    :style="{backgroundColor: colors.color_tertiary_text, borderColor: colors.color_border_line}"
-                    title="Tertiary Text"
+                    v-for="(color, key) in previewColors"
+                    :key="key"
+                    class="palette-swatch"
+                    :style="{backgroundColor: color}"
                 ></div>
             </div>
         </div>
-        <div class="style-info">
-            <h3>{{ style.name }}</h3>
-            <p class="style-date" v-if="style.createdAt">{{ formatDate(style.createdAt) }}</p>
-        </div>
-        <div class="style-actions">
-            <button class="action-btn" @click="handleApply" title="Apply style">
-                <Svg :class_name="'material-icons-outlined'" class="apply" :name="'check_circle'"></Svg>
-            </button>
-            <button class="action-btn" @click="handleDelete" title="Delete style">
-                <Svg :class_name="'material-icons-outlined'" class="delete" :name="'delete'"></Svg>
-            </button>
+        <div class="card-body">
+            <div class="card-text">
+                <h3 class="card-name">{{ style.name }}</h3>
+                <p class="card-date" v-if="style.createdAt">{{ formatDate(style.createdAt) }}</p>
+            </div>
+            <DropdownButton
+                v-if="variant === 'mine'"
+                action="Apply"
+                icon="check_circle"
+                :items="mineItems"
+                title="Style actions"
+                @action="$emit('apply', style.id)"
+                @select="onMenuSelect"
+            />
+            <DropdownButton
+                v-else
+                :action="saved ? 'Saved' : 'Apply & Save'"
+                :icon="saved ? 'check_circle' : 'check_circle_outline'"
+                :items="communityItems"
+                title="Community style actions"
+                :disabled="disabled"
+                @action="$emit('apply')"
+                @select="$emit('save')"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import Svg from "./Svg.vue";
+import DropdownButton from "./DropdownButton.vue";
+import {getItem} from "@/utils/db";
+
+const MINE_ITEMS = [
+    {id: "share", icon: "share", label: "Share"},
+    {id: "delete", icon: "delete", label: "Delete", danger: true},
+];
+
+const COMMUNITY_ITEMS = [
+    {id: "save", icon: "bookmark_border", label: "Save"},
+];
+
+// Session-level cache so remounting the tab reuses object URLs instead of
+// re-fetching every preview blob from IndexedDB
+const previewUrlCache = new Map();
 
 export default {
     name: "StyleCard",
     components: {
-        Svg,
+        DropdownButton,
     },
     props: {
         style: {
             type: Object,
             required: true,
         },
+        variant: {
+            type: String,
+            default: "mine",
+        },
+        // Community only: the style is already saved to My Styles
+        saved: {
+            type: Boolean,
+            default: false,
+        },
+        // Community only: disables the actions while a request is running
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    emits: ["apply", "delete", "save", "share"],
+    data() {
+        return {
+            mineItems: MINE_ITEMS,
+            communityItems: COMMUNITY_ITEMS,
+            previewUrl: null,
+            previewResolved: false,
+        };
+    },
+    watch: {
+        // The hasPreview flag flips reactively when the preview backfill finishes
+        "style.hasPreview": {
+            immediate: true,
+            handler: "loadPreview",
+        },
     },
     methods: {
-        handleApply() {
-            this.$emit("apply", this.style.id);
+        onMenuSelect(item) {
+            // Share carries the style itself; delete carries its id (fixes the
+            // no-payload emit that previously made delete a silent no-op)
+            if (item.id === "share") {
+                this.$emit("share", this.style);
+            } else if (item.id === "delete") {
+                this.$emit("delete", this.style.id);
+            }
         },
-        handleDelete() {
-            this.$emit("delete", this.style.id);
+        async loadPreview() {
+            this.previewResolved = false;
+
+            // Reuse the session-cached URL when the card remounts
+            const cached = previewUrlCache.get(this.style.id);
+            if (cached) {
+                this.previewUrl = cached;
+                this.previewResolved = true;
+                return;
+            }
+
+            if (this.variant !== "mine" || !this.style.hasPreview) {
+                this.previewResolved = true;
+                return;
+            }
+
+            try {
+                const blob = await getItem(`style-preview-${this.style.id}`);
+                if (blob && this.style.hasPreview) {
+                    const url = URL.createObjectURL(blob);
+                    previewUrlCache.set(this.style.id, url);
+                    this.previewUrl = url;
+                }
+            } catch (e) {
+                console.error("Failed to load style preview:", e);
+            } finally {
+                this.previewResolved = true;
+            }
         },
         formatDate(dateString) {
             if (!dateString) return "";
@@ -81,18 +150,36 @@ export default {
         },
     },
     computed: {
-        colors() {
-            if (this.style?.settings?.colors) {
-                return this.style.settings.colors;
+        previewSrc() {
+            if (this.variant === "community") {
+                return this.style.preview || null;
+            }
+            return this.previewUrl;
+        },
+        // Flagged cards with a still-loading blob show a quiet placeholder
+        // instead of the loud palette wash
+        loadingPreview() {
+            return this.variant === "mine" && this.style.hasPreview && !this.previewResolved;
+        },
+        previewColors() {
+            const colors = this.style?.settings?.colors;
+            if (!colors) {
+                return {
+                    a: "#000000",
+                    b: "#141414",
+                    c: "#4b4b4b",
+                    d: "#fafafa",
+                    e: "#c8c8c8",
+                    f: "#323232",
+                };
             }
             return {
-                color_primary_background: "#000",
-                color_secondary_background: "#141414",
-                color_tertiary_background: "#4b4b4b",
-                color_primary_text: "#fafafa",
-                color_secondary_text: "#c8c8c8",
-                color_tertiary_text: "#646464",
-                color_border_line: "#323232",
+                a: colors.color_primary_background,
+                b: colors.color_secondary_background,
+                c: colors.color_tertiary_background,
+                d: colors.color_primary_text,
+                e: colors.color_secondary_text,
+                f: colors.color_border_line,
             };
         },
     },
@@ -101,97 +188,81 @@ export default {
 
 <style scoped>
 .style-card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     width: 100%;
-    min-height: 64px;
+    border-radius: 10px;
     overflow: hidden;
     background-color: var(--color-secondary-background);
-    color: var(--color-secondary-text);
-    border-radius: 10px;
-    text-align: left;
     border: 2px solid var(--color-border-line);
+    transition:
+        border-color 200ms ease,
+        transform 200ms ease;
     user-select: none;
 }
 
-.style-preview {
-    width: 160px;
-    height: 64px;
+.card-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 0.45;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    padding: 6px;
 }
 
-.color-squares {
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card-preview.placeholder,
+.preview-loading {
+    background-color: var(--color-primary-background);
+}
+
+/* Fallback palette */
+.palette-preview {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 4px;
+    height: 100%;
+    width: 100%;
+    gap: 0;
+    filter: blur(22px);
+}
+
+.palette-swatch {
     width: 100%;
     height: 100%;
 }
 
-.color-square {
-    border: 2px solid var(--color-border-line);
-    border-radius: 5px;
-}
-
-.style-info {
-    padding: 8px 12px;
-    flex: 1;
+.card-body {
+    padding: 10px;
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-.style-info h3 {
-    margin: 0;
+.card-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-name {
     font-family: Satoshi-Bold;
     font-size: 0.95rem;
     color: var(--color-primary-text);
-    word-break: break-word;
-}
-
-.style-date {
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-date {
     font-family: Satoshi-Light;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
     color: var(--color-tertiary-text);
-}
-
-.style-actions {
-    display: flex;
-    gap: 8px;
-    padding: 8px 12px;
-    border-left: 1px solid var(--color-border-line);
-    align-items: center;
-}
-
-.action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: transparent;
-    border: none;
-}
-
-.action-btn > i {
-    cursor: pointer;
-    transition: color 200ms ease, transform 200ms ease;
-}
-
-.apply:hover {
-    color: green;
-}
-
-.delete:hover {
-    color: red;
-    transform: rotate(15deg);
+    margin: 0;
 }
 </style>

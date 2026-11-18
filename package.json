@@ -1,6 +1,6 @@
 {
   "name": "cool-tab",
-  "version": "1.17.16",
+  "version": "1.18.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vercel/blob": "^2.3.3",
+    "@zumer/snapdom": "^3.8.0",
     "cobe": "^2.0.1",
     "driver.js": "^1.6.0",
     "material-icons": "^1.13.14",

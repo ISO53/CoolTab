@@ -6,12 +6,10 @@
         <Onboarding />
         <Buttons
             @toggle-sidebar="toggleSidebar"
-            @toggle-share="toggleSharePopup"
             @toggle-edit="toggleEditArea"
             @toggle-wallpaper="toggleWallpaper"
         />
         <WallpaperGallery ref="wallpaperRef" />
-        <ShareStyle ref="shareStyleRef" />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing">
                 <GridItem
@@ -50,7 +48,6 @@ import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vu
 import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
 import Buttons from "./components/ui/Buttons.vue";
 import WallpaperGallery from "@/components/ui/WallpaperGallery.vue";
-import ShareStyle from "./components/ui/ShareStyle.vue";
 import TodoList from "./components/widgets/TodoList.vue";
 import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "./components/widgets/MonthlyCalendar.vue";
@@ -89,7 +86,6 @@ export default {
         NewFeaturesPanel,
         Buttons,
         WallpaperGallery,
-        ShareStyle,
         TodoList,
         HourlyWeatherForecast,
         MonthlyCalendar,
@@ -107,9 +103,6 @@ export default {
         },
         toggleSidebar() {
             this.$refs.sidebarRef.toggleSidebar();
-        },
-        toggleSharePopup() {
-            this.$refs.shareStyleRef.toggleShareStyle();
         },
         toggleWallpaper() {
             if (this.$refs.wallpaperRef.toggle) {

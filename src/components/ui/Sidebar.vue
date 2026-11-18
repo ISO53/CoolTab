@@ -15,10 +15,6 @@
                         <Styles />
                     </Tab>
 
-                    <Tab :label="'Community'" :icon="'explore'">
-                        <CommunityStyles />
-                    </Tab>
-
                     <Tab :label="'Widgets'" :icon="'widgets'">
                         <Widgets />
                     </Tab>
@@ -45,7 +41,6 @@
 import Tabs from "./Tabs.vue";
 import Tab from "./Tab.vue";
 import Styles from "./Styles.vue";
-import CommunityStyles from "./CommunityStyles.vue";
 import Info from "./Info.vue";
 import Theme from "./Theme.vue";
 import Settings from "./Settings.vue";
@@ -62,7 +57,6 @@ export default {
         Tabs,
         Tab,
         Styles,
-        CommunityStyles,
         Info,
         Theme,
         Settings,
