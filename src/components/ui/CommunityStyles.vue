@@ -5,8 +5,10 @@
             <div v-for="i in 6" :key="i" class="skeleton-card">
                 <div class="skeleton-preview"></div>
                 <div class="skeleton-body">
-                    <div class="skeleton-line wide"></div>
-                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-text">
+                        <div class="skeleton-line wide"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
                     <div class="skeleton-actions">
                         <div class="skeleton-btn"></div>
                         <div class="skeleton-btn"></div>
@@ -180,23 +182,31 @@ export default {
 }
 
 .skeleton-body {
-    padding: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.skeleton-text {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
 .skeleton-line {
-    height: 10px;
+    height: 19px;
     border-radius: 6px;
     background-color: var(--color-tertiary-background);
     opacity: 0.3;
-    margin: 4px 0;
 }
 
 .skeleton-btn {
     width: 60px;
-    height: 28px;
+    height: 32px;
     border-radius: 8px;
     background-color: var(--color-tertiary-background);
     opacity: 0.3;
