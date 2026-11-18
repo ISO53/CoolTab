@@ -269,28 +269,33 @@ export const useSettingsStore = defineStore("settings", {
                 return {success: false, error: e.message};
             }
         },
-        async shareUserStyle(styleName) {
+        async shareUserStyle(styleName, style = null) {
             try {
-                const snapshot = this.getStyleSnapshot();
+                // Without a style argument the current design is shared; with one,
+                // the saved style's own snapshot and wallpaper are shared instead.
+                const snapshot = style ? JSON.parse(JSON.stringify(style.settings)) : this.getStyleSnapshot();
 
-                // Always handle background image upload if it exists
-                if (this.backgroundImage) {
-                    try {
-                        const response = await fetch(this.backgroundImage);
-                        const blob = await response.blob();
-
-                        // Upload to Vercel Blob
-                        const newBlob = await upload(this.backgroundImageFileName || "background.jpg", blob, {
-                            access: "public",
-                            handleUploadUrl: "https://cool-tab-api.vercel.app/api/upload-image",
-                        });
-
-                        snapshot.backgroundImage = newBlob.url;
-                    } catch (uploadError) {
-                        console.error("Failed to upload background image to Vercel Blob:", uploadError);
-                        // If upload fails, snapshot.backgroundImage remains as is from getStyleSnapshot()
-                        // which might be a remote URL or null.
+                let blob = null;
+                let fileName = "background.jpg";
+                if (style) {
+                    fileName = style.settings.backgroundImageFileName || fileName;
+                    // The style's wallpaper copy lives in IndexedDB; fall back to its remote URL
+                    blob = await getItem(`style-image-${style.id}`);
+                    if (!blob && typeof style.settings.backgroundImage === "string" && style.settings.backgroundImage.trim()) {
+                        blob = await (await fetch(style.settings.backgroundImage)).blob();
                     }
+                } else if (this.backgroundImage) {
+                    blob = await (await fetch(this.backgroundImage)).blob();
+                    fileName = this.backgroundImageFileName || fileName;
+                }
+
+                if (blob) {
+                    // Upload to Vercel Blob
+                    const newBlob = await upload(fileName, blob, {
+                        access: "public",
+                        handleUploadUrl: "https://cool-tab-api.vercel.app/api/upload-image",
+                    });
+                    snapshot.backgroundImage = newBlob.url;
                 }
 
                 const styleData = {

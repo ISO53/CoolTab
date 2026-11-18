@@ -2,28 +2,20 @@
     <div class="styles-container">
         <div class="styles-top-bar">
             <h2 class="page-title">Styles</h2>
-            <div class="top-bar-actions">
-                <button class="save-btn" @click="toggleSharePanel" title="Share this style with the community">
-                    <i class="material-icons-outlined">share</i>
-                    Share
-                </button>
-                <button class="save-btn" :disabled="saving" @click="saveCurrentStyle" title="Save current style">
-                    <i class="material-icons-outlined">{{ saving ? "hourglass_empty" : "save" }}</i>
-                    {{ saving ? "Saving…" : "Save Current Style" }}
-                </button>
-            </div>
         </div>
 
-        <!-- In-tab share panel -->
-        <div v-if="shareOpen" class="share-panel">
+        <!-- In-tab share panel: opened from a style card, shares that style -->
+        <div v-if="shareOpen && sharingStyle" class="share-panel">
             <div class="share-panel-header">
                 <h3>Share Your Style</h3>
                 <button class="share-panel-close" @click="toggleSharePanel" title="Close">
                     <i class="material-icons-outlined">close</i>
                 </button>
             </div>
-            <p class="share-panel-subtitle">Share your custom style with the CoolTab community</p>
-            <ShareStyleForm :showCancel="false" />
+            <p class="share-panel-subtitle">
+                Share "{{ sharingStyle.name }}" with the CoolTab community
+            </p>
+            <ShareStyleForm :showCancel="false" :targetStyle="sharingStyle" />
         </div>
 
         <!-- Filter -->
@@ -40,6 +32,7 @@
                         variant="mine"
                         @apply="applyStyle"
                         @delete="deleteStyle"
+                        @share="openSharePanel"
                     />
                 </div>
                 <div v-if="!this.settingsStore.userStyles.length" class="no-styles">
@@ -50,6 +43,11 @@
             </template>
             <CommunityStyles v-else />
         </div>
+
+        <!-- Floating action -->
+        <div class="floating-actions">
+            <FloatingButton :icon="saving ? 'hourglass_empty' : 'save'" label="Save style" :disabled="saving" @click="saveCurrentStyle" />
+        </div>
     </div>
 </template>
 
@@ -59,6 +57,7 @@ import StyleCard from "./StyleCard.vue";
 import CommunityStyles from "./CommunityStyles.vue";
 import SelectButton from "./SelectButton.vue";
 import ShareStyleForm from "./ShareStyleForm.vue";
+import FloatingButton from "./FloatingButton.vue";
 import {getItem} from "@/utils/db";
 import {previewKey, renderStylePreview} from "@/utils/stylePreview";
 
@@ -69,12 +68,14 @@ export default {
         CommunityStyles,
         SelectButton,
         ShareStyleForm,
+        FloatingButton,
     },
     data() {
         return {
             settingsStore: useSettingsStore(),
             saving: false,
             shareOpen: false,
+            sharingStyle: null,
             filter: "My Styles",
             filterOptions: [
                 {label: "My Styles", icon: "person"},
@@ -94,6 +95,10 @@ export default {
         this.backfillPreviews();
     },
     methods: {
+        openSharePanel(style) {
+            this.sharingStyle = style;
+            this.shareOpen = true;
+        },
         toggleSharePanel() {
             this.shareOpen = !this.shareOpen;
         },
@@ -139,6 +144,7 @@ export default {
 
 <style scoped>
 .styles-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -160,36 +166,15 @@ export default {
     margin: 0;
 }
 
-.top-bar-actions {
+.floating-actions {
+    position: absolute;
+    right: 0;
+    bottom: 0;
     display: flex;
-    gap: 8px;
-}
-
-.save-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 12px;
-    background-color: var(--color-secondary-background);
-    color: var(--color-secondary-text);
-    border: 1.5px solid var(--color-border-line);
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: Satoshi-Bold;
-    font-size: 0.78rem;
-    white-space: nowrap;
-    transition: color 200ms ease, border-color 200ms ease;
-    user-select: none;
-    flex-shrink: 0;
-}
-
-.save-btn i {
-    font-size: 1.1rem;
-}
-
-.save-btn:hover {
-    color: var(--color-primary-text);
-    border-color: var(--color-secondary-text);
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    z-index: 5;
 }
 
 .share-panel {
@@ -247,6 +232,8 @@ export default {
     gap: 16px;
     overflow-y: auto;
     flex: 1;
+    /* Keep the last card clear of the floating save button */
+    padding-bottom: 70px;
 }
 
 .styles-grid {

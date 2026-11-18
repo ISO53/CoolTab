@@ -40,19 +40,20 @@
             </ul>
         </div>
 
-        <button class="tour-button" @click="startTour">
-        	<i class="material-icons-outlined">tour</i>
-        	<span>Take a tour</span>
-        </button>
+        <FloatingButton class="tour" icon="tour" label="Take a tour" @click="startTour" />
     </div>
 </template>
 
 <script>
 import { version } from "@/../package.json";
 import { useSettingsStore } from "@/settings";
+import FloatingButton from "./FloatingButton.vue";
 
 export default {
     name: "Info",
+    components: {
+        FloatingButton,
+    },
     data() {
 		return {
 			settingsStore: useSettingsStore(),
@@ -173,51 +174,11 @@ export default {
     text-decoration: underline;
 }
 
-.tour-button {
-   position: absolute;
-   bottom: 20px;
-   right: 20px;
-   width: 50px;
-   height: 50px;
-   display: flex;
-   align-items: center;
-   justify-content: flex-start;
-   padding: 0 0 0 13px;
-   border: none;
-   background-color: var(--color-secondary-text);
-   color: var(--color-primary-background);
-   border-radius: 10px;
-   font-size: 1rem;
-   font-family: Satoshi-Medium;
-   cursor: pointer;
-   transition: width 200ms ease, background-color 200ms ease;
-   overflow: hidden;
-   white-space: nowrap;
-}
-
-.tour-button:hover {
-	width: 140px;
-	background-color: var(--color-primary-text);
-}
-
-.tour-button > span {
-	margin: 0 0 0 10px;
-	opacity: 0;
-	font-family: Satoshi-Bold;
-	font-size: 0.95rem;
-	transition: opacity 200ms ease;
-}
-
-.tour-button:hover > span {
-	opacity: 1;
-	transition-delay: 80ms;
-}
-
-.tour-button > i {
-	margin: 0;
-	line-height: 1.4rem;
-	height: 1.4rem;
-	font-size: 1.4rem;
-	flex-shrink: 0;
+.tour {
+    /* Anchored to the tab itself: the 18px insets match the tab's horizontal
+       padding, so the right edge sits on the content edge with equal spacing */
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
 }
 </style>

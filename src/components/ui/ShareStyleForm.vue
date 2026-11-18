@@ -60,6 +60,11 @@ export default {
             type: Boolean,
             default: true,
         },
+        // When set, this saved style is shared instead of the current design
+        targetStyle: {
+            type: Object,
+            default: null,
+        },
     },
     emits: ["cancel"],
     setup() {
@@ -108,7 +113,7 @@ export default {
             this.errorMessage = "";
 
             try {
-                const result = await this.settingsStore.shareUserStyle(this.styleName);
+                const result = await this.settingsStore.shareUserStyle(this.styleName, this.targetStyle);
 
                 if (result.success) {
                     localStorage.setItem("last-share-timestamp", Date.now().toString());

@@ -175,11 +175,11 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".top-bar-actions",
+				element: ".floating-actions",
 				popover: {
-					title: "Save & Share Your Style",
-					description: "Save your current design as a personal style, or share it with the CoolTab community once you are happy with it.",
-					side: "bottom",
+					title: "Save Your Style",
+					description: "Save your current design as a personal style. You can apply, share or delete any of your styles from the menu on their card.",
+					side: "left",
 					align: "center",
 				},
 				onHighlighted: () => {
@@ -240,7 +240,7 @@ export function onboarding() {
 				},
 			},
 			{
-				element: ".tour-button",
+				element: ".floating-button",
 				popover: {
 					title: "Tour",
 					description: "You can run this tour anytime you want to learn about the features of CoolTab.",

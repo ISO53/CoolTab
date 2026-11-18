@@ -40,8 +40,6 @@
                 :key="style._id"
                 :style="style"
                 variant="community"
-                :saveState="getState(style._id, 'save')"
-                :applyState="getState(style._id, 'apply')"
                 :disabled="loadingId === style._id"
                 @save="saveStyle(style)"
                 @apply="applyStyle(style)"
@@ -69,7 +67,6 @@ export default {
             loading: true,
             error: false,
             loadingId: null,
-            states: {},
         };
     },
     mounted() {
@@ -96,56 +93,28 @@ export default {
         async applyStyle(style) {
             if (this.loadingId) return;
             this.loadingId = style._id;
-            this.setState(style._id, "apply", "loading");
             try {
                 const result = await this.settingsStore.importStyleById(style._id);
                 if (result.success) {
                     await this.settingsStore.applyStyle(result.style.id);
-                    this.setState(style._id, "apply", "done");
-                } else {
-                    this.setState(style._id, "apply", "error");
                 }
             } catch {
-                this.setState(style._id, "apply", "error");
+                // Keep the card enabled; a failed apply can simply be retried
             } finally {
                 this.loadingId = null;
-                setTimeout(() => this.setState(style._id, "apply", "idle"), 2200);
             }
         },
 
         async saveStyle(style) {
             if (this.loadingId) return;
             this.loadingId = style._id;
-            this.setState(style._id, "save", "loading");
             try {
-                const result = await this.settingsStore.importStyleById(style._id);
-                if (result.success) {
-                    this.setState(style._id, "save", "done");
-                } else {
-                    this.setState(style._id, "save", "error");
-                }
+                await this.settingsStore.importStyleById(style._id);
             } catch {
-                this.setState(style._id, "save", "error");
+                // Keep the card enabled; a failed save can simply be retried
             } finally {
                 this.loadingId = null;
-                setTimeout(() => this.setState(style._id, "save", "idle"), 2200);
             }
-        },
-
-        setState(id, action, state) {
-            if (!this.states[id]) this.states[id] = {apply: "idle", save: "idle"};
-            this.states = {...this.states, [id]: {...this.states[id], [action]: state}};
-        },
-
-        getState(id, action) {
-            if (this.states[id]?.[action]) {
-                return this.states[id][action];
-            }
-            if (action === "save") {
-                const isSaved = this.settingsStore.userStyles?.some((s) => s._id === id);
-                if (isSaved) return "done";
-            }
-            return "idle";
         },
     },
 };
