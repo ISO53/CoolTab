@@ -2,7 +2,9 @@
     <div class="style-card">
         <div class="card-preview" :class="{placeholder: !previewSrc}">
             <img v-if="previewSrc" :src="previewSrc" class="preview-image" alt="" draggable="false" />
-            <!-- Fallback for styles without a captured preview -->
+            <!-- Flagged cards show a quiet placeholder while their blob loads;
+                 the loud palette wash is only for styles with no preview at all -->
+            <div v-else-if="loadingPreview" class="preview-loading"></div>
             <div v-else class="palette-preview">
                 <div
                     v-for="(color, key) in previewColors"
@@ -53,6 +55,10 @@ const COMMUNITY_ITEMS = [
     {id: "save", icon: "bookmark_border", label: "Save"},
 ];
 
+// Session-level cache so remounting the tab reuses object URLs instead of
+// re-fetching every preview blob from IndexedDB
+const previewUrlCache = new Map();
+
 export default {
     name: "StyleCard",
     components: {
@@ -79,6 +85,7 @@ export default {
             mineItems: MINE_ITEMS,
             communityItems: COMMUNITY_ITEMS,
             previewUrl: null,
+            previewResolved: false,
         };
     },
     watch: {
@@ -87,9 +94,6 @@ export default {
             immediate: true,
             handler: "loadPreview",
         },
-    },
-    beforeUnmount() {
-        this.revokePreview();
     },
     methods: {
         onMenuSelect(item) {
@@ -102,21 +106,32 @@ export default {
             }
         },
         async loadPreview() {
-            this.revokePreview();
-            if (this.variant !== "mine" || !this.style.hasPreview) return;
+            this.previewResolved = false;
+
+            // Reuse the session-cached URL when the card remounts
+            const cached = previewUrlCache.get(this.style.id);
+            if (cached) {
+                this.previewUrl = cached;
+                this.previewResolved = true;
+                return;
+            }
+
+            if (this.variant !== "mine" || !this.style.hasPreview) {
+                this.previewResolved = true;
+                return;
+            }
+
             try {
                 const blob = await getItem(`style-preview-${this.style.id}`);
                 if (blob && this.style.hasPreview) {
-                    this.previewUrl = URL.createObjectURL(blob);
+                    const url = URL.createObjectURL(blob);
+                    previewUrlCache.set(this.style.id, url);
+                    this.previewUrl = url;
                 }
             } catch (e) {
                 console.error("Failed to load style preview:", e);
-            }
-        },
-        revokePreview() {
-            if (this.previewUrl) {
-                URL.revokeObjectURL(this.previewUrl);
-                this.previewUrl = null;
+            } finally {
+                this.previewResolved = true;
             }
         },
         formatDate(dateString) {
@@ -135,6 +150,11 @@ export default {
                 return this.style.preview || null;
             }
             return this.previewUrl;
+        },
+        // Flagged cards with a still-loading blob show a quiet placeholder
+        // instead of the loud palette wash
+        loadingPreview() {
+            return this.variant === "mine" && this.style.hasPreview && !this.previewResolved;
         },
         previewColors() {
             const colors = this.style?.settings?.colors;
@@ -188,7 +208,8 @@ export default {
     display: block;
 }
 
-.card-preview.placeholder {
+.card-preview.placeholder,
+.preview-loading {
     background-color: var(--color-primary-background);
 }
 

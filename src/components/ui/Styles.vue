@@ -58,8 +58,6 @@ import CommunityStyles from "./CommunityStyles.vue";
 import SelectButton from "./SelectButton.vue";
 import ShareStyleForm from "./ShareStyleForm.vue";
 import FloatingButton from "./FloatingButton.vue";
-import {getItem} from "@/utils/db";
-import {previewKey, renderStylePreview} from "@/utils/stylePreview";
 
 export default {
     name: "Styles",
@@ -115,19 +113,7 @@ export default {
         async backfillPreviews() {
             for (const style of this.settingsStore.userStyles) {
                 if (style.hasPreview) continue;
-
-                // A blob may already exist from a previous run that failed before
-                // the flag was persisted
-                const existing = await getItem(previewKey(style.id));
-                if (existing) {
-                    this.settingsStore.setStylePreview(style.id);
-                    continue;
-                }
-
-                const blob = await renderStylePreview(style);
-                if (blob) {
-                    this.settingsStore.setStylePreview(style.id, blob);
-                }
+                await this.settingsStore.generateStylePreview(style.id);
             }
         },
         applyStyle(styleId) {

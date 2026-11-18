@@ -97,6 +97,9 @@ export default {
                 const result = await this.settingsStore.importStyleById(style._id);
                 if (result.success) {
                     await this.settingsStore.applyStyle(result.style.id);
+                    // The imported style has no preview yet; render one now so it
+                    // shows up without needing to leave and revisit the tab
+                    this.settingsStore.generateStylePreview(result.style.id);
                 }
             } catch {
                 // Keep the card enabled; a failed apply can simply be retried
@@ -109,7 +112,10 @@ export default {
             if (this.loadingId) return;
             this.loadingId = style._id;
             try {
-                await this.settingsStore.importStyleById(style._id);
+                const result = await this.settingsStore.importStyleById(style._id);
+                if (result.success) {
+                    this.settingsStore.generateStylePreview(result.style.id);
+                }
             } catch {
                 // Keep the card enabled; a failed save can simply be retried
             } finally {

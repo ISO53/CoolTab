@@ -216,6 +216,26 @@ export const useSettingsStore = defineStore("settings", {
                 storeInLocalStorage("user-styles", JSON.stringify(this.userStyles));
             }
         },
+        async generateStylePreview(styleId) {
+            const style = this.userStyles?.find((t) => t.id === styleId);
+            if (!style || style.hasPreview) return;
+            try {
+                // A blob may already exist from a run that failed before the flag was persisted
+                const existing = await getItem(`style-preview-${styleId}`);
+                if (existing) {
+                    this.setStylePreview(styleId);
+                    return;
+                }
+
+                const {renderStylePreview} = await import("@/utils/stylePreview");
+                const blob = await renderStylePreview(style);
+                if (blob) {
+                    this.setStylePreview(styleId, blob);
+                }
+            } catch (e) {
+                console.error("Failed to generate style preview:", e);
+            }
+        },
         deleteStyle(styleId) {
             // Only allow deleting user styles
             const index = this.userStyles ? this.userStyles.findIndex((t) => t.id === styleId) : -1;
