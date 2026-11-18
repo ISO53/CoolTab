@@ -161,7 +161,8 @@ export default {
                     const seen = new Set(this.styles.map((s) => s._id));
                     this.styles.push(...incoming.filter((s) => !seen.has(s._id)));
                     this.page = nextPage;
-                    this.hasMore = data.hasMore ?? incoming.length === PAGE_SIZE;
+                    // A bare array means an API without pagination support; hasMore is authoritative otherwise
+                    this.hasMore = data.hasMore ?? false;
                 } else {
                     this.loadMoreError = true;
                 }
