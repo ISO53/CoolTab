@@ -11,7 +11,7 @@
  */
 import {createApp} from "vue";
 import {createPinia} from "pinia";
-import {getItem, setItem} from "./db";
+import {getItem} from "./db";
 import {clickOutside} from "./clickOutside";
 import StyleRenderRoot from "@/components/ui/StyleRenderRoot.vue";
 import Svg from "@/components/ui/Svg.vue";
@@ -22,10 +22,6 @@ const THUMBNAIL_QUALITY = 0.85;
 // UI overlays (sidebar, action buttons) that are open when a style is saved but
 // are not part of the design itself
 const LIVE_CAPTURE_EXCLUDE = [".overlay", ".slide", "#Buttons"];
-
-export function previewKey(styleId) {
-    return `style-preview-${styleId}`;
-}
 
 /**
  * Screenshot the live page (with UI overlays removed) as a thumbnail Blob.
