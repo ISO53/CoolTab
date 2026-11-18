@@ -4,20 +4,6 @@
             <h2 class="page-title">Styles</h2>
         </div>
 
-        <!-- In-tab share panel: opened from a style card, shares that style -->
-        <div v-if="shareOpen && sharingStyle" class="share-panel">
-            <div class="share-panel-header">
-                <h3>Share Your Style</h3>
-                <button class="share-panel-close" @click="toggleSharePanel" title="Close">
-                    <i class="material-icons-outlined">close</i>
-                </button>
-            </div>
-            <p class="share-panel-subtitle">
-                Share "{{ sharingStyle.name }}" with the CoolTab community
-            </p>
-            <ShareStyleForm :showCancel="false" :targetStyle="sharingStyle" />
-        </div>
-
         <!-- Filter -->
         <SelectButton v-model="filter" :options="filterOptions" />
 
@@ -32,7 +18,7 @@
                         variant="mine"
                         @apply="applyStyle"
                         @delete="deleteStyle"
-                        @share="openSharePanel"
+                        @share="shareStyle"
                     />
                 </div>
                 <div v-if="!this.settingsStore.userStyles.length" class="no-styles">
@@ -56,7 +42,6 @@ import {useSettingsStore} from "@/settings";
 import StyleCard from "./StyleCard.vue";
 import CommunityStyles from "./CommunityStyles.vue";
 import SelectButton from "./SelectButton.vue";
-import ShareStyleForm from "./ShareStyleForm.vue";
 import FloatingButton from "./FloatingButton.vue";
 
 export default {
@@ -65,15 +50,12 @@ export default {
         StyleCard,
         CommunityStyles,
         SelectButton,
-        ShareStyleForm,
         FloatingButton,
     },
     data() {
         return {
             settingsStore: useSettingsStore(),
             saving: false,
-            shareOpen: false,
-            sharingStyle: null,
             filter: "My Styles",
             filterOptions: [
                 {label: "My Styles", icon: "person"},
@@ -93,12 +75,15 @@ export default {
         this.backfillPreviews();
     },
     methods: {
-        openSharePanel(style) {
-            this.sharingStyle = style;
-            this.shareOpen = true;
-        },
-        toggleSharePanel() {
-            this.shareOpen = !this.shareOpen;
+        async shareStyle(style) {
+            // The style already carries its name, so sharing is a single confirm
+            if (!confirm(`You are sharing "${style.name}" with the CoolTab community. Are you sure?`)) return;
+            const result = await this.settingsStore.shareUserStyle(style.name, style);
+            if (result.success) {
+                alert("Your style has been shared! It will appear in Community Styles in a couple of days after review.");
+            } else {
+                alert(result.error || "Failed to share style");
+            }
         },
         async saveCurrentStyle() {
             const name = prompt("Name for your style:");
@@ -161,55 +146,6 @@ export default {
     align-items: flex-end;
     gap: 10px;
     z-index: 5;
-}
-
-.share-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    flex-shrink: 0;
-    background-color: var(--color-secondary-background);
-    border: 2px solid var(--color-border-line);
-    border-radius: 12px;
-    padding: 16px;
-}
-
-.share-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.share-panel-header h3 {
-    margin: 0;
-    font-family: Satoshi-Bold;
-    font-size: 1.05rem;
-    color: var(--color-primary-text);
-}
-
-.share-panel-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    background-color: transparent;
-    border: none;
-    border-radius: 8px;
-    color: var(--color-tertiary-text);
-    cursor: pointer;
-    transition: color 200ms ease, background-color 200ms ease;
-}
-
-.share-panel-close:hover {
-    color: var(--color-primary-text);
-    background-color: var(--color-tertiary-background);
-}
-
-.share-panel-subtitle {
-    margin: 0;
-    font-family: Satoshi-Light;
-    font-size: 0.8rem;
-    color: var(--color-tertiary-text);
 }
 
 .styles-section {
