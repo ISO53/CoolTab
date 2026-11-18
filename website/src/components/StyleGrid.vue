@@ -1,31 +1,52 @@
 <template>
     <div class="style-grid">
         <div v-if="loading" class="loading">Loading styles...</div>
-        <div 
-            v-else 
-            v-for="style in styles" 
-            :key="style._id" 
-            class="style-card"
-            :class="{ 'style-card--large': style.isLarge }"
-        >
-            <div class="image-container">
-                <img :src="style.preview" :alt="style.name" class="style-image" />
-                <div class="card-overlay">
-                    <div class="info-glass">
-                        <h3>{{ style.name }}</h3>
-                        <p>{{ formatDate(style.createdAt) }}</p>
+        <template v-else>
+            <div
+                v-for="style in styles"
+                :key="style._id"
+                class="style-card"
+                :class="{ 'style-card--large': style.isLarge }"
+            >
+                <div class="image-container">
+                    <img :src="style.preview" :alt="style.name" class="style-image" />
+                    <div class="card-overlay">
+                        <div class="info-glass">
+                            <h3>{{ style.name }}</h3>
+                            <p>{{ formatDate(style.createdAt) }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div v-if="loadingMore" class="loading">Loading more styles...</div>
+        </template>
     </div>
+
+    <!-- Load more failed -->
+    <div v-if="loadMoreError" class="load-more-error">
+        <p>Couldn't load more styles</p>
+        <button @click="loadMore">Retry</button>
+    </div>
+
+    <!-- Infinite scroll sentinel -->
+    <div v-else-if="hasMore" ref="sentinel" class="sentinel"></div>
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref, nextTick, onMounted, onBeforeUnmount} from "vue";
+
+const API_URL = "https://cool-tab-api.vercel.app/api/get-styles";
+const PAGE_SIZE = 12;
 
 const styles = ref([]);
 const loading = ref(true);
+const page = ref(1);
+const hasMore = ref(false);
+const loadingMore = ref(false);
+const loadMoreError = ref(false);
+const sentinel = ref(null);
+let observer = null;
 
 const formatDate = (dateString) => {
     if (!dateString) return "Unknown date";
@@ -36,22 +57,81 @@ const formatDate = (dateString) => {
     });
 };
 
-onMounted(async () => {
+const observeSentinel = () => {
+    if (!hasMore.value || loadMoreError.value) return;
+    const el = sentinel.value;
+    if (!el) return;
+    if (!observer) {
+        observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) loadMore();
+            },
+            {rootMargin: "400px"}
+        );
+    }
+    observer.observe(el);
+};
+
+const loadMore = async () => {
+    if (loadingMore.value || !hasMore.value) return;
+    loadingMore.value = true;
+    loadMoreError.value = false;
+    // Pause observation while fetching; re-observing afterwards also
+    // re-fires a fetch if the sentinel is still on screen
+    observer?.disconnect();
     try {
-        const response = await fetch("https://cool-tab-api.vercel.app/api/get-styles?type=basic");
+        const nextPage = page.value + 1;
+        const response = await fetch(`${API_URL}?type=basic&page=${nextPage}&limit=${PAGE_SIZE}`);
         if (response.ok) {
             const data = await response.json();
+            const incoming = data.styles ?? data;
+            // Styles created between page fetches shift the offset; drop anything already shown
+            const seen = new Set(styles.value.map((s) => s._id));
+            const fresh = incoming
+                .filter((s) => !seen.has(s._id))
+                // Randomly assign large class to ~15% of items for 2x2 effect
+                .map((style) => ({...style, isLarge: Math.random() > 0.85}));
+            styles.value.push(...fresh);
+            page.value = nextPage;
+            // A bare array means an API without pagination support; hasMore is authoritative otherwise
+            hasMore.value = data.hasMore ?? false;
+        } else {
+            loadMoreError.value = true;
+        }
+    } catch (error) {
+        console.error("Error loading more styles:", error);
+        loadMoreError.value = true;
+    } finally {
+        loadingMore.value = false;
+        nextTick(observeSentinel);
+    }
+};
+
+onMounted(async () => {
+    try {
+        const response = await fetch(`${API_URL}?type=basic&page=1&limit=${PAGE_SIZE}`);
+        if (response.ok) {
+            const data = await response.json();
+            const incoming = data.styles ?? data;
             // Randomly assign large class to ~15% of items for 2x2 effect
-            styles.value = data.map(style => ({
+            styles.value = incoming.map((style) => ({
                 ...style,
                 isLarge: Math.random() > 0.85
             }));
+            // A bare array means an API without pagination support; hasMore is authoritative otherwise
+            hasMore.value = data.hasMore ?? false;
         }
     } catch (error) {
         console.error("Error fetching styles:", error);
     } finally {
         loading.value = false;
     }
+    nextTick(observeSentinel);
+});
+
+onBeforeUnmount(() => {
+    observer?.disconnect();
+    observer = null;
 });
 </script>
 
@@ -72,6 +152,43 @@ onMounted(async () => {
     padding: 100px;
     font-size: 1.2rem;
     color: var(--text-muted);
+}
+
+/* ── Infinite scroll ── */
+.sentinel {
+    width: 100%;
+    height: 1px;
+}
+
+.load-more-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.load-more-error p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.load-more-error button {
+    padding: 8px 18px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition:
+        border-color 200ms ease,
+        color 200ms ease;
+}
+
+.load-more-error button:hover {
+    border-color: rgba(255, 255, 255, 0.45);
 }
 
 .style-card {
