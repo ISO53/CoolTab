@@ -37,7 +37,7 @@
                         v-for="style in sortedUserStyles"
                         :key="style.id"
                         :style="style"
-                        :isPredefined="false"
+                        variant="mine"
                         @apply="applyStyle"
                         @delete="deleteStyle"
                     />

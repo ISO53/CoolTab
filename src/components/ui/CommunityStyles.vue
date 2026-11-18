@@ -2,14 +2,12 @@
     <div class="community-container">
         <!-- Loading skeletons -->
         <div v-if="loading" class="styles-grid">
-            <div v-for="i in 6" :key="i" class="style-card skeleton-card">
-                <div class="card-preview skeleton-preview"></div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <div class="skeleton-line wide"></div>
-                        <div class="skeleton-line short"></div>
-                    </div>
-                    <div class="card-actions">
+            <div v-for="i in 6" :key="i" class="skeleton-card">
+                <div class="skeleton-preview"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line wide"></div>
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-actions">
                         <div class="skeleton-btn"></div>
                         <div class="skeleton-btn"></div>
                     </div>
@@ -35,63 +33,30 @@
 
         <!-- Grid -->
         <div v-else class="styles-grid">
-            <div v-for="style in styles" :key="style._id" class="style-card">
-                <!-- Preview -->
-                <div
-                    class="card-preview"
-                    :class="{'has-image': !!style.preview}"
-                    :style="style.preview ? {backgroundImage: `url(${style.preview})`} : {}"
-                >
-                    <!-- Color palette fallback -->
-                    <div v-if="!style.preview && style.settings && style.settings.colors" class="palette-preview">
-                        <div
-                            v-for="(color, key) in getPreviewColors(style.settings.colors)"
-                            :key="key"
-                            class="palette-swatch"
-                            :style="{backgroundColor: color}"
-                        ></div>
-                    </div>
-                </div>
-
-                <!-- Card info -->
-                <div class="card-body">
-                    <div class="card-text">
-                        <h3 class="card-name">{{ style.name }}</h3>
-                        <p class="card-date">{{ formatDate(style.createdAt) }}</p>
-                    </div>
-                    <div class="card-actions">
-                        <button
-                            class="action-btn save-btn"
-                            :class="getState(style._id, 'save')"
-                            :disabled="loadingId === style._id"
-                            @click.stop="saveStyle(style)"
-                            title="Save to My Styles"
-                        >
-                            <i class="material-icons-outlined">{{ getIcon(style._id, "save") }}</i>
-                            <span>{{ getLabel(style._id, "save") }}</span>
-                        </button>
-                        <button
-                            class="action-btn apply-btn"
-                            :class="getState(style._id, 'apply')"
-                            :disabled="loadingId === style._id"
-                            @click.stop="applyStyle(style)"
-                            title="Apply style immediately"
-                        >
-                            <i class="material-icons-outlined">{{ getIcon(style._id, "apply") }}</i>
-                            <span>{{ getLabel(style._id, "apply") }}</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <StyleCard
+                v-for="style in styles"
+                :key="style._id"
+                :style="style"
+                variant="community"
+                :saveState="getState(style._id, 'save')"
+                :applyState="getState(style._id, 'apply')"
+                :disabled="loadingId === style._id"
+                @save="saveStyle(style)"
+                @apply="applyStyle(style)"
+            />
         </div>
     </div>
 </template>
 
 <script>
 import {useSettingsStore} from "@/settings";
+import StyleCard from "./StyleCard.vue";
 
 export default {
     name: "CommunityStyles",
+    components: {
+        StyleCard,
+    },
     setup() {
         const settingsStore = useSettingsStore();
         return {settingsStore};
@@ -180,50 +145,6 @@ export default {
             }
             return "idle";
         },
-
-        getIcon(id, action) {
-            const s = this.getState(id, action);
-            const icons = {
-                apply: {
-                    idle: "check_circle_outline",
-                    loading: "hourglass_empty",
-                    done: "check_circle",
-                    error: "error_outline",
-                },
-                save: {
-                    idle: "bookmark_border",
-                    loading: "hourglass_empty",
-                    done: "bookmark_added",
-                    error: "error_outline",
-                },
-            };
-            return icons[action][s] || icons[action].idle;
-        },
-
-        getLabel(id, action) {
-            const s = this.getState(id, action);
-            const labels = {
-                apply: {idle: "Apply & Save", loading: "Applying…", done: "Applied!", error: "Failed"},
-                save: {idle: "Save", loading: "Saving…", done: "Saved!", error: "Failed"},
-            };
-            return labels[action][s] || labels[action].idle;
-        },
-
-        getPreviewColors(colors) {
-            return {
-                a: colors.color_primary_background,
-                b: colors.color_secondary_background,
-                c: colors.color_tertiary_background,
-                d: colors.color_primary_text,
-                e: colors.color_secondary_text,
-                f: colors.color_border_line,
-            };
-        },
-
-        formatDate(dateString) {
-            if (!dateString) return "";
-            return new Date(dateString).toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"});
-        },
     },
 };
 </script>
@@ -242,152 +163,6 @@ export default {
     gap: 16px;
 }
 
-/* ── Card ── */
-.style-card {
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: var(--color-secondary-background);
-    border: 2px solid var(--color-border-line);
-    transition:
-        border-color 200ms ease,
-        transform 200ms ease;
-    cursor: pointer;
-}
-
-/* ── Preview ── */
-.card-preview {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 0.45;
-    background-color: var(--color-primary-background);
-    background-size: cover;
-    background-position: center;
-    overflow: hidden;
-}
-
-.card-preview.has-image {
-    background-color: #0a0a0a;
-}
-
-.palette-preview {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    height: 100%;
-    width: 100%;
-    gap: 0;
-}
-
-.palette-swatch {
-    width: 100%;
-    height: 100%;
-}
-
-/* ── Card body ── */
-.card-body {
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.card-text {
-    flex: 1;
-    min-width: 0;
-}
-
-.card-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* ── Action Buttons ── */
-.action-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1.5px solid transparent;
-    font-size: 0.72rem;
-    font-family: Satoshi-Bold;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 200ms ease;
-}
-
-.action-btn i {
-    font-size: 1rem;
-}
-
-.action-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.apply-btn {
-    background-color: var(--color-primary-text);
-    color: var(--color-primary-background);
-    border-color: var(--color-primary-text);
-}
-
-.apply-btn:hover:not(:disabled) {
-    opacity: 0.88;
-}
-
-.apply-btn.done {
-    background-color: #22c55e;
-    border-color: #22c55e;
-    color: #fff;
-}
-
-.apply-btn.error {
-    background-color: #ef4444;
-    border-color: #ef4444;
-    color: #fff;
-}
-
-.save-btn {
-    background-color: transparent;
-    color: var(--color-secondary-text);
-    border-color: var(--color-border-line);
-}
-
-.save-btn:hover:not(:disabled) {
-    background-color: var(--color-primary-background);
-    border-color: var(--color-tertiary-text);
-    color: var(--color-primary-text);
-}
-
-.save-btn.done {
-    border-color: #22c55e;
-    color: #22c55e;
-}
-
-.save-btn.error {
-    border-color: #ef4444;
-    color: #ef4444;
-}
-
-.card-name {
-    font-family: Satoshi-Bold;
-    font-size: 0.95rem;
-    color: var(--color-primary-text);
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card-date {
-    font-family: Satoshi-Light;
-    font-size: 0.75rem;
-    color: var(--color-tertiary-text);
-    margin: 0;
-}
-
 /* ── Skeletons ── */
 .skeleton-card {
     border-radius: 10px;
@@ -404,6 +179,13 @@ export default {
     opacity: 0.3;
 }
 
+.skeleton-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .skeleton-line {
     height: 10px;
     border-radius: 6px;
@@ -418,6 +200,12 @@ export default {
     border-radius: 8px;
     background-color: var(--color-tertiary-background);
     opacity: 0.3;
+}
+
+.skeleton-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .skeleton-line.wide {

@@ -1,8 +1,8 @@
 <template>
     <div class="style-card">
-        <div class="card-preview" :class="{placeholder: !previewUrl}">
-            <img v-if="previewUrl" :src="previewUrl" class="preview-image" alt="" draggable="false" />
-            <!-- Fallback for styles without a captured preview (legacy saves, imports) -->
+        <div class="card-preview" :class="{placeholder: !previewSrc}">
+            <img v-if="previewSrc" :src="previewSrc" class="preview-image" alt="" draggable="false" />
+            <!-- Fallback for styles without a captured preview -->
             <div v-else class="palette-preview">
                 <div
                     v-for="(color, key) in previewColors"
@@ -14,36 +14,93 @@
         </div>
         <div class="card-body">
             <div class="card-text">
-                <h3>{{ style.name }}</h3>
-                <p class="style-date" v-if="style.createdAt">{{ formatDate(style.createdAt) }}</p>
+                <h3 class="card-name">{{ style.name }}</h3>
+                <p class="card-date" v-if="style.createdAt">{{ formatDate(style.createdAt) }}</p>
             </div>
             <div class="card-actions">
-                <button class="action-btn" @click="handleApply" title="Apply style">
-                    <Svg :class_name="'material-icons-outlined apply'" :name="'check_circle'"></Svg>
-                </button>
-                <button class="action-btn" @click="handleDelete" title="Delete style">
-                    <Svg :class_name="'material-icons-outlined delete'" :name="'delete'"></Svg>
-                </button>
+                <!-- Community: Save + Apply & Save, driven by the parent's request states -->
+                <template v-if="variant === 'community'">
+                    <button
+                        class="action-btn secondary-btn"
+                        :class="saveState"
+                        :disabled="disabled"
+                        @click.stop="$emit('save')"
+                        title="Save to My Styles"
+                    >
+                        <i class="material-icons-outlined">{{ saveIcon }}</i>
+                        <span>{{ saveLabel }}</span>
+                    </button>
+                    <button
+                        class="action-btn primary-btn"
+                        :class="applyState"
+                        :disabled="disabled"
+                        @click.stop="$emit('apply')"
+                        title="Apply style immediately"
+                    >
+                        <i class="material-icons-outlined">{{ applyIcon }}</i>
+                        <span>{{ applyLabel }}</span>
+                    </button>
+                </template>
+
+                <!-- Mine: Delete (secondary) + Apply (primary) -->
+                <template v-else>
+                    <button class="action-btn secondary-btn" @click.stop="$emit('delete')" title="Delete style">
+                        <i class="material-icons-outlined">delete</i>
+                        <span>Delete</span>
+                    </button>
+                    <button class="action-btn primary-btn" @click.stop="$emit('apply')" title="Apply style">
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Apply</span>
+                    </button>
+                </template>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import Svg from "./Svg.vue";
 import {getItem} from "@/utils/db";
+
+const COMMUNITY_SAVE_STATES = {
+    idle: {icon: "bookmark_border", label: "Save"},
+    loading: {icon: "hourglass_empty", label: "Saving…"},
+    done: {icon: "bookmark_added", label: "Saved!"},
+    error: {icon: "error_outline", label: "Failed"},
+};
+
+const COMMUNITY_APPLY_STATES = {
+    idle: {icon: "check_circle_outline", label: "Apply & Save"},
+    loading: {icon: "hourglass_empty", label: "Applying…"},
+    done: {icon: "check_circle", label: "Applied!"},
+    error: {icon: "error_outline", label: "Failed"},
+};
 
 export default {
     name: "StyleCard",
-    components: {
-        Svg,
-    },
     props: {
         style: {
             type: Object,
             required: true,
         },
+        variant: {
+            type: String,
+            default: "mine",
+        },
+        // Community-only request states: idle | loading | done | error
+        saveState: {
+            type: String,
+            default: "idle",
+        },
+        applyState: {
+            type: String,
+            default: "idle",
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
     },
+    emits: ["apply", "delete", "save"],
     data() {
         return {
             previewUrl: null,
@@ -62,7 +119,7 @@ export default {
     methods: {
         async loadPreview() {
             this.revokePreview();
-            if (!this.style.hasPreview) return;
+            if (this.variant !== "mine" || !this.style.hasPreview) return;
             try {
                 const blob = await getItem(`style-preview-${this.style.id}`);
                 if (blob && this.style.hasPreview) {
@@ -78,12 +135,6 @@ export default {
                 this.previewUrl = null;
             }
         },
-        handleApply() {
-            this.$emit("apply", this.style.id);
-        },
-        handleDelete() {
-            this.$emit("delete", this.style.id);
-        },
         formatDate(dateString) {
             if (!dateString) return "";
             const date = new Date(dateString);
@@ -95,6 +146,12 @@ export default {
         },
     },
     computed: {
+        previewSrc() {
+            if (this.variant === "community") {
+                return this.style.preview || null;
+            }
+            return this.previewUrl;
+        },
         previewColors() {
             const colors = this.style?.settings?.colors;
             if (!colors) {
@@ -116,6 +173,20 @@ export default {
                 f: colors.color_border_line,
             };
         },
+        saveIcon() {
+            return COMMUNITY_SAVE_STATES[this.saveState]?.icon ?? "bookmark_border";
+        },
+        saveLabel() {
+            return COMMUNITY_SAVE_STATES[this.saveState]?.label ?? "Save";
+        },
+        applyIcon() {
+            if (this.variant !== "community") return "check_circle";
+            return COMMUNITY_APPLY_STATES[this.applyState]?.icon ?? "check_circle_outline";
+        },
+        applyLabel() {
+            if (this.variant !== "community") return "Apply";
+            return COMMUNITY_APPLY_STATES[this.applyState]?.label ?? "Apply & Save";
+        },
     },
 };
 </script>
@@ -123,12 +194,14 @@ export default {
 <style scoped>
 .style-card {
     width: 100%;
+    border-radius: 10px;
     overflow: hidden;
     background-color: var(--color-secondary-background);
-    color: var(--color-secondary-text);
-    border-radius: 10px;
-    text-align: left;
     border: 2px solid var(--color-border-line);
+    transition:
+        border-color 200ms ease,
+        transform 200ms ease;
+    cursor: pointer;
     user-select: none;
 }
 
@@ -150,7 +223,7 @@ export default {
     background-color: var(--color-primary-background);
 }
 
-/* Fallback palette, matching the Community Styles cards */
+/* Fallback palette */
 .palette-preview {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -181,19 +254,21 @@ export default {
     gap: 2px;
 }
 
-.card-text h3 {
-    margin: 0;
+.card-name {
     font-family: Satoshi-Bold;
     font-size: 0.95rem;
     color: var(--color-primary-text);
-    word-break: break-word;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.style-date {
-    margin: 0;
+.card-date {
     font-family: Satoshi-Light;
     font-size: 0.75rem;
     color: var(--color-tertiary-text);
+    margin: 0;
 }
 
 .card-actions {
@@ -205,24 +280,67 @@ export default {
 .action-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: transparent;
-    border: none;
-}
-
-.action-btn > i {
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1.5px solid transparent;
+    font-size: 0.72rem;
+    font-family: Satoshi-Bold;
     cursor: pointer;
-    transition: color 200ms ease, transform 200ms ease;
+    white-space: nowrap;
+    transition: all 200ms ease;
 }
 
-.apply:hover {
-    color: green;
+.action-btn i {
+    font-size: 1rem;
 }
 
-.delete:hover {
-    color: red;
-    transform: rotate(15deg);
+.action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.primary-btn {
+    background-color: var(--color-primary-text);
+    color: var(--color-primary-background);
+    border-color: var(--color-primary-text);
+}
+
+.primary-btn:hover:not(:disabled) {
+    opacity: 0.88;
+}
+
+.primary-btn.done {
+    background-color: #22c55e;
+    border-color: #22c55e;
+    color: #fff;
+}
+
+.primary-btn.error {
+    background-color: #ef4444;
+    border-color: #ef4444;
+    color: #fff;
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: var(--color-secondary-text);
+    border-color: var(--color-border-line);
+}
+
+.secondary-btn:hover:not(:disabled) {
+    background-color: var(--color-primary-background);
+    border-color: var(--color-tertiary-text);
+    color: var(--color-primary-text);
+}
+
+.secondary-btn.done {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.secondary-btn.error {
+    border-color: #ef4444;
+    color: #ef4444;
 }
 </style>
