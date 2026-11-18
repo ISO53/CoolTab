@@ -40,6 +40,7 @@
                 :key="style._id"
                 :style="style"
                 variant="community"
+                :saved="isSaved(style._id)"
                 :disabled="loadingId === style._id"
                 @save="saveStyle(style)"
                 @apply="applyStyle(style)"
@@ -73,6 +74,9 @@ export default {
         this.fetchStyles();
     },
     methods: {
+        isSaved(communityStyleId) {
+            return (this.settingsStore.userStyles || []).some((s) => s._id === communityStyleId);
+        },
         async fetchStyles() {
             this.loading = true;
             this.error = false;

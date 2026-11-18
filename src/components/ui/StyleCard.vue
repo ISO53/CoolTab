@@ -30,8 +30,8 @@
             />
             <DropdownButton
                 v-else
-                action="Apply & Save"
-                icon="check_circle_outline"
+                :action="saved ? 'Saved' : 'Apply & Save'"
+                :icon="saved ? 'check_circle' : 'check_circle_outline'"
                 :items="communityItems"
                 title="Community style actions"
                 :disabled="disabled"
@@ -72,6 +72,11 @@ export default {
         variant: {
             type: String,
             default: "mine",
+        },
+        // Community only: the style is already saved to My Styles
+        saved: {
+            type: Boolean,
+            default: false,
         },
         // Community only: disables the actions while a request is running
         disabled: {
