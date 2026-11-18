@@ -23,7 +23,7 @@
                 icon="check_circle"
                 :items="mineItems"
                 title="Style actions"
-                @action="$emit('apply')"
+                @action="$emit('apply', style.id)"
                 @select="onMenuSelect"
             />
             <DropdownButton
