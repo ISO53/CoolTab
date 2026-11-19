@@ -34,3 +34,5 @@ package-lock.json
 theme
 
 biome.json
+
+.zcode

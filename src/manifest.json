@@ -10,6 +10,9 @@
         "https://query1.finance.yahoo.com/*",
         "https://query2.finance.yahoo.com/*"
     ],
+    "permissions": [
+        "topSites"
+    ],
     "background": {
         "service_worker": "background.js"
     },
