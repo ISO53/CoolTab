@@ -47,15 +47,8 @@
 				</div>
 
 				<div v-if="settingsStore.searchSuggestions" class="popover-footer">
-					<span v-if="highlightedHistory" class="footer-hint">
-						<span>Delete</span>
-						<span class="kbd">Del</span>
-					</span>
-					<span v-else></span>
-					<span class="footer-hint">
-						<span>Open link</span>
-						<span class="kbd">↵</span>
-					</span>
+					<span>Open link</span>
+					<span class="kbd">↵</span>
 				</div>
 			</div>
 		</Transition>
@@ -143,11 +136,6 @@ export default {
 						},
 					};
 			}
-			},
-			// The highlighted row when it is a removable history entry
-			highlightedHistory() {
-				const row = this.suggestionRows[this.highlightedIndex];
-				return row && row.kind === "history" ? row : null;
 			},
 			suggestionRows() {
 			if (!this.settingsStore.searchSuggestions) return [];
@@ -261,7 +249,7 @@ export default {
 		onKeydown(e) {
 			if (e.isComposing || e.keyCode === 229) return;
 
-			if (e.key === "Backspace") {
+			if (e.key === "Backspace" || e.key === "Delete") {
 				this.ghostSuppressed = true;
 			} else if (e.key.length === 1) {
 				this.ghostSuppressed = false;
@@ -283,16 +271,6 @@ export default {
 				if (caretAtEnd) {
 					e.preventDefault();
 					this.acceptGhost();
-				}
-			} else if (e.key === "Delete") {
-				// Delete removes the highlighted history entry; the highlight
-				// stays at the same index so entries can be deleted in a run.
-				// With a text selection, let the input edit normally instead.
-				const input = this.$refs.input;
-				const noSelection = !input || input.selectionStart === input.selectionEnd;
-				if (this.highlightedHistory && noSelection) {
-					e.preventDefault();
-					this.removeHighlightedEntry();
 				}
 			} else if (e.key === "Escape") {
 				this.$emit("close");
@@ -384,14 +362,6 @@ export default {
 		removeEntry(row) {
 			this.settingsStore.removeSearchHistoryEntry(row);
 			this.highlightedIndex = -1; // indices shift after removal
-		},
-		removeHighlightedEntry() {
-			if (!this.highlightedHistory) return;
-			const index = this.highlightedIndex;
-			this.settingsStore.removeSearchHistoryEntry(this.highlightedHistory);
-			const count = this.suggestionRows.length;
-			this.highlightedIndex = count ? Math.min(index, count - 1) : -1;
-			this.updateGhost();
 		},
 		submitDefault() {
 			const raw = this.searchQuery.trim();
@@ -644,49 +614,29 @@ function escapeHtml(s) {
 .popover-footer {
 	flex-shrink: 0;
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
+	gap: 6px;
 	padding: 8px 14px 10px;
 	color: var(--color-tertiary-text);
 	font-size: 0.8rem;
 	user-select: none;
 }
 
-.footer-hint {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-
 .kbd {
-	position: relative;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 1.8em;
-	height: 1.4em;
-	padding: 0 7px;
+	min-width: 1.4em;
+	height: 1.3em;
+	padding: 0 5px;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	font-size: 0.7rem;
 	color: var(--color-tertiary-text);
-	border: 1px solid currentColor;
-	border-radius: 6px;
-}
-
-/* The key's base: a same-width box whose top portion sits behind the face
-   (side lines coincide with the face's sides), extending 3px below it.
-   No top border — the face's bottom edge doubles as the joint line. The
-   box is tall enough for the corner radius to fully resolve, so the
-   bottom edge spans the same width as the face. */
-.kbd::after {
-	content: "";
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: calc(100% - 7px);
-	bottom: -3px;
-	border: 1px solid currentColor;
-	border-top: none;
-	border-radius: 0 0 6px 6px;
+	background: color-mix(in srgb, var(--color-primary-background), transparent 35%);
+	border: 1px solid var(--color-border-line);
+	border-radius: 4px;
+	box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--color-primary-background), transparent 0%);
 }
 
 .suggestion-row {
