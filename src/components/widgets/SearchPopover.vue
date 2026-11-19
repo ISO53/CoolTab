@@ -48,7 +48,7 @@
 
 				<div v-if="settingsStore.searchSuggestions" class="popover-footer">
 					<span>Open link</span>
-					<span class="kbd">↵</span>
+					<i class="material-icons-outlined footer-icon">keyboard_return</i>
 				</div>
 			</div>
 		</Transition>
@@ -623,20 +623,8 @@ function escapeHtml(s) {
 	user-select: none;
 }
 
-.kbd {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 1.4em;
-	height: 1.3em;
-	padding: 0 5px;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-size: 0.7rem;
-	color: var(--color-tertiary-text);
-	background: color-mix(in srgb, var(--color-primary-background), transparent 35%);
-	border: 1px solid var(--color-border-line);
-	border-radius: 4px;
-	box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--color-primary-background), transparent 0%);
+.footer-icon {
+	font-size: 0.95rem;
 }
 
 .suggestion-row {
