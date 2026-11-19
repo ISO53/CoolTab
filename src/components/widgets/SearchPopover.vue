@@ -47,8 +47,15 @@
 				</div>
 
 				<div v-if="settingsStore.searchSuggestions" class="popover-footer">
-					<span>Open link</span>
-					<i class="material-icons-outlined footer-icon">keyboard_return</i>
+					<span v-if="highlightedHistory" class="footer-hint">
+						<span>Delete</span>
+						<i class="material-icons-outlined footer-icon">keyboard_delete</i>
+					</span>
+					<span v-else></span>
+					<span class="footer-hint">
+						<span>Open link</span>
+						<i class="material-icons-outlined footer-icon">keyboard_return</i>
+					</span>
 				</div>
 			</div>
 		</Transition>
@@ -136,8 +143,13 @@ export default {
 						},
 					};
 			}
-		},
-		suggestionRows() {
+			},
+			// The highlighted row when it is a removable history entry
+			highlightedHistory() {
+				const row = this.suggestionRows[this.highlightedIndex];
+				return row && row.kind === "history" ? row : null;
+			},
+			suggestionRows() {
 			if (!this.settingsStore.searchSuggestions) return [];
 
 			const q = this.searchQuery.trim().toLowerCase();
@@ -249,7 +261,7 @@ export default {
 		onKeydown(e) {
 			if (e.isComposing || e.keyCode === 229) return;
 
-			if (e.key === "Backspace" || e.key === "Delete") {
+			if (e.key === "Backspace") {
 				this.ghostSuppressed = true;
 			} else if (e.key.length === 1) {
 				this.ghostSuppressed = false;
@@ -271,6 +283,16 @@ export default {
 				if (caretAtEnd) {
 					e.preventDefault();
 					this.acceptGhost();
+				}
+			} else if (e.key === "Delete") {
+				// Delete removes the highlighted history entry; the highlight
+				// stays at the same index so entries can be deleted in a run.
+				// With a text selection, let the input edit normally instead.
+				const input = this.$refs.input;
+				const noSelection = !input || input.selectionStart === input.selectionEnd;
+				if (this.highlightedHistory && noSelection) {
+					e.preventDefault();
+					this.removeHighlightedEntry();
 				}
 			} else if (e.key === "Escape") {
 				this.$emit("close");
@@ -362,6 +384,14 @@ export default {
 		removeEntry(row) {
 			this.settingsStore.removeSearchHistoryEntry(row);
 			this.highlightedIndex = -1; // indices shift after removal
+		},
+		removeHighlightedEntry() {
+			if (!this.highlightedHistory) return;
+			const index = this.highlightedIndex;
+			this.settingsStore.removeSearchHistoryEntry(this.highlightedHistory);
+			const count = this.suggestionRows.length;
+			this.highlightedIndex = count ? Math.min(index, count - 1) : -1;
+			this.updateGhost();
 		},
 		submitDefault() {
 			const raw = this.searchQuery.trim();
@@ -614,13 +644,18 @@ function escapeHtml(s) {
 .popover-footer {
 	flex-shrink: 0;
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 	align-items: center;
-	gap: 6px;
 	padding: 8px 14px 10px;
 	color: var(--color-tertiary-text);
 	font-size: 0.8rem;
 	user-select: none;
+}
+
+.footer-hint {
+	display: flex;
+	align-items: center;
+	gap: 6px;
 }
 
 .footer-icon {
