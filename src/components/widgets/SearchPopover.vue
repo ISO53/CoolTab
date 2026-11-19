@@ -672,15 +672,18 @@ function escapeHtml(s) {
 	border-radius: 6px;
 }
 
-/* The key's base: an outline extending below the face, line-art style.
-   No top border so the face's bottom edge doubles as the joint line. */
+/* The key's base: a same-width box whose top portion sits behind the face
+   (side lines coincide with the face's sides), extending 3px below it.
+   No top border — the face's bottom edge doubles as the joint line. The
+   box is tall enough for the corner radius to fully resolve, so the
+   bottom edge spans the same width as the face. */
 .kbd::after {
 	content: "";
 	position: absolute;
 	left: 0;
 	right: 0;
+	top: calc(100% - 7px);
 	bottom: -3px;
-	height: 5px;
 	border: 1px solid currentColor;
 	border-top: none;
 	border-radius: 0 0 6px 6px;
