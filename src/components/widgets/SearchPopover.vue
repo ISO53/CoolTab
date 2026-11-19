@@ -659,19 +659,31 @@ function escapeHtml(s) {
 }
 
 .kbd {
+	position: relative;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 1.4em;
-	height: 1.3em;
-	padding: 0 5px;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	min-width: 1.8em;
+	height: 1.4em;
+	padding: 0 7px;
 	font-size: 0.7rem;
 	color: var(--color-tertiary-text);
-	background: color-mix(in srgb, var(--color-primary-background), transparent 35%);
-	border: 1px solid var(--color-border-line);
-	border-radius: 4px;
-	box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--color-primary-background), transparent 0%);
+	border: 1px solid currentColor;
+	border-radius: 6px;
+}
+
+/* The key's base: an outline extending below the face, line-art style.
+   No top border so the face's bottom edge doubles as the joint line. */
+.kbd::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -3px;
+	height: 5px;
+	border: 1px solid currentColor;
+	border-top: none;
+	border-radius: 0 0 6px 6px;
 }
 
 .suggestion-row {
