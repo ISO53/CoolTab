@@ -1,65 +1,48 @@
 <template>
     <Widget>
-        <div class="search-bar">
+        <button
+            ref="trigger"
+            type="button"
+            class="search-bar"
+            title="Search"
+            aria-label="Search"
+            @click="openPopover"
+        >
             <Svg class="search-logo" :class_name="'material-icons-outlined'" :name="'search'"></Svg>
+            <span class="search-hint">Search...</span>
+        </button>
 
-            <input
-                type="text"
-                v-model="searchQuery"
-                @keypress.enter="handleSearch"
-                placeholder="Search..."
-                class="search-input"
-            />
-
-            <Svg
-                :class_name="'material-icons-outlined'"
-                :name="'close'"
-                v-if="searchQuery"
-                @click="searchQuery = ''"
-                class="clear-button"
-            ></Svg>
-        </div>
+        <SearchPopover ref="popover" :open="popoverOpen" :launcher="triggerElement" @close="closePopover" />
     </Widget>
 </template>
 
 <script>
 import Widget from "./Widget.vue";
-import {useSettingsStore} from "@/settings";
+import SearchPopover from "./SearchPopover.vue";
 
 export default {
     name: "SearchBar",
     components: {
         Widget,
-    },
-    setup() {
-        const settingsStore = useSettingsStore();
-        return {settingsStore};
+        SearchPopover,
     },
     data() {
         return {
-            searchQuery: "",
+            popoverOpen: false,
+            triggerElement: null,
         };
     },
+    mounted() {
+        this.triggerElement = this.$refs.trigger;
+    },
     methods: {
-        handleSearch() {
-            const searchEngines = new Map([
-                ["Google", "https://www.google.com/search?q="],
-                ["Bing", "https://www.bing.com/search?q="],
-                ["DuckDuckGo", "https://duckduckgo.com/?q="],
-                ["Yahoo", "https://search.yahoo.com/search?p="],
-                ["Ecosia", "https://www.ecosia.org/search?q="],
-                ["Yandex", "https://yandex.com/search/?text="],
-                ["Startpage", "https://www.startpage.com/do/dsearch?query="],
-                ["Swisscows", "https://swisscows.com/web?query="],
-            ]);
-
-            const request = searchEngines.get(this.settingsStore.searchEngine) + encodeURIComponent(this.searchQuery);
-
-            if (this.settingsStore.openSearchResultIn === "New Tab") {
-                window.open(request, "_blank");
-            } else {
-                window.location.href = request; // Current Tab
-            }
+        openPopover() {
+            this.popoverOpen = true;
+            this.$refs.popover?.focusInput();
+        },
+        closePopover() {
+            this.popoverOpen = false;
+            this.$refs.trigger?.focus();
         },
     },
 };
@@ -71,39 +54,31 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    align-items: center;
     padding: 1cqh;
     container-type: size;
+    background: transparent;
+    border: none;
+    font-family: Satoshi-Regular;
+    cursor: text;
+    text-align: left;
+}
+
+.search-bar:focus {
+    outline: none;
 }
 
 .search-logo {
     height: 100cqh;
+    flex-shrink: 0;
 }
 
-.search-input {
-    width: 100%;
-    border: none;
-    background-color: transparent;
-    color: var(--color-secondary-text);
+.search-hint {
     margin-left: 5cqh;
     font-size: 60cqh;
-}
-
-.search-input::placeholder {
     color: var(--color-tertiary-text);
-}
-
-.search-input:focus {
-    outline: none;
-}
-
-.clear-button {
-    height: 100%;
-    cursor: pointer;
-    transition: color 200ms ease;
-}
-
-.clear-button:hover {
-    color: var(--color-primary-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>

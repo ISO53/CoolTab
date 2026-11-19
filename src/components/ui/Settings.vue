@@ -56,6 +56,15 @@
 			/>
 		</div>
 
+		<div>
+			<h2>Search Suggestions</h2>
+			<SelectButton
+				v-model="searchSuggestionsText"
+				:options="['Enabled', 'Disabled']"
+				:onSelect="setSearchSuggestions"
+			/>
+		</div>
+
 		<span class="divider"></span>
 
 		<div>
@@ -236,8 +245,14 @@ export default {
         rememberWallpaperPageText() {
             return this.settingsStore.rememberWallpaperPage ? "Enabled" : "Disabled";
         },
+		searchSuggestionsText() {
+			return this.settingsStore.searchSuggestions ? "Enabled" : "Disabled";
+		},
     },
 	methods: {
+		setSearchSuggestions(choice) {
+			this.settingsStore.setSearchSuggestions(choice);
+		},
 		setBackgroundSize(option) {
             this.settingsStore.setBackgroundSize(option);
         },

@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import pkg from "../package.json";
 import {getItem, setItem, removeItem} from "./utils/db";
 import {upload} from "@vercel/blob/client";
+import {normalizeUrl, frecencyRank} from "./utils/omnibox";
 
 export const useSettingsStore = defineStore("settings", {
     state: () => ({
@@ -10,6 +11,8 @@ export const useSettingsStore = defineStore("settings", {
         backgroundSize: localStorage.getItem("background-size") || "Cover",
         searchEngine: localStorage.getItem("search-engine") || "Google",
         openSearchResultIn: localStorage.getItem("open-search-result-in") || "New Tab",
+        searchSuggestions: localStorage.getItem("search-suggestions") !== "Disabled",
+        searchHistory: getSearchHistory(),
         currentWeatherInfo: getCurrentWeatherInfo(),
         stock: getStock(),
         quickLinks: getQuickLinks(),
@@ -93,6 +96,70 @@ export const useSettingsStore = defineStore("settings", {
         setOpenSearchResultIn(choice) {
             this.openSearchResultIn = choice;
             storeInLocalStorage("open-search-result-in", choice);
+        },
+        setSearchSuggestions(choice) {
+            this.searchSuggestions = choice === "Enabled";
+            storeInLocalStorage("search-suggestions", choice);
+        },
+        setSearchHistory(items) {
+            this.searchHistory = items;
+            storeInLocalStorage("search-history", JSON.stringify(items));
+        },
+        clearSearchHistory() {
+            this.setSearchHistory([]);
+        },
+        /**
+         * Removes a single history entry, matched the same way
+         * recordSearchPick dedupes: URL entries by normalized URL,
+         * search entries by case-insensitive text.
+         * @param {{type: String, text: String, url: String|null}} entry
+         */
+        removeSearchHistoryEntry(entry) {
+            const list = this.searchHistory.filter((e) => {
+                if (entry.type === "url") {
+                    return !(e.type === "url" && normalizeUrl(e.url) === normalizeUrl(entry.url));
+                }
+                return !(e.type === "search" && e.text.toLowerCase() === entry.text.toLowerCase());
+            });
+            this.setSearchHistory(list);
+        },
+        /**
+         * Boosts (or creates) a history entry after the user submitted or
+         * picked it, so the suggestion list self-tunes per user. Short inputs
+         * and recording while suggestions are disabled are skipped.
+         * @param {{type: String, text: String, url: String|null}} entry
+         */
+        recordSearchPick(entry) {
+            if (!this.searchSuggestions) return;
+
+            const text = entry.text?.trim();
+            if (!text || text.length < 3) return;
+
+            const list = [...this.searchHistory];
+            const now = Date.now();
+            const index = list.findIndex((e) =>
+                entry.type === "url"
+                    ? e.type === "url" && normalizeUrl(e.url) === normalizeUrl(entry.url)
+                    : e.type === "search" && e.text.toLowerCase() === text.toLowerCase()
+            );
+
+            if (index !== -1) {
+                list[index].score = (list[index].score || 1) * 0.7 + 1;
+                list[index].lastUsed = now;
+                list[index].text = text;
+                if (entry.url) list[index].url = entry.url;
+            } else {
+                list.push({type: entry.type, text: text, url: entry.url || null, score: 1, lastUsed: now});
+            }
+
+            // Evict lowest-ranked (decayed) entries past the cap
+            const max_search_history = 200;
+            if (list.length > max_search_history) {
+                list.sort((a, b) => frecencyRank(a) - frecencyRank(b));
+                list.splice(0, list.length - max_search_history);
+            }
+
+            this.setSearchHistory(list);
         },
         setCurrentWeatherInfo(weather) {
             if (weather?.lastUpdated && typeof weather.lastUpdated === "string") {
@@ -906,6 +973,22 @@ function getUserStyles() {
  */
 function getTodoItems() {
     const items = localStorage.getItem("todo-items");
+    if (items) {
+        try {
+            return JSON.parse(items);
+        } catch {
+            return [];
+        }
+    }
+    return [];
+}
+
+/**
+ * Return search history entries from localStorage
+ * @returns {Array<{type: String, text: String, url: String|null, score: Number, lastUsed: Number}>}
+ */
+function getSearchHistory() {
+    const items = localStorage.getItem("search-history");
     if (items) {
         try {
             return JSON.parse(items);
