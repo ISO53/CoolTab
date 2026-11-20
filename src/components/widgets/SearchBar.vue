@@ -59,6 +59,7 @@ export default {
     container-type: size;
     background: transparent;
     border: none;
+    color: var(--color-tertiary-text);
     font-family: Satoshi-Regular;
     cursor: text;
     text-align: left;
