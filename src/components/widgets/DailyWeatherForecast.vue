@@ -6,7 +6,7 @@
                     <div class="orbit">
                         <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
                             <Icon class="planet" name="sun" />
-                            <Icon class="planet" name="moon-star" />
+                            <Icon class="planet" name="moon" />
                         </div>
                     </div>
                 </div>

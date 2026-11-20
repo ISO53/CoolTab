@@ -28,7 +28,6 @@ import {
 	Landmark,
 	LayoutGrid,
 	Moon,
-	MoonStar,
 	Paintbrush,
 	Palette,
 	Package,
@@ -65,6 +64,8 @@ export const ICONS = {
 	"check-circle": CircleCheck,
 	"check-circle-outline": CircleCheckBig,
 	"light-mode": Sun,
+	sun: Sun,
+	moon: Moon,
 	"dark-mode": Moon,
 	"image": Image,
 	"edit": Pencil,
@@ -97,5 +98,4 @@ export const ICONS = {
 	"account-balance": Landmark,
 	"pie-chart": ChartPie,
 	"inventory-2": Package,
-	"moon-star": MoonStar,
 };
