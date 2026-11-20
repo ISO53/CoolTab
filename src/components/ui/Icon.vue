@@ -28,9 +28,9 @@ export default {
 </script>
 
 <style scoped>
+/* No default width/height here: sizing belongs to each call site's CSS and
+   must not compete with it. Unsized icons use the svg's intrinsic 24px. */
 .icon {
-    width: 1.5rem;
-    height: 1.5rem;
     flex-shrink: 0;
     user-select: none;
 }
