@@ -19,17 +19,17 @@
 
         <!-- Error -->
         <div v-else-if="error" class="empty-state">
-            <i class="material-icons-outlined">wifi_off</i>
+            <Icon name="wifi-off" />
             <p>Could not load community styles</p>
             <button class="retry-btn" @click="fetchStyles">
-                <i class="material-icons-outlined">refresh</i>
+                <Icon name="refresh" />
                 Retry
             </button>
         </div>
 
         <!-- Empty -->
         <div v-else-if="styles.length === 0" class="empty-state">
-            <i class="material-icons-outlined">explore_off</i>
+            <Icon name="explore-off" />
             <p>No community styles yet</p>
         </div>
 
@@ -69,7 +69,7 @@
             <div v-else-if="loadMoreError" class="empty-state">
                 <p>Couldn't load more styles</p>
                 <button class="retry-btn" @click="loadMore">
-                    <i class="material-icons-outlined">refresh</i>
+                    <Icon name="refresh" />
                     Retry
                 </button>
             </div>
@@ -328,8 +328,9 @@ export default {
     color: var(--color-tertiary-text);
 }
 
-.empty-state i {
-    font-size: 2.5rem;
+.empty-state svg {
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 .empty-state p {
@@ -359,7 +360,8 @@ export default {
     color: var(--color-primary-text);
 }
 
-.retry-btn i {
-    font-size: 1rem;
+.retry-btn svg {
+    width: 1rem;
+    height: 1rem;
 }
 </style>

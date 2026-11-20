@@ -86,7 +86,7 @@
 					@click="showStockGuide = true"
 					title="Show Search Guide"
 				>
-					<i class="material-icons-outlined">help_outline</i>
+					<Icon name="help-outline" />
 				</button>
 			</div>
 			<StockSearch
@@ -384,7 +384,8 @@ export default {
     color: var(--color-secondary-text);
 }
 
-.help-btn i {
-    font-size: 1.2rem;
+.help-btn svg {
+    width: 1.2rem;
+    height: 1.2rem;
 }
 </style>

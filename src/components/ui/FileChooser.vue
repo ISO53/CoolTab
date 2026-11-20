@@ -8,20 +8,9 @@
                 {{ settingsStore.backgroundImageFileName }}
             </p>
 
-            <Svg
-                v-if="settingsStore.backgroundImage === null"
-                class="folder-logo"
-                :class_name="'material-icons-outlined'"
-                :name="'folder'"
-            ></Svg>
+            <Icon v-if="settingsStore.backgroundImage === null" class="folder-logo" name="folder" />
 
-            <Svg
-                v-if="settingsStore.backgroundImage !== null"
-                class="trash-logo"
-                @click.prevent="trash"
-                :class_name="'material-icons-outlined'"
-                :name="'delete'"
-            ></Svg>
+            <Icon v-if="settingsStore.backgroundImage !== null" class="trash-logo" name="delete" @click.prevent="trash" />
         </label>
     </div>
 </template>
@@ -78,7 +67,8 @@ label:hover {
 }
 
 .folder-logo {
-    transition: filter 200ms ease;
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 label:hover .folder-logo {
@@ -95,12 +85,12 @@ label:hover .folder-logo {
 }
 
 .trash-logo {
-    transition: transform 200ms ease, color 200ms ease;
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 .trash-logo:hover {
     color: red;
-    transform: rotate(15deg);
 }
 
 .file-text {

@@ -12,10 +12,7 @@
 			@click="setWidgetSelected(widget, !widget.selected)"
 		>
 			<div v-if="widget.selected" class="card-indicator">
-				<Svg
-					:class_name="'material-icons-outlined'"
-					:name="'check_circle'"
-				></Svg>
+				<Icon name="check-circle" />
 			</div>
 			<div class="preview-container">
 				<div class="preview-wrapper">
@@ -32,7 +29,6 @@
 </template>
 
 <script>
-import Svg from "@/components/ui/Svg.vue";
 import SearchBar from "@/components/widgets/SearchBar.vue";
 import Calendar from "@/components/widgets/Calendar.vue";
 import AnalogClock from "@/components/widgets/AnalogClock.vue";
@@ -56,7 +52,6 @@ const Location = defineAsyncComponent(() => import("../widgets/Location.vue"));
 export default {
 	name: "Widgets",
 	components: {
-		Svg,
 		SearchBar,
 		Calendar,
 		AnalogClock,
@@ -171,8 +166,9 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.card-indicator i {
-    font-size: 1.1rem !important;
+.card-indicator svg {
+    width: 1.1rem;
+    height: 1.1rem;
 }
 
 .preview-container {

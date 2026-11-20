@@ -6,7 +6,7 @@
             :class="['select-button-option', {selected: modelValue === optionLabel(option)}]"
             @click="selectOption(option)"
         >
-            <i v-if="optionIcon(option)" class="material-icons-outlined">{{ optionIcon(option) }}</i>
+            <Icon v-if="optionIcon(option)" :name="optionIcon(option)" />
             {{ optionLabel(option) }}
         </button>
     </div>
@@ -79,8 +79,9 @@ export default {
     gap: 6px;
 }
 
-.select-button-option .material-icons-outlined {
-    font-size: 1.1rem;
+.select-button-option svg {
+    width: 1.1rem;
+    height: 1.1rem;
     user-select: none;
 }
 

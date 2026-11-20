@@ -6,12 +6,12 @@
                 <div v-for="item in settingsStore.todoItems" :key="item.id" class="task-item"
                     :class="{ done: item.done }">
                     <div class="checkbox" @click="toggleTask(item)">
-                        <Svg v-if="item.done" :class_name="'material-icons-outlined'" :name="'check_box'"></Svg>
-                        <Svg v-else :class_name="'material-icons-outlined'" :name="'check_box_outline_blank'"></Svg>
+                        <Icon v-if="item.done" name="check-box" />
+                        <Icon v-else name="check-box-outline-blank" />
                     </div>
                     <span class="task-text" @click="toggleTask(item)">{{ item.text }}</span>
                     <div class="remove-btn" @click="removeTask(item.id)">
-                        <Svg :class_name="'material-icons-outlined'" :name="'close'"></Svg>
+                        <Icon name="close" />
                     </div>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                     :placeholder="isLimitReached && !hasFinishedTasks ? 'Limit reached (Remove some tasks)' : 'Add a task...'"
                     :disabled="isLimitReached && !hasFinishedTasks" class="todo-input" />
                 <div v-if="newTask" class="enter-hint">
-                    <Svg :class_name="'material-icons-outlined'" :name="'keyboard_return'"></Svg>
+                    <Icon name="keyboard-return" />
                 </div>
             </div>
         </div>
@@ -30,14 +30,12 @@
 
 <script>
 import Widget from "./Widget.vue";
-import Svg from "../ui/Svg.vue";
 import { useSettingsStore } from "@/settings";
 
 export default {
     name: "TodoList",
     components: {
 		Widget,
-        Svg,
     },
     setup() {
         const settingsStore = useSettingsStore();
@@ -167,8 +165,9 @@ export default {
     color: var(--color-primary-text);
 }
 
-.checkbox :deep(i) {
-    font-size: 1.2rem !important;
+.checkbox :deep(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
 }
 
 .task-text {
@@ -201,8 +200,9 @@ export default {
     color: #ff5555;
 }
 
-.remove-btn :deep(i) {
-    font-size: 1.1rem !important;
+.remove-btn :deep(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
 }
 
 .input-container {
@@ -248,7 +248,8 @@ export default {
     pointer-events: none;
 }
 
-.enter-hint :deep(i) {
-    font-size: 0.9rem !important;
+.enter-hint :deep(svg) {
+    width: 0.9rem;
+    height: 0.9rem;
 }
 </style>

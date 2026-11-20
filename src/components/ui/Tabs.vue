@@ -9,7 +9,7 @@
                 :class="{ active: selectedTabLabel === tab.label }"
                 @click="setSelected(tab.label)"
             >
-                <i class="material-icons-outlined">{{ tab.icon }}</i>
+                <Icon :name="tab.icon" />
                 <span class="rail-tooltip">{{ tab.label }}</span>
             </button>
             <div class="rail-spacer"></div>
@@ -93,10 +93,10 @@ export default {
     color: var(--color-tertiary-text);
 }
 
-.rail-btn i {
-    font-size: 1.5rem;
+.rail-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
     color: inherit;
-    transition: color 200ms ease;
     user-select: none;
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "cool-tab",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lucide/vue": "^1.74.0",
     "@vercel/blob": "^2.3.3",
     "@zumer/snapdom": "^3.8.0",
     "cobe": "^2.0.1",
     "driver.js": "^1.6.0",
-    "material-icons": "^1.13.14",
     "pinia": "^2.2.4",
     "qweather-icons": "^1.8.0",
     "vue": "^3.4.29"

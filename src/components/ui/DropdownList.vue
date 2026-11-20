@@ -14,12 +14,7 @@
                 <button @click="removeValue(index)" class="delete-button">x</button>
             </li>
         </ul>
-        <Svg
-            :class_name="'material-icons-outlined'"
-            :name="'keyboard_arrow_down'"
-            :class="{rotate: isOpen}"
-            class="arrow-logo"
-        ></Svg>
+        <Icon name="keyboard-arrow-down" class="arrow-logo" :class="{rotate: isOpen}" />
     </div>
 </template>
 
@@ -90,11 +85,10 @@ export default {
 
 .arrow-logo {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     top: 8px;
     right: 4px;
-    transition: transform 200ms ease;
 }
 
 .rotate {

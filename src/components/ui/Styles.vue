@@ -22,7 +22,7 @@
                     />
                 </div>
                 <div v-if="!this.settingsStore.userStyles.length" class="no-styles">
-                    <i class="material-icons-outlined">style</i>
+                    <Icon name="style" />
                     <p>No styles saved yet.</p>
                     <p class="hint">Save your current look or check the Community filter.</p>
                 </div>
@@ -32,7 +32,7 @@
 
         <!-- Floating action -->
         <div class="floating-actions">
-            <FloatingButton :icon="saving ? 'hourglass_empty' : 'save'" label="Save style" :disabled="saving" @click="saveCurrentStyle" />
+            <FloatingButton :icon="saving ? 'hourglass' : 'save'" label="Save style" :disabled="saving" @click="saveCurrentStyle" />
         </div>
     </div>
 </template>
@@ -58,7 +58,7 @@ export default {
             saving: false,
             filter: "My Styles",
             filterOptions: [
-                {label: "My Styles", icon: "person"},
+                {label: "My Styles", icon: "user"},
                 {label: "Community", icon: "explore"},
             ],
         };
@@ -177,8 +177,9 @@ export default {
     border-radius: 12px;
 }
 
-.no-styles i {
-    font-size: 2rem;
+.no-styles svg {
+    width: 2rem;
+    height: 2rem;
     opacity: 0.5;
 }
 

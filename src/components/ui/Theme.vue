@@ -7,15 +7,15 @@
 			<SelectButton
 				v-model="theme"
 				:options="[
-					{ label: 'Light', icon: 'light_mode' },
-					{ label: 'Dark', icon: 'dark_mode' },
+					{ label: 'Light', icon: 'light-mode' },
+					{ label: 'Dark', icon: 'dark-mode' },
 				]"
 				:onSelect="setTheme"
 			/>
 		</div>
 
 		<div class="palette-info">
-			<Svg :class_name="'material-icons-outlined'" :name="'info'"></Svg>
+			<Icon name="info" />
 			<h2 v-if="this.theme === 'Dark'">Dark themes are best suited for dark colored wallpapers.</h2>
 			<h2 v-else>Light themes are best suited for light colored wallpapers.</h2>
 		</div>
@@ -37,7 +37,6 @@
 import ColorPalette from "./ColorPalette.vue";
 import SelectButton from "./SelectButton.vue";
 import ThemePreview from "./ThemePreview.vue";
-import Svg from "./Svg.vue";
 import { useSettingsStore } from "@/settings";
 
 export default {
@@ -46,7 +45,6 @@ export default {
 		ColorPalette,
 		SelectButton,
 		ThemePreview,
-		Svg,
 	},
 	data() {
 		return {
@@ -98,8 +96,9 @@ export default {
 	gap: 5px;
 }
 
-.palette-info > i.svg {
-	font-size: 1.2rem;
+.palette-info > svg {
+	width: 1.2rem;
+	height: 1.2rem;
 	color: var(--color-tertiary-text);
 }
 
