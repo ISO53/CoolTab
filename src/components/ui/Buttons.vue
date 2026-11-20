@@ -1,15 +1,15 @@
 <template>
     <div id="Buttons" class="buttons" :class="{revealed: isRevealed}">
         <button @click.stop="toggleWallpaperGallery" class="button" title="Wallpaper gallery">
-            <Svg :class_name="'material-icons-outlined'" :name="'image'"></Svg>
+            <Icon name="image" />
         </button>
 
         <button @click="toggleEditArea" class="button" title="Edit layout">
-            <Svg :class_name="'material-icons-outlined'" :name="'edit'"></Svg>
+            <Icon name="edit" />
         </button>
 
         <button @click="toggleSidebar" class="button" title="Open settings">
-            <Svg :class_name="'material-icons-outlined'" :name="'settings'"></Svg>
+            <Icon name="settings" />
         </button>
     </div>
 </template>
@@ -119,15 +119,10 @@ export default {
     transition: transform 200ms ease, opacity 200ms ease;
 }
 
-.button i {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+.button svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    color: var(--color-secondary-text);
     margin: 0;
-    transition: transform 200ms ease;
-}
-
-.button:hover i {
-    transform: scale(115%);
 }
 </style>

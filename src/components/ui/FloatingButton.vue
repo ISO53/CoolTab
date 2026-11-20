@@ -1,6 +1,6 @@
 <template>
     <button class="floating-button" :class="{small}" :disabled="disabled" @click="$emit('click')">
-        <i class="material-icons-outlined">{{ icon }}</i>
+        <Icon :name="icon" />
         <span>{{ label }}</span>
     </button>
 </template>
@@ -75,12 +75,10 @@ export default {
     transition-delay: 80ms;
 }
 
-.floating-button > i {
+.floating-button > svg {
     margin: 0;
-    line-height: 1.4rem;
+    width: 1.4rem;
     height: 1.4rem;
-    font-size: 1.4rem;
-    flex-shrink: 0;
 }
 
 /* Slightly smaller variant */
@@ -99,9 +97,8 @@ export default {
     font-size: 0.85rem;
 }
 
-.floating-button.small > i {
-    line-height: 1.2rem;
+.floating-button.small > svg {
+    width: 1.2rem;
     height: 1.2rem;
-    font-size: 1.2rem;
 }
 </style>

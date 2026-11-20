@@ -4,11 +4,11 @@
         <div v-if="show" class="overlay" @click="$emit('close')">
             <div class="panel" @click.stop>
                 <button class="panel-close-btn" @click="$emit('close')" title="Close">
-                    <i class="material-icons-outlined">close</i>
+                    <Icon name="close" />
                 </button>
 
                 <div class="header">
-                    <i class="material-icons-outlined">help_outline</i>
+                    <Icon name="help-outline" />
                     <h1>Stock Search Guide</h1>
                 </div>
 
@@ -20,7 +20,7 @@
                     <div class="guide-grid">
                         <div class="guide-item">
                             <div class="item-header">
-                                <i class="material-icons-outlined">trending_up</i>
+                                <Icon name="trending-up" />
                                 <h3>Stocks</h3>
                             </div>
                             <p>Use standard ticker symbols for US markets. For international markets, append the exchange suffix.</p>
@@ -34,7 +34,7 @@
 
                         <div class="guide-item">
                             <div class="item-header">
-                                <i class="material-icons-outlined">currency_bitcoin</i>
+                                <Icon name="currency-bitcoin" />
                                 <h3>Crypto</h3>
                             </div>
                             <p>Track cryptocurrencies by pairing them with a fiat currency (USD, EUR, GBP, etc.).</p>
@@ -48,7 +48,7 @@
 
                         <div class="guide-item">
                             <div class="item-header">
-                                <i class="material-icons-outlined">payments</i>
+                                <Icon name="payments" />
                                 <h3>Currencies</h3>
                             </div>
                             <p>Monitor Forex exchange rates by adding the <b>=X</b> suffix to the currency pair.</p>
@@ -61,7 +61,7 @@
 
                         <div class="guide-item">
                             <div class="item-header">
-                                <i class="material-icons-outlined">inventory_2</i>
+                                <Icon name="inventory-2" />
                                 <h3>Commodities</h3>
                             </div>
                             <p>Track commodity prices using their futures symbols with the <b>=F</b> suffix.</p>
@@ -75,7 +75,7 @@
 
                         <div class="guide-item">
                             <div class="item-header">
-                                <i class="material-icons-outlined">account_balance</i>
+                                <Icon name="account-balance" />
                                 <h3>Turkish Market (BIST)</h3>
                             </div>
                             <p>Follow Borsa Istanbul stocks by adding the <b>.IS</b> suffix.</p>
@@ -88,7 +88,7 @@
 
                         <div class="guide-item">
                             <div class="item-header">
-                                <i class="material-icons-outlined">pie_chart</i>
+                                <Icon name="pie-chart" />
                                 <h3>Market Indices</h3>
                             </div>
                             <p>Track major market indices using the <b>^</b> prefix.</p>
@@ -183,8 +183,9 @@ export default {
     color: var(--color-primary-text);
 }
 
-.panel-close-btn i {
-    font-size: 1.5rem;
+.panel-close-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .overlay-enter-active .panel,
@@ -205,8 +206,9 @@ export default {
     margin-bottom: 24px;
 }
 
-.header i {
-    font-size: 2rem;
+.header svg {
+    width: 2rem;
+    height: 2rem;
     color: var(--color-primary-text);
 }
 
@@ -264,8 +266,9 @@ export default {
     margin-bottom: 12px;
 }
 
-.item-header i {
-    font-size: 1.2rem;
+.item-header svg {
+    width: 1.2rem;
+    height: 1.2rem;
     color: var(--color-primary-text);
 }
 

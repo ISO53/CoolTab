@@ -34,7 +34,7 @@
                     <li v-for="(value, index) in modelValue" :key="'sel-' + index" class="dropdown-option">
                         <p>{{ value }}</p>
                         <button @click="removeValue(index)" class="delete-button">
-                            <i class="material-icons-outlined">close</i>
+                            <Icon name="close" />
                         </button>
                     </li>
                     <li v-if="!modelValue.length" class="dropdown-option">
@@ -42,7 +42,7 @@
                     </li>
                 </template>
             </ul>
-            <i class="material-icons-outlined arrow-logo" :class="{rotate: isOpen}">keyboard_arrow_down</i>
+            <Icon name="keyboard-arrow-down" class="arrow-logo" :class="{rotate: isOpen}" />
         </div>
     </div>
 </template>
@@ -160,7 +160,8 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     right: 8px;
-    transition: transform 200ms ease;
+    width: 1.8rem;
+    height: 1.8rem;
     color: var(--color-secondary-text);
 }
 
@@ -201,8 +202,9 @@ export default {
         color 200ms ease;
 }
 
-.delete-button i {
-    font-size: 1.2rem;
+.delete-button svg {
+    width: 1.2rem;
+    height: 1.2rem;
 }
 
 .delete-button:hover {

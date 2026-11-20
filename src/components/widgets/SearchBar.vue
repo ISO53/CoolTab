@@ -8,7 +8,7 @@
             aria-label="Search"
             @click="openPopover"
         >
-            <Svg class="search-logo" :class_name="'material-icons-outlined'" :name="'search'"></Svg>
+            <Icon class="search-logo" name="search" />
             <span class="search-hint">Search...</span>
         </button>
 
@@ -69,6 +69,7 @@ export default {
 }
 
 .search-logo {
+    width: 100cqh;
     height: 100cqh;
     flex-shrink: 0;
 }

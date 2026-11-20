@@ -2,7 +2,7 @@
     <div ref="root" class="dropdown-button">
         <div class="split-button" :class="{open: isOpen}">
             <button class="action-segment" :disabled="disabled" @click="$emit('action')">
-                <i v-if="icon" class="material-icons-outlined">{{ icon }}</i>
+                <Icon v-if="icon" :name="icon" />
                 <span>{{ action }}</span>
             </button>
             <button
@@ -11,7 +11,7 @@
                 :title="title"
                 @click="toggle"
             >
-                <i class="material-icons-outlined" :class="{rotate: isOpen}">keyboard_arrow_down</i>
+                <Icon name="keyboard-arrow-down" class="arrow-logo" :class="{rotate: isOpen}" />
             </button>
         </div>
 
@@ -24,7 +24,7 @@
                     :class="{danger: item.danger}"
                     @click="select(item)"
                 >
-                    <i class="material-icons-outlined">{{ item.icon }}</i>
+                    <Icon :name="item.icon" />
                     <span>{{ item.label }}</span>
                 </li>
             </ul>
@@ -163,9 +163,9 @@ export default {
     transition: background-color 200ms ease;
 }
 
-.action-segment i {
-    font-size: 1rem;
-    line-height: 1;
+.action-segment svg {
+    width: 1rem;
+    height: 1rem;
 }
 
 /* Selector-style hover tint; also applied while the menu is open */
@@ -203,12 +203,12 @@ export default {
     cursor: not-allowed;
 }
 
-.menu-segment i {
-    font-size: 1.1rem;
-    transition: transform 200ms ease;
+.menu-segment svg {
+    width: 1.1rem;
+    height: 1.1rem;
 }
 
-.menu-segment i.rotate {
+.menu-segment svg.rotate {
     transform: rotate(180deg);
 }
 </style>
@@ -259,13 +259,14 @@ export default {
     background-color: color-mix(in srgb, var(--color-tertiary-background), transparent 50%);
 }
 
-.dropdown-menu-item i {
-    font-size: 1rem;
+.dropdown-menu-item svg {
+    width: 1rem;
+    height: 1rem;
     color: inherit;
 }
 
 .dropdown-menu-item.danger,
-.dropdown-menu-item.danger i {
+.dropdown-menu-item.danger svg {
     color: #ef4444;
 }
 

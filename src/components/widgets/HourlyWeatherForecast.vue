@@ -13,7 +13,7 @@
                         :class="{ active: activeMetric === 'temp' }"
                         @mouseenter="activeMetric = 'temp'"
                     >
-                        <i class="material-icons-outlined">thermostat</i>
+                        <Icon name="thermostat" />
                         <span>Temp</span>
                     </button>
                     <button
@@ -21,7 +21,7 @@
                         :class="{ active: activeMetric === 'rain' }"
                         @mouseenter="activeMetric = 'rain'"
                     >
-                        <i class="material-icons-outlined">water_drop</i>
+                        <Icon name="water-drop" />
                         <span>Rain</span>
                     </button>
                     <button
@@ -29,7 +29,7 @@
                         :class="{ active: activeMetric === 'wind' }"
                         @mouseenter="activeMetric = 'wind'"
                     >
-                        <i class="material-icons-outlined">air</i>
+                        <Icon name="air" />
                         <span>Wind</span>
                     </button>
                 </div>
@@ -318,8 +318,9 @@ export default {
     border-color: var(--color-secondary-text);
 }
 
-.ctrl-btn i {
-    font-size: 7cqh;
+.ctrl-btn svg {
+    width: 7cqh;
+    height: 7cqh;
 }
 
 .ctrl-btn span {

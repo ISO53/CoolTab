@@ -4,7 +4,7 @@
         <div v-if="isOpen" class="gallery" v-click-outside="close">
             <div class="page-indicator">Page {{ page + 1 }} / {{ totalPages }}</div>
             <button class="nav-btn" @click="prev" :disabled="page === 0">
-                <Svg :class_name="'material-icons-outlined'" :name="'chevron_left'"></Svg>
+                <Icon name="chevron-left" />
             </button>
 
             <div class="previews">
@@ -26,7 +26,7 @@
             </div>
 
             <button class="nav-btn" @click="next" :disabled="isLastPage || loading">
-                <Svg :class_name="'material-icons-outlined'" :name="'chevron_right'"></Svg>
+                <Icon name="chevron-right" />
             </button>
         </div>
     </Transition>
@@ -249,8 +249,9 @@ export default {
     cursor: not-allowed;
 }
 
-.nav-btn i {
-    font-size: 26px;
+.nav-btn svg {
+    width: 26px;
+    height: 26px;
     color: var(--color-secondary-text);
 }
 

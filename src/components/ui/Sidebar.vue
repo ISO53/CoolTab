@@ -29,7 +29,7 @@
                 </Tabs>
 
                 <button class="sidebar-close-btn" @click="toggleSidebar" title="Close settings">
-                    <i class="material-icons-outlined">arrow_back</i>
+                    <Icon name="arrow-left" />
                     <span class="close-tooltip">Close</span>
                 </button>
             </div>
@@ -145,10 +145,10 @@ export default {
     z-index: 1;
 }
 
-.sidebar-close-btn i {
-    font-size: 1.5rem;
+.sidebar-close-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
     color: inherit;
-    transition: transform 200ms ease;
     user-select: none;
 }
 

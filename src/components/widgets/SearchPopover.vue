@@ -5,7 +5,7 @@
 				:class="{ glass: surface.isGlass, compact: !settingsStore.searchSuggestions }" :style="surface.style"
 				@click.stop>
 				<div class="popover-input-row">
-					<Svg :class_name="'material-icons-outlined'" :name="'search'" class="popover-search-icon"></Svg>
+					<Icon name="search" class="popover-search-icon" />
 
 					<div class="input-wrap">
 						<input ref="input" type="text" v-model="searchQuery" placeholder="Search..."
@@ -18,8 +18,7 @@
 						</div>
 					</div>
 
-					<Svg :class_name="'material-icons-outlined'" :name="'close'" v-if="searchQuery" @click="clearQuery"
-						class="popover-clear-button"></Svg>
+					<Icon name="close" v-if="searchQuery" @click="clearQuery" class="popover-clear-button" />
 					<!-- placeholder keeps the row width identical when the X is hidden -->
 					<span v-else class="clear-button-placeholder"></span>
 				</div>
@@ -31,7 +30,7 @@
 							:data-index="index" @mousedown.prevent @mouseenter="highlightedIndex = index"
 							@click="executeRow(row)">
 							<img v-if="rowFavicon(row)" :src="rowFavicon(row)" alt="" class="row-icon" />
-							<i v-else class="material-icons-outlined row-icon">{{ rowIcon(row) }}</i>
+							<Icon v-else :name="rowIcon(row)" class="row-icon" />
 
 							<span v-if="row.kind === 'action'" class="row-primary row-action-text">
 								{{ actionLabel(row) }} {{ row.action === "open" ? row.text : `'${row.text}'` }}
@@ -40,15 +39,15 @@
 
 							<span v-if="secondaryText(row)" class="row-secondary">{{ secondaryText(row) }}</span>
 
-							<i v-if="row.kind === 'history'" class="material-icons-outlined row-delete"
-								title="Remove from history" @click.stop="removeEntry(row)">close</i>
+							<Icon v-if="row.kind === 'history'" name="close" class="row-delete" title="Remove from history"
+								@click.stop="removeEntry(row)" />
 						</div>
 					</div>
 				</div>
 
 				<div v-if="settingsStore.searchSuggestions" class="popover-footer">
 					<span>Open link</span>
-					<i class="material-icons-outlined footer-icon">keyboard_return</i>
+					<Icon name="keyboard-return" class="footer-icon" />
 				</div>
 			</div>
 		</Transition>
@@ -431,9 +430,9 @@ export default {
 		},
 		rowIcon(row) {
 			if (row.kind === "action") {
-				return row.action === "open" ? "language" : "search";
+				return row.action === "open" ? "globe" : "search";
 			}
-			return row.type === "url" ? "language" : "search";
+			return row.type === "url" ? "globe" : "search";
 		},
 		actionLabel(row) {
 			return row.action === "open" ? "Open" : `Search ${this.settingsStore.searchEngine} for`;
@@ -521,7 +520,8 @@ function escapeHtml(s) {
 
 .popover-search-icon {
 	color: var(--color-tertiary-text);
-	font-size: 22px;
+	width: 22px;
+	height: 22px;
 }
 
 .input-wrap {
@@ -570,10 +570,10 @@ function escapeHtml(s) {
 }
 
 .popover-clear-button {
-	font-size: 20px;
+	width: 20px;
+	height: 20px;
 	cursor: pointer;
 	color: var(--color-tertiary-text);
-	transition: color 200ms ease;
 	flex-shrink: 0;
 }
 
@@ -624,7 +624,8 @@ function escapeHtml(s) {
 }
 
 .footer-icon {
-	font-size: 0.95rem;
+	width: 0.95rem;
+	height: 0.95rem;
 }
 
 .suggestion-row {
@@ -643,7 +644,6 @@ function escapeHtml(s) {
 }
 
 .row-icon {
-	font-size: 18px;
 	width: 18px;
 	height: 18px;
 	flex-shrink: 0;
@@ -684,8 +684,10 @@ function escapeHtml(s) {
 /* Per-entry delete, revealed on row hover; no transition, matching the rows */
 .row-delete {
 	flex-shrink: 0;
-	font-size: 16px;
+	width: 16px;
+	height: 16px;
 	padding: 4px;
+	box-sizing: content-box;
 	cursor: pointer;
 	color: var(--color-tertiary-text);
 	opacity: 0;

@@ -22,7 +22,7 @@
             <DropdownButton
                 v-if="variant === 'mine'"
                 action="Apply"
-                icon="check_circle"
+                icon="check-circle"
                 :items="mineItems"
                 title="Style actions"
                 @action="$emit('apply', style.id)"
@@ -31,7 +31,7 @@
             <DropdownButton
                 v-else
                 :action="saved ? 'Saved' : 'Apply & Save'"
-                :icon="saved ? 'check_circle' : 'check_circle_outline'"
+                :icon="saved ? 'check-circle' : 'check-circle-outline'"
                 :items="communityItems"
                 title="Community style actions"
                 :disabled="disabled"
@@ -52,7 +52,7 @@ const MINE_ITEMS = [
 ];
 
 const COMMUNITY_ITEMS = [
-    {id: "save", icon: "bookmark_border", label: "Save"},
+    {id: "save", icon: "bookmark", label: "Save"},
 ];
 
 // Session-level cache so remounting the tab reuses object URLs instead of

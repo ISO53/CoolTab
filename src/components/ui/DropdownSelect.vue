@@ -16,12 +16,7 @@
             </li>
         </ul>
 
-        <Svg
-            :class_name="'material-icons-outlined'"
-            :name="'keyboard_arrow_down'"
-            :class="{rotate: isOpen}"
-            class="arrow-logo"
-        ></Svg>
+        <Icon name="keyboard-arrow-down" class="arrow-logo" :class="{rotate: isOpen}" />
     </div>
 </template>
 
@@ -90,7 +85,6 @@ export default {
     height: 30px;
     top: 8px;
     right: 4px;
-    transition: transform 200ms ease;
 }
 
 .rotate {

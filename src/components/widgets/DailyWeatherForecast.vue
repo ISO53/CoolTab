@@ -5,8 +5,8 @@
                 <div class="sun-and-moon">
                     <div class="orbit">
                         <div class="orbit-line" :style="{transform: `rotate(${rotation}deg)`}">
-                            <Svg class="planet" :class_name="'material-icons-outlined'" :name="'wb_sunny'"></Svg>
-                            <Svg class="planet" :class_name="'material-icons-outlined'" :name="'nightlight'"></Svg>
+                            <Icon class="planet" name="sun" />
+                            <Icon class="planet" name="moon-star" />
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,8 @@ export default {
 .planet {
     border-radius: 50%;
     margin: 5px;
-    font-size: 15cqh !important;
+    width: 15cqh !important;
+    height: 15cqh !important;
 }
 
 .times {
