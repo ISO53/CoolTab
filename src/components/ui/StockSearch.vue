@@ -160,8 +160,8 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     right: 8px;
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 26px;
+    height: 26px;
     color: var(--color-secondary-text);
 }
 

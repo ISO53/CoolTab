@@ -81,8 +81,8 @@ export default {
 
 .arrow-logo {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     top: 8px;
     right: 4px;
 }

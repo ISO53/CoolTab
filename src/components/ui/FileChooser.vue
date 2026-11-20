@@ -67,8 +67,8 @@ label:hover {
 }
 
 .folder-logo {
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 label:hover .folder-logo {
@@ -85,8 +85,8 @@ label:hover .folder-logo {
 }
 
 .trash-logo {
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 .trash-logo:hover {
