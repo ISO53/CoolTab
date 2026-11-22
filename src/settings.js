@@ -632,13 +632,12 @@ function getStock() {
 }
 
 /**
- * @returns {{orientation: String, links: Array<String>, images: Array<String>, open_link_in: String}}
+ * @returns {{orientation: String, open_link_in: String}}
  */
 function getQuickLinks() {
     const quickLinks = localStorage.getItem("quick-links");
     const def = {
         orientation: "Horizontal",
-        links: ["www.youtube.com", "google.com/maps"],
         open_link_in: "New Tab",
     };
 
@@ -646,6 +645,7 @@ function getQuickLinks() {
         try {
             const parsed = JSON.parse(quickLinks);
             delete parsed.images; // Cleanup legacy data
+            delete parsed.links; // Links were replaced by topSites
             return parsed;
         } catch {
             return def;

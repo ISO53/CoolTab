@@ -56,7 +56,8 @@
 
 <script>
 import { useSettingsStore } from "@/settings";
-import { SEARCH_ENGINES, isUrl, toNavigableUrl, toDisplayUrl, normalizeUrl, frecencyRank, getTopSites, getFaviconUrl } from "@/utils/omnibox";
+import { SEARCH_ENGINES, isUrl, toNavigableUrl, toDisplayUrl, normalizeUrl, frecencyRank, getTopSites } from "@/utils/omnibox";
+import { getFavicon } from "@/utils/favicons";
 
 // Content suggestions shown before the terminal search/open row
 const MAX_SUGGESTIONS = 8;
@@ -407,26 +408,16 @@ export default {
 		async loadFavicons() {
 			for (const row of this.suggestionRows) {
 				if (row.type !== "url" || !row.url) continue;
-				let hostname;
-				try {
-					hostname = new URL(row.url).hostname;
-				} catch {
-					continue;
-				}
-				if (!(hostname in this.favicons)) {
+				if (!(row.url in this.favicons)) {
 					// Placeholder while fetching; null means "no favicon"
-					this.favicons[hostname] = null;
-					this.favicons[hostname] = await getFaviconUrl(hostname);
+					this.favicons[row.url] = null;
+					this.favicons[row.url] = await getFavicon(row.url);
 				}
 			}
 		},
 		rowFavicon(row) {
 			if (row.type !== "url" || !row.url) return null;
-			try {
-				return this.favicons[new URL(row.url).hostname] || null;
-			} catch {
-				return null;
-			}
+			return this.favicons[row.url] || null;
 		},
 		rowIcon(row) {
 			if (row.kind === "action") {

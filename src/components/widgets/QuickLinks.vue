@@ -3,16 +3,25 @@
         <div
             class="quick-links"
             :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'"
+            :style="{ '--n': count }"
         >
-            <base href="/" />
             <a
-                v-for="link in settingsStore.quickLinks.links"
-                :key="link"
-                :href="'https://' + link"
+                v-for="site in visibleSites"
+                :key="site.url"
+                :href="site.url"
                 :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
                 rel="noopener noreferrer"
+                :title="site.title"
             >
-                <img :src="faviconUrls[link]" alt="favicon" class="link" />
+                <div class="tile">
+                    <img
+                        v-if="faviconSrcs[site.url]"
+                        :src="faviconSrcs[site.url]"
+                        alt="favicon"
+                        class="link"
+                    />
+                    <Icon v-else name="globe" class="link placeholder" />
+                </div>
             </a>
         </div>
     </Widget>
@@ -21,7 +30,8 @@
 <script>
 import Widget from "./Widget.vue";
 import {useSettingsStore} from "@/settings";
-import { getItem, setItem } from "@/utils/db";
+import {getTopSites} from "@/utils/omnibox";
+import {getFavicon} from "@/utils/favicons";
 
 export default {
     name: "QuickLinks",
@@ -34,15 +44,33 @@ export default {
     },
     data() {
         return {
-            faviconUrls: {},
+            sites: [],
+            faviconSrcs: {},
         };
     },
-    mounted() {
-        this.loadFavicons();
+    computed: {
+        // The widget only resizes along one axis (horizontal/vertical resize
+        // mode), so its long axis holds one tile per grid cell.
+        count() {
+            const widget = this.settingsStore.widgets.find((w) => w.name === "QuickLinks");
+            if (!widget) return 0;
+            return Math.max(widget.width, widget.height);
+        },
+        visibleSites() {
+            return this.sites.slice(0, this.count);
+        },
+    },
+    watch: {
+        visibleSites: {
+            handler: "loadFavicons",
+        },
+    },
+    async mounted() {
+        this.sites = await getTopSites();
     },
     beforeUnmount() {
         // Revoke all favicon object URLs to free memory
-        Object.values(this.faviconUrls).forEach((url) => {
+        Object.values(this.faviconSrcs).forEach((url) => {
             if (url?.startsWith("blob:")) {
                 URL.revokeObjectURL(url);
             }
@@ -50,32 +78,11 @@ export default {
     },
     methods: {
         async loadFavicons() {
-            const urls = this.settingsStore.quickLinks.links;
-            const newFaviconUrls = { ...this.faviconUrls };
-            let updated = false;
-
-            for (const url of urls) {
-                try {
-                    let blob = await getItem(`favicon-${url}`);
-                    if (!blob) {
-                        // Fetch if not in cache
-                        const request = `https://cool-tab-api.vercel.app/api/favicon?hostname=${url}`;
-                        const response = await fetch(request);
-                        blob = await response.blob();
-                        await setItem(`favicon-${url}`, blob);
-                    }
-
-                    if (blob instanceof Blob) {
-                        newFaviconUrls[url] = URL.createObjectURL(blob);
-                        updated = true;
-                    }
-                } catch (error) {
-                    console.error(`Error loading favicon for ${url}:`, error);
-                }
-            }
-
-            if (updated) {
-                this.faviconUrls = newFaviconUrls;
+            for (const site of this.visibleSites) {
+                if (site.url in this.faviconSrcs) continue;
+                // Placeholder while resolving; null means "no favicon"
+                this.faviconSrcs[site.url] = null;
+                this.faviconSrcs[site.url] = await getFavicon(site.url);
             }
         },
     },
@@ -100,7 +107,8 @@ export default {
     container-type: size;
     padding: 5px;
     justify-content: center;
-    gap: 12px;
+    align-items: center;
+    gap: 8px;
 }
 
 .vertical {
@@ -108,12 +116,8 @@ export default {
 }
 
 .vertical a {
-    width: 100cqw;
-    height: 100cqw;
-}
-
-.vertical > a > .link {
-	width: 100%;
+    width: calc(min(100cqw, 100cqh / var(--n)) - 10px);
+    height: calc(min(100cqw, 100cqh / var(--n)) - 10px);
 }
 
 .horizontal {
@@ -121,20 +125,35 @@ export default {
 }
 
 .horizontal a {
-    width: 100cqh;
-    height: 100cqh;
+    width: calc(min(100cqh, 100cqw / var(--n)) - 10px);
+    height: calc(min(100cqh, 100cqw / var(--n)) - 10px);
 }
 
-.horizontal > a > .link {
+.tile {
+    width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-secondary-background);
+    border: 2px solid var(--color-border-line);
+    box-sizing: border-box;
 }
 
 .link {
+    width: 55%;
     filter: grayscale(100%);
     transition: filter 200ms ease;
 }
 
 .link:hover {
     filter: grayscale(0%);
+}
+
+.placeholder {
+    width: 45%;
+    height: 45%;
+    opacity: 0.5;
 }
 </style>

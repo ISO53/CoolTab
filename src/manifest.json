@@ -11,7 +11,8 @@
         "https://query2.finance.yahoo.com/*"
     ],
     "permissions": [
-        "topSites"
+        "topSites",
+        "favicon"
     ],
     "background": {
         "service_worker": "background.js"

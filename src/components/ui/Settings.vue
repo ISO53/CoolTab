@@ -98,15 +98,6 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Quick Links</h2>
-			<DropdownList
-				v-model="this.settingsStore.quickLinks.links"
-				:text="'link'"
-				:onSelect="setQuickLinks"
-			/>
-		</div>
-
-		<div>
 			<h2>Quick Links Orientation</h2>
 			<SelectButton
 				v-model="settingsStore.quickLinks.orientation"
@@ -220,7 +211,6 @@ import SelectButton from "./SelectButton.vue";
 import DropdownSelect from "./DropdownSelect.vue";
 import StockSearch from "./StockSearch.vue";
 import StockGuidePopup from "./StockGuidePopup.vue";
-import DropdownList from "./DropdownList.vue";
 import NumberPicker from "./NumberPicker.vue";
 import {useSettingsStore} from "@/settings";
 
@@ -232,7 +222,6 @@ export default {
 		DropdownSelect,
 		StockSearch,
 		StockGuidePopup,
-		DropdownList,
 		NumberPicker,
 	},
 	data() {
@@ -272,11 +261,6 @@ export default {
             const stockInfo = this.settingsStore.stock;
             stockInfo.tickers = tickers;
             this.settingsStore.setStock(stockInfo);
-        },
-        setQuickLinks(links) {
-            const quickLinksInfo = this.settingsStore.quickLinks;
-            quickLinksInfo.links = links;
-            this.settingsStore.setQuickLinks(quickLinksInfo);
         },
         setOrientation(orientation) {
             const quickLinksInfo = this.settingsStore.quickLinks;
