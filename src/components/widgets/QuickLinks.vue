@@ -1,30 +1,28 @@
 <template>
-    <Widget>
-        <div
-            class="quick-links"
-            :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'"
-            :style="{ '--n': count }"
+    <div
+        class="quick-links"
+        :class="settingsStore.quickLinks.orientation === 'Vertical' ? 'vertical' : 'horizontal'"
+            :style="{ '--n': count, '--gap': GAP }"
+    >
+        <a
+            v-for="site in visibleSites"
+            :key="site.url"
+            :href="site.url"
+            :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
+            rel="noopener noreferrer"
+            :title="site.title"
         >
-            <a
-                v-for="site in visibleSites"
-                :key="site.url"
-                :href="site.url"
-                :target="settingsStore.quickLinks.open_link_in === 'New Tab' ? '_blank' : '_self'"
-                rel="noopener noreferrer"
-                :title="site.title"
-            >
-                <div class="tile">
-                    <img
-                        v-if="faviconSrcs[site.url]"
-                        :src="faviconSrcs[site.url]"
-                        alt="favicon"
-                        class="link"
-                    />
-                    <Icon v-else name="globe" class="link placeholder" />
-                </div>
-            </a>
-        </div>
-    </Widget>
+            <Widget class="tile">
+                <img
+                    v-if="faviconSrcs[site.url]"
+                    :src="faviconSrcs[site.url]"
+                    alt="favicon"
+                    class="link"
+                />
+                <Icon v-else name="globe" class="link placeholder" />
+            </Widget>
+        </a>
+    </div>
 </template>
 
 <script>
@@ -33,6 +31,9 @@ import {useSettingsStore} from "@/settings";
 import {getTopSites} from "@/utils/omnibox";
 import {getFavicon} from "@/utils/favicons";
 
+// Gap between tiles as a fraction of a grid unit, shared with CSS via --gap.
+const GAP = 0.15;
+
 export default {
     name: "QuickLinks",
     components: {
@@ -40,7 +41,7 @@ export default {
     },
     setup() {
         const settingsStore = useSettingsStore();
-        return {settingsStore};
+        return {settingsStore, GAP};
     },
     data() {
         return {
@@ -49,12 +50,13 @@ export default {
         };
     },
     computed: {
-        // The widget only resizes along one axis (horizontal/vertical resize
-        // mode), so its long axis holds one tile per grid cell.
+        // Tiles span the short axis; N * short + (N - 1) * GAP <= long yields the count.
         count() {
             const widget = this.settingsStore.widgets.find((w) => w.name === "QuickLinks");
             if (!widget) return 0;
-            return Math.max(widget.width, widget.height);
+            const long = Math.max(widget.width, widget.height);
+            const short = Math.min(widget.width, widget.height);
+            return Math.floor((long + GAP) / (short + GAP));
         },
         visibleSites() {
             return this.sites.slice(0, this.count);
@@ -90,13 +92,14 @@ export default {
 </script>
 
 <style scoped>
-.quick-links :deep(a) {
+.quick-links a {
     all: unset;
-    display: block;
+    display: flex;
     cursor: pointer;
 }
 
-.quick-links :deep(a::after) {
+.quick-links a::after {
+    /* base.css animates an underline bar onto every link */
     display: none;
 }
 
@@ -105,19 +108,29 @@ export default {
 	height: 100%;
     display: flex;
     container-type: size;
-    padding: 5px;
     justify-content: center;
     align-items: center;
-    gap: 8px;
 }
 
 .vertical {
     flex-direction: column;
 }
 
+/* Slots fund their share of the gaps: flex gap on the container itself can't use container units. */
 .vertical a {
-    width: calc(min(100cqw, 100cqh / var(--n)) - 10px);
-    height: calc(min(100cqw, 100cqh / var(--n)) - 10px);
+    width: 100%;
+    height: calc((100cqh - (var(--n) - 1) * var(--gap) * 100cqw) / var(--n));
+    margin-bottom: calc(var(--gap) * 100cqw);
+    justify-content: center;
+}
+
+.vertical a:last-child {
+    margin-bottom: 0;
+}
+
+.vertical a .tile {
+    width: 100cqw;
+    height: 100cqw;
 }
 
 .horizontal {
@@ -125,26 +138,35 @@ export default {
 }
 
 .horizontal a {
-    width: calc(min(100cqh, 100cqw / var(--n)) - 10px);
-    height: calc(min(100cqh, 100cqw / var(--n)) - 10px);
+    width: calc((100cqw - (var(--n) - 1) * var(--gap) * 100cqh) / var(--n));
+    height: 100%;
+    margin-right: calc(var(--gap) * 100cqh);
+    justify-content: center;
 }
 
-.tile {
-    width: 100%;
-    height: 100%;
+.horizontal a:last-child {
+    margin-right: 0;
+}
+
+.horizontal a .tile {
+    width: 100cqh;
+    height: 100cqh;
+}
+
+/* Each tile is a full <Widget> so the widget background setting applies per site. */
+.quick-links a .tile {
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--color-secondary-background);
-    border: 2px solid var(--color-border-line);
-    box-sizing: border-box;
 }
 
 .link {
-    width: 55%;
+    width: 65%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
     filter: grayscale(100%);
-    transition: filter 200ms ease;
 }
 
 .link:hover {
