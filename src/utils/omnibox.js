@@ -1,5 +1,3 @@
-import {getItem, setItem} from "./db";
-
 /**
  * Search engines supported by the search bar, engine name -> query URL prefix.
  */
@@ -146,33 +144,3 @@ export function getTopSites() {
     return topSitesCache;
 }
 
-// Session cache of favicon object URLs, hostname -> blob URL (or null when the
-// fetch failed). Shares the IndexedDB cache ("favicon-<hostname>") with QuickLinks.
-const faviconUrlCache = new Map();
-
-/**
- * @param {String} hostname
- * @returns {Promise<String|null>} object URL of the favicon, or null
- */
-export async function getFaviconUrl(hostname) {
-    if (!hostname) return null;
-    if (faviconUrlCache.has(hostname)) return faviconUrlCache.get(hostname);
-
-    let url = null;
-    try {
-        let blob = await getItem(`favicon-${hostname}`);
-        if (!blob) {
-            const response = await fetch(`https://cool-tab-api.vercel.app/api/favicon?hostname=${hostname}`);
-            blob = await response.blob();
-            await setItem(`favicon-${hostname}`, blob);
-        }
-        if (blob instanceof Blob) {
-            url = URL.createObjectURL(blob);
-        }
-    } catch {
-        url = null;
-    }
-
-    faviconUrlCache.set(hostname, url);
-    return url;
-}
