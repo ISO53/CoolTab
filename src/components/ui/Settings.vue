@@ -155,17 +155,6 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Remember Wallpaper Page</h2>
-			<SelectButton
-				v-model="rememberWallpaperPageText"
-				:options="['Enabled', 'Disabled']"
-				:onSelect="setRememberWallpaperPage"
-			/>
-		</div>
-
-		<span class="divider"></span>
-
-		<div>
 			<h2>Time Format</h2>
 			<SelectButton
 				v-model="settingsStore.timeFormat"
@@ -231,9 +220,6 @@ export default {
 		};
 	},
 	computed: {
-        rememberWallpaperPageText() {
-            return this.settingsStore.rememberWallpaperPage ? "Enabled" : "Disabled";
-        },
 		searchSuggestionsText() {
 			return this.settingsStore.searchSuggestions ? "Enabled" : "Disabled";
 		},
@@ -292,9 +278,6 @@ export default {
         setHourlyWeatherRotation(rotation) {
             this.settingsStore.setHourlyWeatherRotation(rotation);
         },
-        setRememberWallpaperPage(choice) {
-            this.settingsStore.setRememberWallpaperPage(choice);
-		},
         setTimeFormat(format) {
             this.settingsStore.setTimeFormat(format);
 		},

@@ -39,7 +39,7 @@ export function onboarding() {
 				element: "#Buttons",
 				popover: {
 					title: "CoolTab Features Tour",
-					description: "Hover your mouse in this bottom-left corner to reveal the action buttons. These buttons let's you choose wallpapers, edit the widgets and access to settings panel.",
+					description: "Hover your mouse in this bottom-left corner to reveal the action buttons. These buttons let's you edit the widgets and access to settings panel.",
 					side: "right",
 					align: "end",
 				},
@@ -68,38 +68,6 @@ export function onboarding() {
 			{
 				element: "#Buttons button:nth-child(1)",
 				popover: {
-					title: "Open Gallery",
-					description: "Click here to open the wallpaper gallery.",
-					side: "right",
-					align: "center",
-				},
-				onHighlightStarted: () => {
-					const gallery = document.querySelector(".gallery");
-					if (!gallery) {
-						const btn = document.querySelector("#Buttons button:nth-child(1)");
-						if (btn) btn.click();
-					}
-				},
-			},
-			{
-				element: ".gallery",
-				popover: {
-					title: "Explore Wallpapers",
-					description: "Here you can browse and select from a variety of beautiful backgrounds to personalize your tab.",
-					side: "top",
-					align: "center",
-				},
-				onDestroyStarted: () => {
-					const gallery = document.querySelector(".gallery");
-					if (!gallery) {
-						const btn = document.querySelector("#Buttons button:nth-child(1)");
-						if (btn) btn.click();
-					}
-				},
-			},
-			{
-				element: "#Buttons button:nth-child(2)",
-				popover: {
 					title: "Edit Mode",
 					description: "Click here to activate the edit mode.",
 					side: "right",
@@ -115,18 +83,18 @@ export function onboarding() {
 					align: "center",
 				},
 				onHighlightStarted: () => {
-					const btn = document.querySelector("#Buttons button:nth-child(2)");
+					const btn = document.querySelector("#Buttons button:nth-child(1)");
 					// Open the edit mode
 					if (btn) btn.click();
 				},
 				onDeselected: () => {
-					const btn = document.querySelector("#Buttons button:nth-child(2)");
+					const btn = document.querySelector("#Buttons button:nth-child(1)");
 					// Close the edit mode on the next step
 					if (btn) btn.click();
 				},
 			},
 			{
-				element: "#Buttons button:nth-child(3)",
+				element: "#Buttons button:nth-child(2)",
 				popover: {
 					title: "Sidebar",
 					description: "Click here to open the sidebar.",
@@ -146,7 +114,7 @@ export function onboarding() {
 					const slide = document.querySelector(".slide");
 					if (slide && slide.style.display === "none") {
 						slide.style.transition = "none";
-						const btn = document.querySelector("#Buttons button:nth-child(3)");
+						const btn = document.querySelector("#Buttons button:nth-child(2)");
 						if (btn) btn.click();
 						setTimeout(() => {
 							slide.style.transition = "";

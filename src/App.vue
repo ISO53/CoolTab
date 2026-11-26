@@ -7,9 +7,7 @@
         <Buttons
             @toggle-sidebar="toggleSidebar"
             @toggle-edit="toggleEditArea"
-            @toggle-wallpaper="toggleWallpaper"
         />
-        <WallpaperGallery ref="wallpaperRef" />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing">
                 <GridItem
@@ -47,7 +45,6 @@ import QuickLinks from "./components/widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
 import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
 import Buttons from "./components/ui/Buttons.vue";
-import WallpaperGallery from "@/components/ui/WallpaperGallery.vue";
 import TodoList from "./components/widgets/TodoList.vue";
 import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "./components/widgets/MonthlyCalendar.vue";
@@ -85,7 +82,6 @@ export default {
         WeeklyWeatherForecast,
         NewFeaturesPanel,
         Buttons,
-        WallpaperGallery,
         TodoList,
         HourlyWeatherForecast,
         MonthlyCalendar,
@@ -103,11 +99,6 @@ export default {
         },
         toggleSidebar() {
             this.$refs.sidebarRef.toggleSidebar();
-        },
-        toggleWallpaper() {
-            if (this.$refs.wallpaperRef.toggle) {
-                this.$refs.wallpaperRef.toggle();
-            }
         },
         updateWidgetPosition(index, {x, y}) {
             const widgets = this.settingsStore.widgets;

@@ -33,7 +33,6 @@ export const useSettingsStore = defineStore("settings", {
         analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
         hourlyWeatherRotation: localStorage.getItem("hourly-weather-rotation") || "Enabled",
         largeStockRange: localStorage.getItem("large-stock-range") || "1D",
-        rememberWallpaperPage: localStorage.getItem("remember-wallpaper-page") !== "Disabled",
 		location: getLocation(),
 		onboarding: localStorage.getItem("onboarding") || "Enabled",
 		timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
@@ -432,10 +431,6 @@ export const useSettingsStore = defineStore("settings", {
         setLargeStockRange(range) {
             this.largeStockRange = range;
             storeInLocalStorage("large-stock-range", range);
-        },
-        setRememberWallpaperPage(choice) {
-            this.rememberWallpaperPage = choice === "Enabled";
-            storeInLocalStorage("remember-wallpaper-page", choice);
         },
         setLocation(location) {
             if (location?.lastUpdated && typeof location.lastUpdated === "string") {
