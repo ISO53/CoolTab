@@ -8,6 +8,24 @@
 		</div>
 
 		<div>
+			<h2>Daily Wallpapers</h2>
+			<SelectButton
+				v-model="settingsStore.dailyWallpapers"
+				:options="['Enabled', 'Disabled']"
+				:onSelect="setDailyWallpapers"
+			/>
+		</div>
+
+		<div>
+			<h2>Wallpaper Colors</h2>
+			<SelectButton
+				v-model="settingsStore.wallpaperColors"
+				:options="['Follow wallpaper', 'Keep my palette']"
+				:onSelect="setWallpaperColors"
+			/>
+		</div>
+
+		<div>
 			<h2>Image Size</h2>
 			<SelectButton
 				v-model="settingsStore.backgroundSize"
@@ -155,17 +173,6 @@
 		<span class="divider"></span>
 
 		<div>
-			<h2>Remember Wallpaper Page</h2>
-			<SelectButton
-				v-model="rememberWallpaperPageText"
-				:options="['Enabled', 'Disabled']"
-				:onSelect="setRememberWallpaperPage"
-			/>
-		</div>
-
-		<span class="divider"></span>
-
-		<div>
 			<h2>Time Format</h2>
 			<SelectButton
 				v-model="settingsStore.timeFormat"
@@ -213,6 +220,7 @@ import StockSearch from "./StockSearch.vue";
 import StockGuidePopup from "./StockGuidePopup.vue";
 import NumberPicker from "./NumberPicker.vue";
 import {useSettingsStore} from "@/settings";
+import {rotateDailyWallpaper} from "@/utils/dailyWallpaper";
 
 export default {
 	name: "Settings",
@@ -231,9 +239,6 @@ export default {
 		};
 	},
 	computed: {
-        rememberWallpaperPageText() {
-            return this.settingsStore.rememberWallpaperPage ? "Enabled" : "Disabled";
-        },
 		searchSuggestionsText() {
 			return this.settingsStore.searchSuggestions ? "Enabled" : "Disabled";
 		},
@@ -242,8 +247,24 @@ export default {
 		setSearchSuggestions(choice) {
 			this.settingsStore.setSearchSuggestions(choice);
 		},
-		setBackgroundSize(option) {
+        setBackgroundSize(option) {
             this.settingsStore.setBackgroundSize(option);
+        },
+        setDailyWallpapers(choice) {
+            this.settingsStore.setDailyWallpapers(choice);
+            // Enabling picks today's wallpaper right away instead of waiting
+            // for the next tab; disabling falls back to the custom image.
+            if (choice === "Enabled") {
+                rotateDailyWallpaper({force: true});
+            }
+        },
+        setWallpaperColors(choice) {
+            this.settingsStore.setWallpaperColors(choice);
+            // Switching modes changes which cell (if any) constrains the
+            // pick, so re-run the rotation for immediate feedback.
+            if (this.settingsStore.dailyWallpapers === "Enabled") {
+                rotateDailyWallpaper({force: true});
+            }
         },
         setWidgetBackground(background) {
             this.settingsStore.setWidgetBackground(background);
@@ -292,9 +313,6 @@ export default {
         setHourlyWeatherRotation(rotation) {
             this.settingsStore.setHourlyWeatherRotation(rotation);
         },
-        setRememberWallpaperPage(choice) {
-            this.settingsStore.setRememberWallpaperPage(choice);
-		},
         setTimeFormat(format) {
             this.settingsStore.setTimeFormat(format);
 		},

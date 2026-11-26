@@ -1,9 +1,5 @@
 <template>
     <div id="Buttons" class="buttons" :class="{revealed: isRevealed}">
-        <button @click.stop="toggleWallpaperGallery" class="button" title="Wallpaper gallery">
-            <Icon name="image" />
-        </button>
-
         <button @click="toggleEditArea" class="button" title="Edit layout">
             <Icon name="edit" />
         </button>
@@ -58,9 +54,6 @@ export default {
         toggleSidebar() {
             this.$emit("toggle-sidebar");
         },
-        toggleWallpaperGallery() {
-            this.$emit("toggle-wallpaper");
-        },
     },
 };
 </script>
@@ -97,9 +90,6 @@ export default {
 }
 .buttons .button:nth-child(3) {
     transition-delay: 50ms;
-}
-.buttons .button:nth-child(4) {
-    transition-delay: 75ms;
 }
 
 .button {

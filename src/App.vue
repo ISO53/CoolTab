@@ -4,12 +4,11 @@
         <Sidebar ref="sidebarRef" />
         <NewFeaturesPanel />
         <Onboarding />
+        <WallpaperCredit />
         <Buttons
             @toggle-sidebar="toggleSidebar"
             @toggle-edit="toggleEditArea"
-            @toggle-wallpaper="toggleWallpaper"
         />
-        <WallpaperGallery ref="wallpaperRef" />
         <div style="width: calc(100vw - 100px); height: calc(100vh - 100px)">
             <Grid :cols="this.settingsStore.widgetAreaColumns" :editing="this.editing">
                 <GridItem
@@ -47,12 +46,13 @@ import QuickLinks from "./components/widgets/QuickLinks.vue";
 import WeeklyWeatherForecast from "./components/widgets/WeeklyWeatherForecast.vue";
 import NewFeaturesPanel from "./components/ui/NewFeaturesPanel.vue";
 import Buttons from "./components/ui/Buttons.vue";
-import WallpaperGallery from "@/components/ui/WallpaperGallery.vue";
 import TodoList from "./components/widgets/TodoList.vue";
 import HourlyWeatherForecast from "./components/widgets/HourlyWeatherForecast.vue";
 import MonthlyCalendar from "./components/widgets/MonthlyCalendar.vue";
 import Onboarding from "./components/ui/Onboarding.vue";
+import WallpaperCredit from "./components/ui/WallpaperCredit.vue";
 import { useSettingsStore } from "./settings";
+import { rotateDailyWallpaper } from "./utils/dailyWallpaper";
 import { defineAsyncComponent } from "vue";
 
 // Location widget is lazy loaded because it loads cobe library, a WebGL-based 3D globe library that
@@ -68,6 +68,13 @@ export default {
     beforeMount() {
         this.updateCSSVariables();
         this.settingsStore.loadBackgroundImage();
+    },
+    mounted() {
+        // Daily wallpaper rotation runs async after paint; on most days this
+        // is a no-op (already rotated) and costs nothing.
+        setTimeout(() => {
+            rotateDailyWallpaper();
+        }, 0);
     },
     components: {
         Grid,
@@ -85,12 +92,12 @@ export default {
         WeeklyWeatherForecast,
         NewFeaturesPanel,
         Buttons,
-        WallpaperGallery,
         TodoList,
         HourlyWeatherForecast,
         MonthlyCalendar,
 		Location,
         Onboarding,
+        WallpaperCredit,
     },
     data() {
         return {
@@ -103,11 +110,6 @@ export default {
         },
         toggleSidebar() {
             this.$refs.sidebarRef.toggleSidebar();
-        },
-        toggleWallpaper() {
-            if (this.$refs.wallpaperRef.toggle) {
-                this.$refs.wallpaperRef.toggle();
-            }
         },
         updateWidgetPosition(index, {x, y}) {
             const widgets = this.settingsStore.widgets;

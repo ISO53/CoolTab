@@ -106,7 +106,6 @@ export default {
 
 .changes-link {
     color: var(--color-primary-text);
-    text-decoration: underline;
     font-family: Satoshi-Bold;
     margin-left: 6px;
     transition: color 200ms ease;

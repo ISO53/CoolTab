@@ -35,7 +35,7 @@
                     <a href="https://icons.qweather.com/" target="_blank">QWeather.com</a> for providing weather icons.
                 </li>
                 <li>
-                    <a href="https://peapix.com/" target="_blank">Peapix.com</a> for providing wallpapers.
+                    <a href="https://unsplash.com/" target="_blank">Unsplash.com</a> for providing daily wallpapers.
                 </li>
             </ul>
         </div>
@@ -140,7 +140,6 @@ export default {
 
 .value a {
     color: var(--color-primary-text);
-    text-decoration: underline;
 }
 
 .section-title {
@@ -168,10 +167,6 @@ export default {
     color: var(--color-primary-text);
     font-family: Satoshi-Bold;
     text-decoration: none;
-}
-
-.thanks-list a:hover {
-    text-decoration: underline;
 }
 
 .tour {
