@@ -33,6 +33,9 @@ export const useSettingsStore = defineStore("settings", {
         analogClockStyle: localStorage.getItem("analog-clock-style") || "Minimal",
         hourlyWeatherRotation: localStorage.getItem("hourly-weather-rotation") || "Enabled",
         largeStockRange: localStorage.getItem("large-stock-range") || "1D",
+        dailyWallpapers: localStorage.getItem("daily-wallpapers") || "Disabled",
+        wallpaperColors: localStorage.getItem("wallpaper-colors") || "Follow wallpaper",
+        dailyWallpaper: getDailyWallpaper(),
 		location: getLocation(),
 		onboarding: localStorage.getItem("onboarding") || "Enabled",
 		timeFormat: localStorage.getItem("time-format") || getDefaultTimeFormat(),
@@ -42,6 +45,10 @@ export const useSettingsStore = defineStore("settings", {
     }),
     actions: {
         async setBackgroundImage(image, saveToDb = true) {
+            // Setting a background manually is a takeover: it turns the daily
+            // rotation off (the daily wallpaper never flows through here —
+            // it renders straight from its CDN URL per Unsplash guidelines).
+            this.setDailyWallpapers("Disabled");
             if (this.backgroundImage?.startsWith("blob:")) {
                 URL.revokeObjectURL(this.backgroundImage);
             }
@@ -432,6 +439,18 @@ export const useSettingsStore = defineStore("settings", {
             this.largeStockRange = range;
             storeInLocalStorage("large-stock-range", range);
         },
+        setDailyWallpapers(choice) {
+            this.dailyWallpapers = choice;
+            storeInLocalStorage("daily-wallpapers", choice);
+        },
+        setWallpaperColors(choice) {
+            this.wallpaperColors = choice;
+            storeInLocalStorage("wallpaper-colors", choice);
+        },
+        setDailyWallpaper(photo) {
+            this.dailyWallpaper = photo;
+            storeInLocalStorage("daily-wallpaper", photo ? JSON.stringify(photo) : null);
+        },
         setLocation(location) {
             if (location?.lastUpdated && typeof location.lastUpdated === "string") {
                 location.lastUpdated = new Date(location.lastUpdated);
@@ -457,7 +476,10 @@ export const useSettingsStore = defineStore("settings", {
 		    };
 		},
 		async applyStyleSettings(settings) {
-		    if (settings.backgroundImage !== undefined) {
+			// Applying a style is a manual design takeover, same as uploading
+			// an image: the daily rotation hands control back to the user.
+			this.setDailyWallpapers("Disabled");
+			if (settings.backgroundImage !== undefined) {
 		        await this.setBackgroundImage(settings.backgroundImage);
 		    }
 		    if (settings.backgroundImageFileName !== undefined)
@@ -1019,6 +1041,22 @@ function getLocation() {
     }
 
     return def;
+}
+
+/**
+ * Return the applied daily wallpaper (or null) from localStorage.
+ * @returns {{id: String, url: String, date: String, credit: Object}|null}
+ */
+function getDailyWallpaper() {
+    const photo = localStorage.getItem("daily-wallpaper");
+    if (photo) {
+        try {
+            return JSON.parse(photo);
+        } catch {
+            return null;
+        }
+    }
+    return null;
 }
 
 /**

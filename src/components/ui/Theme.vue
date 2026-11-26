@@ -38,6 +38,7 @@ import ColorPalette from "./ColorPalette.vue";
 import SelectButton from "./SelectButton.vue";
 import ThemePreview from "./ThemePreview.vue";
 import { useSettingsStore } from "@/settings";
+import { rotateDailyWallpaper } from "@/utils/dailyWallpaper";
 
 export default {
 	name: "Theme",
@@ -60,8 +61,24 @@ export default {
 			this.theme = theme;
 		},
 		setColors(colors) {
-			this.settingsStore.setColorPalette({ color: "default", theme: this.theme });
+			const dailyActive = this.settingsStore.dailyWallpapers === "Enabled";
+			const prevTheme = this.settingsStore.colorPalette?.theme;
+			const prevFamily = this.settingsStore.colors?.name;
+
+			this.settingsStore.setColorPalette({ color: colors.name, theme: this.theme });
 			this.settingsStore.setColors(colors);
+
+			if (dailyActive) {
+				// A manual palette pick takes color control back from the
+				// rotation: "Follow wallpaper" switches to "Keep my palette".
+				if (this.settingsStore.wallpaperColors === "Follow wallpaper") {
+					this.settingsStore.setWallpaperColors("Keep my palette");
+				}
+				// Theme/family change means a new pool cell — re-pick now.
+				if (prevTheme !== this.theme || prevFamily !== colors.name) {
+					rotateDailyWallpaper({ force: true });
+				}
+			}
 		},
 		previewColors(palette) {
 			this.previewPalette = palette;
