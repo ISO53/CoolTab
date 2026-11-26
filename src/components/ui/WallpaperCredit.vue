@@ -54,8 +54,4 @@ export default {
     text-decoration: none;
     font-weight: bold;
 }
-
-.wallpaper-credit a:hover {
-    text-decoration: underline;
-}
 </style>

@@ -137,7 +137,6 @@ export default {
 
 .value a {
     color: var(--color-primary-text);
-    text-decoration: underline;
 }
 
 .section-title {
@@ -165,10 +164,6 @@ export default {
     color: var(--color-primary-text);
     font-family: Satoshi-Bold;
     text-decoration: none;
-}
-
-.thanks-list a:hover {
-    text-decoration: underline;
 }
 
 .tour {
